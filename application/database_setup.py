@@ -49,3 +49,7 @@ class Producto(Base):
 #		'mysql+pymysql://plantondemand:Fumies9933@plantondemand.cdbbfmyitjua.eu-west-2.rds.amazonaws.com:3306/flaskdb')
 #Base.metadata.create_all(engine)
 
+
+engine = create_engine('sqlite:///restaurantmenu.db')
+Base.metadata.bind = engine
+Base.metadata.create_all(engine)
