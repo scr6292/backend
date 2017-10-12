@@ -1,6 +1,6 @@
 from application import db
-from application.database_setup import Agricultor, Producto, Contacto
+from application.models import Contacto, Agricultor, Producto
 
 db.create_all()
 
-print("DB created...........................")
+print("DB created.")

@@ -2,10 +2,10 @@
 # The other elements are the same as used in the tutorial
 # format: (user):(password)@(db_identifier).amazonaws.com:3306/(db_name)
 
-#SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://plantondemand:Fumies9933@plantondemand.cdbbfmyitjua.eu-west-2.rds.amazonaws.com:3306/flaskdb'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://plantondemand:Fumies9933@plantondemand.cdbbfmyitjua.eu-west-2.rds.amazonaws.com:3306/flaskdb'
 
 # Uncomment the line below if you want to work with a local DB
-SQLALCHEMY_DATABASE_URI = 'sqlite:///restaurantmenu.db'
+#SQLALCHEMY_DATABASE_URI = 'sqlite:///Test1.db'
 
 SQLALCHEMY_POOL_RECYCLE = 3600
 
