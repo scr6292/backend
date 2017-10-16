@@ -19,9 +19,9 @@ class Agricultor(db.Model):
 	name = db.Column(db.String(80), nullable = False)
 	id = db.Column(db.Integer, primary_key = True)
 	categoria = db.Column(db.String(30))
-	contactoId = db.Column(db.Integer, db.ForeignKey('contacto.id'))
+	contacto_id = db.Column(db.Integer, db.ForeignKey('contacto.id'))
 	contacto = db.relationship(Contacto)
-	pedidoMinimo = (db.Float(5,2))
+	pedido_minimo = (db.Float(5,2))
 	
 	def __repr__(self):
 		return '<Agricultor %r>' % self.name
