@@ -7,3 +7,8 @@
 # Flask files
 
 flask-aws/*
+
+# Alembic
+#
+alembic.ini
+alembic/*
