@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Agricultor, Producto, Contacto
+from database_setup import Base, Agricultor, Producto, Contacto, engine
 
 
 
-engine = create_engine('sqlite:///Test1.db')
+
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
