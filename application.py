@@ -6,6 +6,9 @@ from database_setup import Base, Agricultor, Producto, Contacto, engine
 
 # Elastic Beanstalk initalization
 application = Flask(__name__)
+application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'   
+
+application.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://plantondemand:Fumies9933@ec2-35-176-159-65.eu-west-2.compute.amazonaws.com:3306/agricultores'
 
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -13,11 +16,10 @@ session = DBSession()
 
 
 
-#application.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://plantondemand:Fumies9933@ec2-35-176-159-65.eu-west-2.compute.amazonaws.com:3306/agricultores'
+
 
 #application.debug=True
 # change this to your own value
-application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'   
 
 #Show all agricultures
 @application.route('/')
