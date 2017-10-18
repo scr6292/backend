@@ -6,7 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
-application=Flask(__name__)
 
 Base = declarative_base()
 
@@ -25,7 +24,7 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://plantondemand:Fumies9933@ec2-35-176-1
 SQLALCHEMY_POOL_RECYCLE = 3600
 
 WTF_CSRF_ENABLED = True
-SECRET_KEY = 'dsaf0897sfdg45sfdgfdsaqzdf98sdf0a'
+SECRET_KEY = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
 # -------------------------------------------------------------------------------
 
 
