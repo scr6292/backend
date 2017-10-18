@@ -1,9 +1,12 @@
 import os
 import sys
+from flask import Flask
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+
+application=Flask(__name__)
 
 Base = declarative_base()
 
