@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Agricultor, Producto, Contacto, engine
+from application.database_setup import Base, Agricultor, Producto, Contacto, engine
 
 
 
@@ -13,7 +13,8 @@ session = DBSession()
 # Elastic Beanstalk initalization
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://plantondemand:Fumies9933@ec2-35-176-159-65.eu-west-2.compute.amazonaws.com:3306/agricultores'
-application.debug=True
+
+#application.debug=True
 # change this to your own value
 application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'   
 
@@ -192,7 +193,6 @@ def deleteMenuItem(agricultor_id, product_id):
 
 
 if __name__ == '__main__':
-	application.run()
-#    application.run(host='0.0.0.0', port=5000)
-
+	application.run(host='0.0.0.0', port=5000)
+	application.debug = True
 
