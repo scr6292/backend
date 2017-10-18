@@ -7,7 +7,6 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-application = Flask(__name__)
 # -------------------------------------------------------------------------------
 # config.py
 #
