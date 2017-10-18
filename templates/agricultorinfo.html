@@ -1,0 +1,63 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<h1>{{agricultor.name}}</h1>
+
+<!--MESSAGE FLASHING EXAMPLE -->
+<!-- {% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %} -->
+
+
+<!-- Mostrar info agricultor -->
+    <div class = 'info'>
+    
+		<p> Name: {{item.name}}</p>
+		<p> Email: {{item.email}} </p>
+		<p> Teléfono: {{item.phone}} </p>
+		<p> Localización: {{item.location}} </p>
+		<p> Web: {{item.website}} </p>
+		<p> Productos: {{item.productos}} </p>
+		<p> Pedido min.: {{item.pedido_minimo}} </p>
+		<p> Reparto: {{item.diasreparto}} </p>
+		<p> Logística: {{item.logistica}} </p>
+		<p> Encargado: {{item.encargado}} </p>
+		<p> Links: {{item.links}} </p>
+	
+	</div>
+
+<!-- Editar info agricultor -->
+	<div class = "editdeletepane">
+		<a href='{{url_for('editInfo',agricultor_id = agricultor.id)}}' >Edit Info</a></div>
+	
+	<div class = "editdeletepane">
+
+<!-- Mostrar productos agricultor -->
+
+	<div class = "menu">
+
+		<a href='{{url_for('agricultorMenu',agricultor_id = agricultor.id)}}' >Mostrar productos</a>
+	</div>
+
+<!-- Volver a lista agricultores -->
+</div></br>
+
+	<a href= "{{url_for('listaAgricultores')}}">Volver a Agricultores</a>
+</div>
+	</body>
+
+
+
+
+</html>

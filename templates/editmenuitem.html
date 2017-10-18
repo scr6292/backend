@@ -6,13 +6,22 @@
 <body>
 
 <h1>Edit menu item</h1>
+
 <form action = "{{url_for('editMenuItem',agricultor_id=agricultor_id, product_id=item.id)}}" method = 'POST'>
+
 	<p>New name:</p>
-	<input type = 'text' size = '30' name = 'new name' placeholder = '{{item.name}}'>
+		<input type = 'text' size = '30' name = 'name' placeholder = '{{item.name}}'>
+
+	<p>Description:</p>
+		<input type ='text' size='30' name='description' placeholder = '{{item.description}}'>
+
+	<p>Price:</p>
+		<input type ='text' size='30' name='price' placeholder = '{{item.price}}'>
 
 <input type = 'submit' value = 'Edit'>
 </form>
-<a href= "{{url_for('agricultorMenu', agricultor_id= item.id)}}">Cancel</a>
+
+<a href= "{{url_for('agricultorMenu', agricultor_id= agricultor_id)}}">Cancel</a>
 
 </body>
 

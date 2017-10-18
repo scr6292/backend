@@ -8,7 +8,7 @@
 <h1>{{agricultor.name}}</h1>
 
 <!--MESSAGE FLASHING EXAMPLE -->
-{% with messages = get_flashed_messages() %}
+<!-- {% with messages = get_flashed_messages() %}
 {% if messages %}
 
 <ul>
@@ -17,32 +17,49 @@
   {% endfor %}
 </ul>
 {% endif %}
-{% endwith %}
+{% endwith %} -->
+
+
+
+<!-- Añadir nuevo producto -->
+<a href = '{{url_for('newProduct', agricultor_id = agricultor.id) }}'>Add new product</a>
+
+<!-- Mostrar productos existentes -->
+	{% for i in items %}
+    <div class = 'nameAndPrice'>
+		<span class = 'name'><p>{{i.name}}</p></span>
+
+		<span class = 'price'><p>{{i.price}} </p></span>
+	</div>
+
+	
+	
+	<div class = 'description'>
+		<p>{{i.description}}</p>
+	</div>
+
+	
+	
+	<div class = "editdeletepane">
+
+	
+	<a href='{{url_for('editMenuItem',agricultor_id = agricultor.id, product_id=i.id)}}' >Edit</a>
+	<a href='{{url_for('deleteMenuItem', agricultor_id = agricultor.id, product_id=i.id)}}' >Delete</a>
+	</div>
 
 
 
 
-<a href = "{{url_for('newProduct',agricultor_id=agricultor.id)}}">Create new item</a>
+		{% endfor %}
 
 
-{% for i in items %}
+</div></br>
 
-<div>
-
-<p>{{i.name}}</p>
-
-<p>{{i.description}}</p>
-
-<p> {{i.price}} </p>
-
-<a href = "{{url_for('editMenuItem',agricultor_id=agricultor.id,product_id=i.id)}}">Edit</a>
-</br>
-<a href = "{{url_for('deleteMenuItem',agricultor_id=agricultor.id,product_id=i.id)}}">Delete</a>
-
+	<a href= "{{url_for('listaAgricultores')}}">Volver a Agricultores</a>
 </div>
+	</body>
 
 
-{% endfor %}
-</body>
+
 
 </html>
