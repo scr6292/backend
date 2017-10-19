@@ -12,3 +12,6 @@ flask-aws/*
 #
 alembic.ini
 alembic/*
+
+#*pyc
+/*.pyc
