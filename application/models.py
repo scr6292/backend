@@ -7,7 +7,7 @@ class Agricultor(db.Model):
 	name = db.Column(db.String(80), nullable = False)
 	id = db.Column(db.Integer, primary_key = True)
 
-	def __init__(self, notes):
+	def __init__(self, name):
 		self.name = name
 
 	def __repr__(self):
