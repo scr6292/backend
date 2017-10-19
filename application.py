@@ -6,7 +6,7 @@ from application.models import Agricultor, Producto, Contacto
 application = Flask(__name__)
 application.debug=True
 # change this to your own value
-application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'   
+application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
 
 #Show all agricultures
 @application.route('/')
