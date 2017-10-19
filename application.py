@@ -11,6 +11,7 @@ application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
 #Show all agricultures
 @application.route('/', methods=['GET'])
 def listaAgricultores():
+    db.session.commit()
     agriList = db.session.query(Agricultor).all()
     return render_template('agriList.html', agriList = agriList)
 
