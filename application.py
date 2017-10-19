@@ -1,45 +1,32 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Agricultor, Producto, Contacto, engine
-
+from application import db
+from application.models import Agricultor, Producto, Contacto
 
 # Elastic Beanstalk initalization
 application = Flask(__name__)
-application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'   
-
-application.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://plantondemand:Fumies9933@plantondemand.cdbbfmyitjua.eu-west-2.rds.amazonaws.com:3306/agricultores'
-
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-
-
-
-
-
-#application.debug=True
+application.debug=True
 # change this to your own value
+application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'   
 
 #Show all agricultures
 @application.route('/')
 def listaAgricultores():
-    agriList = session.query(Agricultor).all()
+    agriList = db.session.query(Agricultor).all()
     return render_template('agriList.html', agriList = agriList)
 
 
 #Show agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info')
 def agricultorInfo(agricultor_id):
-    agricultor = session.query(Agricultor).filter_by(id=agricultor_id).one()
-    item = session.query(Contacto).filter_by(agricultor_id=agricultor.id).first()
+    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    item = db.session.query(Contacto).filter_by(agricultor_id=agricultor.id).first()
     return render_template('agricultorinfo.html', agricultor=agricultor, item=item)
 
 #Edit agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info/edit', methods=['GET', 'POST'])
 def editInfo(agricultor_id):
-    # agricultor = session.query(Agricultor).filter_by(id=agricultor_id).one()
-    editedInfo = session.query(Contacto).filter_by(agricultor_id = agricultor_id).first()
+    # agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    editedInfo = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).first()
     if request.method == 'POST':
         if editedInfo:
             if request.form['name']:
@@ -65,8 +52,8 @@ def editInfo(agricultor_id):
             if request.form['links']:
                 editedInfo.links = request.form['links']
 
-            session.add(editedInfo)
-            session.commit()
+            db.session.add(editedInfo)
+            db.session.commit()
             flash("Infor properly edited")
             return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id))
         else:    
@@ -75,8 +62,8 @@ def editInfo(agricultor_id):
                  productos = request.form['productos'],pedido_minimo = request.form['pedido_minimo'],
                  diasreparto = request.form['diasreparto'],logistica = request.form['logistica'],
                  encargado = request.form['encargado'],links = request.form['links'],  agricultor_id = agricultor_id)
-            session.add(editedInfo)
-            session.commit()
+            db.session.add(editedInfo)
+            db.session.commit()
             return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id)) 
     else:
         return render_template('editinfo.html', agricultor_id = agricultor_id, item = editedInfo)
@@ -87,8 +74,8 @@ def editInfo(agricultor_id):
 #Show agricultor products
 @application.route('/agricultores/<int:agricultor_id>/')
 def agricultorMenu(agricultor_id):
-    agricultor = session.query(Agricultor).filter_by(id=agricultor_id).one()
-    items = session.query(Producto).filter_by(agricultor_id=agricultor.id)
+    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    items = db.session.query(Producto).filter_by(agricultor_id=agricultor.id)
     return render_template('menu.html', agricultor=agricultor, items=items)
 
 
@@ -97,8 +84,8 @@ def agricultorMenu(agricultor_id):
 def newAgricultor():
     if request.method == 'POST':
         newAgri = Agricultor(name = request.form['name'])
-        session.add(newAgri)
-        session.commit()
+        db.session.add(newAgri)
+        db.session.commit()
         flash("New agricultor created!")
         return redirect(url_for('listaAgricultores'))
     else:
@@ -107,12 +94,12 @@ def newAgricultor():
 #Edit an agriculture
 @application.route('/agricultores/<int:agricultor_id>/edit', methods=['GET', 'POST'])
 def editAgricultor(agricultor_id):
-    editedAgricultor = session.query(Agricultor).filter_by(id = agricultor_id).one()
+    editedAgricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
     if request.method == 'POST':
         if request.form['new name']:
             editedAgricultor.name = request.form['new name']
-        session.add(editedAgricultor)
-        session.commit()
+        db.session.add(editedAgricultor)
+        db.session.commit()
         flash("Agricultor properly edited")
         return redirect(url_for('listaAgricultores'))
     else:
@@ -121,19 +108,19 @@ def editAgricultor(agricultor_id):
 #Delete an agricultor
 @application.route('/agricultores/<int:agricultor_id>/delete', methods = ['GET', 'POST'])
 def deleteAgricultor(agricultor_id):
-    selectedContacto = session.query(Contacto).filter_by(agricultor_id = agricultor_id).all()
-    selectedProducts = session.query(Producto).filter_by(agricultor_id = agricultor_id).all()
-    selectedItem = session.query(Agricultor).filter_by(id = agricultor_id).one()
+    selectedContacto = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).all()
+    selectedProducts = db.session.query(Producto).filter_by(agricultor_id = agricultor_id).all()
+    selectedItem = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
     if request.method == 'POST':
         for items in selectedProducts:
-            session.delete(items)
-            session.commit()
+            db.session.delete(items)
+            db.session.commit()
         for items in selectedContacto:
-            session.delete(items)
-            session.commit()
+            db.session.delete(items)
+            db.session.commit()
 
-        session.delete(selectedItem)
-        session.commit()
+        db.session.delete(selectedItem)
+        db.session.commit()
         flash("Item properly deleted")
         return redirect(url_for('listaAgricultores'))
 
@@ -147,8 +134,8 @@ def newProduct(agricultor_id):
     if request.method == 'POST':
         newItem = Producto(name = request.form['name'], description=request.form['description'],
                  price=request.form['price'], agricultor_id = agricultor_id)
-        session.add(newItem)
-        session.commit()
+        db.session.add(newItem)
+        db.session.commit()
         flash("New menu item created!")
         return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
     else:
@@ -158,7 +145,7 @@ def newProduct(agricultor_id):
 #Edit a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/edit', methods=['GET', 'POST'])
 def editMenuItem(agricultor_id, product_id):
-    editedItem = session.query(Producto).filter_by(id = product_id).one()
+    editedItem = db.session.query(Producto).filter_by(id = product_id).one()
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -166,8 +153,8 @@ def editMenuItem(agricultor_id, product_id):
             editedItem.description = request.form['description']
         if request.form['price']:
             editedItem.price = request.form['price']
-        session.add(editedItem)
-        session.commit()
+        db.session.add(editedItem)
+        db.session.commit()
         flash("Item properly edited")
         return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
     else:
@@ -177,10 +164,10 @@ def editMenuItem(agricultor_id, product_id):
 #Delete a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/delete', methods = ['GET', 'POST'])
 def deleteMenuItem(agricultor_id, product_id):
-    selectedItem = session.query(Producto).filter_by(id = product_id).one()
+    selectedItem = db.session.query(Producto).filter_by(id = product_id).one()
     if request.method == 'POST':
-        session.delete(selectedItem)
-        session.commit()
+        db.session.delete(selectedItem)
+        db.session.commit()
         flash("Item properly deleted")
         return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
 
@@ -190,12 +177,10 @@ def deleteMenuItem(agricultor_id, product_id):
 # # Making an API ENDPOINT (getting menus on JSON)
 # @application.route('/agricultores/<int:agricultor_id>/menu/JSON')
 # def restaurantMenuJSON(agricultor_id):
-#     restaurant = db.session.query(Restaurant).filter_by(id = agricultor_id).one()
-#     items = db.session.query(MenuItem).filter_by(agricultor_id = agricultor_id).all()
+#     restaurant = db.db.session.query(Restaurant).filter_by(id = agricultor_id).one()
+#     items = db.db.session.query(MenuItem).filter_by(agricultor_id = agricultor_id).all()
 #     return jsonify(MenuItems=[i.serialize for i in items])
 
 
 if __name__ == '__main__':
-	application.run(host='0.0.0.0', port=5000)
-	application.debug = True
-
+    application.run(host='0.0.0.0', port=5000)
