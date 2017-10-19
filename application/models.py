@@ -6,7 +6,10 @@ class Agricultor(db.Model):
 
 	name = db.Column(db.String(80), nullable = False)
 	id = db.Column(db.Integer, primary_key = True)
-	
+
+	def __init__(self, notes):
+		self.name = name
+
 	def __repr__(self):
 		return '<Agricultor %r>' % self.name
 
