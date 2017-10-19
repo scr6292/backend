@@ -9,14 +9,14 @@ application.debug=True
 application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
 
 #Show all agricultures
-@application.route('/')
+@application.route('/', methods=['GET'])
 def listaAgricultores():
     agriList = db.session.query(Agricultor).all()
     return render_template('agriList.html', agriList = agriList)
 
 
 #Show agricultor info
-@application.route('/agricultores/<int:agricultor_id>/info')
+@application.route('/agricultores/<int:agricultor_id>/info', methods=['GET'])
 def agricultorInfo(agricultor_id):
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     item = db.session.query(Contacto).filter_by(agricultor_id=agricultor.id).first()
@@ -72,7 +72,7 @@ def editInfo(agricultor_id):
 
 
 #Show agricultor products
-@application.route('/agricultores/<int:agricultor_id>/')
+@application.route('/agricultores/<int:agricultor_id>/', methods=['GET'])
 def agricultorMenu(agricultor_id):
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     items = db.session.query(Producto).filter_by(agricultor_id=agricultor.id)
