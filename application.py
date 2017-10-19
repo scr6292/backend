@@ -19,6 +19,7 @@ def listaAgricultores():
 #Show agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info', methods=['GET'])
 def agricultorInfo(agricultor_id):
+    db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     item = db.session.query(Contacto).filter_by(agricultor_id=agricultor.id).first()
     return render_template('agricultorinfo.html', agricultor=agricultor, item=item)
@@ -75,6 +76,7 @@ def editInfo(agricultor_id):
 #Show agricultor products
 @application.route('/agricultores/<int:agricultor_id>/', methods=['GET'])
 def agricultorMenu(agricultor_id):
+    db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     items = db.session.query(Producto).filter_by(agricultor_id=agricultor.id)
     return render_template('menu.html', agricultor=agricultor, items=items)
