@@ -181,7 +181,7 @@ def deleteMenuItem(agricultor_id, product_id):
 
 # Making an API ENDPOINT (getting agricultors on JSON)
 @application.route('/JSON')
-def agricultorProductosJSON():
+def agricultoresJSON():
     agricultors = db.session.query(Agricultor).all()
     return jsonify(Agricultores=[i.serialize for i in agricultors])
 
