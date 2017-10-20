@@ -136,7 +136,7 @@ def deleteAgricultor(agricultor_id):
 def newProduct(agricultor_id):
     if request.method == 'POST':
         newItem = Producto(name = request.form['name'], description=request.form['description'],
-                 price=request.form['price'], agricultor_id = agricultor_id)
+                 price=request.form['price'],preciounidad=request.form['preciounidad'], agricultor_id = agricultor_id)
         db.session.add(newItem)
         db.session.commit()
         flash("New menu item created!")
@@ -156,6 +156,8 @@ def editMenuItem(agricultor_id, product_id):
             editedItem.description = request.form['description']
         if request.form['price']:
             editedItem.price = request.form['price']
+        if request.form['preciounidad']:
+            editedItem.preciounidad = request.form['preciounidad']
         db.session.add(editedItem)
         db.session.commit()
         flash("Item properly edited")
