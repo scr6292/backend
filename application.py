@@ -201,21 +201,21 @@ def deleteMenuItem(agricultor_id, product_id):
 @application.route('/JSON')
 def agricultoresJSON():
     agricultors = db.session.query(Agricultor).all()
-    return jsonify(Agricultores=agricultors.serialize)
+    return jsonify(Agricultores=[i.serialize for i in agricultors])
 
-# # Making an API ENDPOINT (getting products for an agricultor on JSON)
-# @application.route('/agricultores/<int:agricultor_id>/JSON')
-# def agricultorProductosJSON(agricultor_id):
-#     agricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
-#     items = db.session.query(Producto).filter_by(agricultor_id = agricultor_id).all()
-#     return jsonify(Products=[i.serialize for i in items])
+# Making an API ENDPOINT (getting products for an agricultor on JSON)
+@application.route('/agricultores/<int:agricultor_id>/JSON')
+def agricultorProductosJSON(agricultor_id):
+    agricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
+    items = db.session.query(Producto).filter_by(agricultor_id = agricultor_id).all()
+    return jsonify(Products=[i.serialize for i in items])
 
-# # Making an API ENDPOINT (getting info for an agricultor on JSON)
-# @application.route('/agricultores/<int:agricultor_id>/info/JSON')
-# def agricultorInfoJSON(agricultor_id):
-#     agricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
-#     info = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).one()
-#     return jsonify(Info=info)
+# Making an API ENDPOINT (getting info for an agricultor on JSON)
+@application.route('/agricultores/<int:agricultor_id>/info/JSON')
+def agricultorInfoJSON(agricultor_id):
+    agricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
+    info = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).one()
+    return jsonify(Info=info.serialize)
 
 
 if __name__ == '__main__':
