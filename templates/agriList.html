@@ -13,13 +13,13 @@
 
 {% for i in agriList %}
 
-<a href = "{{url_for('agricultorInfo', agricultor_id = i.id)}}"> <p>{{i.name}}</p></a>
+<a href = "{{url_for('agricultorInfo', agricultor_id = i.id)}}"><h1>{{i.name}}</h1></a>
 <a href = "{{url_for('editAgricultor',agricultor_id=i.id)}}">Edit</a>
 <a href = "{{url_for('deleteAgricultor',agricultor_id=i.id)}}">Delete</a>
+<br>
+<br>
 
-<!-- <p><a href = "#">Edit </a></p>
 
-<p> <a href = "#">Delete </a> </p> -->
 
 {% endfor %}
 
