@@ -21,6 +21,7 @@ class Producto(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	description = db.Column(db.String(250))
 	price = db.Column(db.String(8))
+	preciounidad = db.Column(db.String(8))
 	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
 	agricultor = db.relationship(Agricultor)
 
