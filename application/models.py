@@ -7,11 +7,21 @@ class Agricultor(db.Model):
 	name = db.Column(db.String(80), nullable = False)
 	id = db.Column(db.Integer, primary_key = True)
 
+	@property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
+
 	def __init__(self, name):
 		self.name = name
 
 	def __repr__(self):
 		return '<Agricultor %r>' % self.name
+
+	
 
 
 class Producto(db.Model):
@@ -25,8 +35,25 @@ class Producto(db.Model):
 	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
 	agricultor = db.relationship(Agricultor)
 
+	@property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'price': self.price,
+            'preciounidad': self.preciounidad,
+            'agricultor_id': self.agricultor_id,
+            'agricultor': self.agricultor,
+        }
+	
 	def __repr__(self):
 		return '<Producto %r>' % self.name
+
+	
+
+
 
 class Contacto(db.Model):
 	__tablename__= 'contacto'
