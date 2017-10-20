@@ -194,7 +194,7 @@ def agricultorProductosJSON(agricultor_id):
 
 # Making an API ENDPOINT (getting info for an agricultor on JSON)
 @application.route('/agricultores/<int:agricultor_id>/info/JSON')
-def agricultorProductosJSON(agricultor_id):
+def agricultorInfoJSON(agricultor_id):
     agricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
     info = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).one()
     return jsonify(Info=info)
