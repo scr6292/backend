@@ -1,4 +1,3 @@
-
 <html>
 <head>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
@@ -17,6 +16,27 @@
 
 	<p>Price:</p>
 		<input type ='text' size='30' name='price' placeholder = '{{item.price}}'>
+
+	<select name="preciounidad"> 
+	{% if item.preciounidad == '€/kg' %}
+		 <option value="€/kg" selected="selected">€/kg</option>
+	{%else%}
+		<option value="€/kg">€/kg</option>
+    {% endif %}
+
+    {% if item.preciounidad == '€/unidad' %}
+		 <option value="€/unidad" selected="selected">€/unidad</option>
+	{%else%}
+		<option value="€/unidad">€/unidad</option>
+    {% endif %}
+
+    {% if item.preciounidad == '€/L' %}
+		 <option value="€/L" selected="selected">€/L</option>
+	{%else%}
+		<option value="€/L">€/L</option>
+    {% endif %}
+	</select>
+
 
 <input type = 'submit' value = 'Edit'>
 </form>

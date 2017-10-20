@@ -1,4 +1,4 @@
-<html>
+<<html>
 <head>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -29,7 +29,7 @@
     <div class = 'nameAndPrice'>
 		<span class = 'name'><p>{{i.name}}</p></span>
 
-		<span class = 'price'><p>{{i.price}} </p></span>
+		<span class = 'price'><p>{{i.price}}{{i.preciounidad}}</p> </span>
 	</div>
 
 	
@@ -37,7 +37,6 @@
 	<div class = 'description'>
 		<p>{{i.description}}</p>
 	</div>
-
 	
 	
 	<div class = "editdeletepane">
