@@ -10,8 +10,8 @@ flask-aws/*
 
 # Alembic
 #
-alembic.ini
-alembic/*
+#alembic.ini
+#alembic/*
 
 #*pyc
 /*.pyc
