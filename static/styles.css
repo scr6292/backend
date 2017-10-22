@@ -1,72 +1,25 @@
-body {
-    font-family: times;
-    background-color: #424242
+
+
+.filterable {
+    margin-top: 15px;
 }
-
-h1,
-h2,
-h3,
-h4 {
-    color: #ffffff;
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
 }
-
-h1,
-h2 {
-    font-family: 'times', serif;
-    margin: 0;
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
 }
-
-h1 {
-    border-bottom: 1px solid #eee;
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: #333;
 }
-
-h2 {
-    font-size: 1.2em;
+.filterable .filters input[disabled]::-moz-placeholder {
+    color: #333;
 }
-
-p,
-dd,
-dt {
-    color: #cccccc;
-}
-
-a {
-    text-decoration: none;
-    color: #ffffcc;
-    font-size: .75em;
-}
-
-.pane {
-    position: absolute;
-    left: 25%;
-    border: 2px solid;
-    border-radius: 25px;
-    padding: 5px;
-    margin: 5px;
-    border-color: #999999;
-    background-color: #333333
-}
-
-.header {
-    left: 50%;
-    text-align: center;
-}
-
-.name {
-    width: 50%;
-
-}
-
-.description {}
-
-.price {
-    text-align: left;
-    width: 50%;
-
-}
-
-.editdeletepane {}
-
-.flash {
-    background: #cee5f5;
+.filterable .filters input[disabled]:-ms-input-placeholder {
+    color: #333;
 }
