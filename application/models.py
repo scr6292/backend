@@ -21,7 +21,24 @@ class Agricultor(db.Model):
 	def __repr__(self):
 		return '<Agricultor %r>' % self.name
 
-	
+
+class Productos(db.Model):
+    #Tell SQLAlchemy what the table name is and if there's any table-specific arguments it should know about
+    __tablename__ = 'Productos'
+
+    #tell SQLAlchemy the name of column and its attributes:
+    product_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False) 
+    units = db.Column(db.String(80))
+    product_title = db.Column(db.String(80))
+    location_origin = db.Column(db.String(80))
+    unit_price = db.Column(db.Float(8))
+    amount = db.Column(db.Float(8))
+    current_price = db.Column(db.Float(8))
+    agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
+    agricultor = db.relationship(Agricultor)
+
+	# def __repr__(self):
+	# 	return '<Productos %r>' % self.name
 
 
 class Producto(db.Model):

@@ -6,36 +6,34 @@
 
 <h1>Edit menu item</h1>
 
-<form action = "{{url_for('editMenuItem',agricultor_id=agricultor_id, product_id=item.id)}}" method = 'POST'>
+<form action = "{{url_for('editMenuItem',agricultor_id=agricultor_id, product_id=item.product_id)}}" method = 'POST'>
 
 	<p>New name:</p>
-		<input type = 'text' size = '30' name = 'name' placeholder = '{{item.name}}'>
-
-	<p>Description:</p>
-		<input type ='text' size='30' name='description' placeholder = '{{item.description}}'>
+		<input type = 'text' size = '30' name = 'name' placeholder = '{{item.product_title}}'>
 
 	<p>Price:</p>
-		<input type ='text' size='30' name='price' placeholder = '{{item.price}}'>
+		<input type ='text' size='30' name='price' placeholder = '{{item.unit_price}}'>
 
-	<select name="preciounidad"> 
-	{% if item.preciounidad == '€/kg' %}
-		 <option value="€/kg" selected="selected">€/kg</option>
-	{%else%}
-		<option value="€/kg">€/kg</option>
-    {% endif %}
+	<p>Units:</p>
+		<select name="units"> 
+		{% if item.preciounidad == '€/kg' %}
+			 <option value="KG" selected="selected">KG</option>
+		{%else%}
+			<option value="KG">KG</option>
+	    {% endif %}
 
-    {% if item.preciounidad == '€/unidad' %}
-		 <option value="€/unidad" selected="selected">€/unidad</option>
-	{%else%}
-		<option value="€/unidad">€/unidad</option>
-    {% endif %}
+	    {% if item.preciounidad == '€/unidad' %}
+			 <option value="U" selected="selected">U</option>
+		{%else%}
+			<option value="U">U</option>
+	    {% endif %}
 
-    {% if item.preciounidad == '€/L' %}
-		 <option value="€/L" selected="selected">€/L</option>
-	{%else%}
-		<option value="€/L">€/L</option>
-    {% endif %}
-	</select>
+	    {% if item.preciounidad == '€/L' %}
+			 <option value="L" selected="selected">€/L</option>
+		{%else%}
+			<option value="L">L</option>
+	    {% endif %}
+		</select>
 
 
 <input type = 'submit' value = 'Edit'>

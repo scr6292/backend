@@ -1,12 +1,51 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from application import db
-from application.models import Agricultor, Producto, Contacto
+from application.models import Agricultor, Producto, Contacto, Productos
+from werkzeug.utils import secure_filename
+import parseCSV
+
+#Being able to store files
+UPLOAD_FOLDER = '/Users/SRoca/PLANTONDEMAND/November/backend/Documents/csvFiles'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'])
 
 # Elastic Beanstalk initalization
 application = Flask(__name__)
 application.debug=True
+
 # change this to your own value
 application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
+
+#Set Upload folder
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#alloed files
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+#Upload csv file
+@application.route("/csv/<int:agricultor_id>", methods=['GET', 'POST'])
+def csvFiles(agricultor_id):
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
+            parseCSV.parsecsv(filename, agricultor_id)
+            return redirect(url_for('csvFiles', agricultor_id = agricultor_id))
+    return """
+        <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    <p>%s</p>
+    """ % "<br>".join(os.listdir(application.config['UPLOAD_FOLDER'],))
+    
 
 #Show all agricultures
 @application.route('/', methods=['GET'])
@@ -55,7 +94,11 @@ def editInfo(agricultor_id):
                 editedInfo.links = request.form['links']
 
             db.session.add(editedInfo)
-            db.session.commit()
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback() #Rollback the changes on error
+
             flash("Infor properly edited")
             return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id))
         else:    
@@ -65,7 +108,10 @@ def editInfo(agricultor_id):
                  diasreparto = request.form['diasreparto'],logistica = request.form['logistica'],
                  encargado = request.form['encargado'],links = request.form['links'],  agricultor_id = agricultor_id)
             db.session.add(editedInfo)
-            db.session.commit()
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback() #Rollback the changes on error
             return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id)) 
     else:
         return render_template('editinfo.html', agricultor_id = agricultor_id, item = editedInfo)
@@ -78,7 +124,7 @@ def editInfo(agricultor_id):
 def agricultorMenu(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    items = db.session.query(Producto).filter_by(agricultor_id=agricultor.id)
+    items = db.session.query(Productos)
     return render_template('menu.html', agricultor=agricultor, items=items)
 
 
@@ -88,7 +134,10 @@ def newAgricultor():
     if request.method == 'POST':
         newAgri = Agricultor(name = request.form['name'])
         db.session.add(newAgri)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback() #Rollback the changes on error
         flash("New agricultor created!")
         return redirect(url_for('listaAgricultores'))
     else:
@@ -102,7 +151,10 @@ def editAgricultor(agricultor_id):
         if request.form['new name']:
             editedAgricultor.name = request.form['new name']
         db.session.add(editedAgricultor)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback() #Rollback the changes on error
         flash("Agricultor properly edited")
         return redirect(url_for('listaAgricultores'))
     else:
@@ -123,7 +175,10 @@ def deleteAgricultor(agricultor_id):
             db.session.commit()
 
         db.session.delete(selectedItem)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback() #Rollback the changes on error
         flash("Item properly deleted")
         return redirect(url_for('listaAgricultores'))
 
@@ -138,7 +193,10 @@ def newProduct(agricultor_id):
         newItem = Producto(name = request.form['name'], description=request.form['description'],
                  price=request.form['price'],preciounidad=request.form['preciounidad'], agricultor_id = agricultor_id)
         db.session.add(newItem)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback() #Rollback the changes on error
         flash("New menu item created!")
         return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
     else:
@@ -148,18 +206,19 @@ def newProduct(agricultor_id):
 #Edit a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/edit', methods=['GET', 'POST'])
 def editMenuItem(agricultor_id, product_id):
-    editedItem = db.session.query(Producto).filter_by(id = product_id).one()
+    editedItem = db.session.query(Productos).filter_by(product_id = product_id).one()
     if request.method == 'POST':
         if request.form['name']:
-            editedItem.name = request.form['name']
-        if request.form['description']:
-            editedItem.description = request.form['description']
+            editedItem.product_title = request.form['name']
         if request.form['price']:
-            editedItem.price = request.form['price']
-        if request.form['preciounidad']:
-            editedItem.preciounidad = request.form['preciounidad']
+            editedItem.unit_price = request.form['price']
+        if request.form['units']:
+            editedItem.units = request.form['units']
         db.session.add(editedItem)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback() #Rollback the changes on error
         flash("Item properly edited")
         return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
     else:
@@ -172,7 +231,10 @@ def deleteMenuItem(agricultor_id, product_id):
     selectedItem = db.session.query(Producto).filter_by(id = product_id).one()
     if request.method == 'POST':
         db.session.delete(selectedItem)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback() #Rollback the changes on error
         flash("Item properly deleted")
         return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
 

@@ -25,23 +25,28 @@
 	                    <tr class="filters">
 	                        <th><input type="text" class="form-control" placeholder="Id" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Precio/unidad" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Descripción" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Precio" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Unidades" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Procedencia" disabled></th>
 	                    </tr>
 	                </thead>
 	                <tbody>
 	                    {% for i in items %}
 	                    <tr>
-	                        <td>{{i.id}}</td>
-	                        <td>{{i.name}}</td>
-	                        <td>{{i.price}}{{i.preciounidad}}</td>
-	                        <td>{{i.description}}</td>
-	                        <td><a href="{{url_for('editMenuItem',agricultor_id = agricultor.id, product_id=i.id)}}">Edit</a></td>
-	                        <td><a href="{{url_for('deleteMenuItem', agricultor_id = agricultor.id, product_id=i.id)}}">Delete</a></td>
+	                        <td>{{i.product_id}}</td>
+	                        <td>{{i.product_title}}</td>
+	                        <td>{{i.unit_price}}</td>
+	                        <td>{{i.units}}</td>
+	                        <td>{{i.location_origin}}</td>
+	                        <td><a href="{{url_for('editMenuItem',agricultor_id = agricultor.id, product_id=i.product_id)}}">Edit</a></td>
+	                        <td><a href="{{url_for('deleteMenuItem', agricultor_id = agricultor.id, product_id=i.product_id)}}">Delete</a></td>
 	                    </tr>
 	                    {% endfor %}
 	                    <tr>
-	                        <td><a href = '{{url_for('newProduct', agricultor_id = agricultor.id) }}'>Add new product</a></td>
+	                        <td><a href = "{{url_for('newProduct', agricultor_id = agricultor.id) }}">Add new product</a></td>
+	                    </tr>
+	                    <tr>
+	                        <td><a href = "{{url_for('csvFiles', agricultor_id = agricultor.id)}}">Upload a csv file</a></td>
 	                    </tr>
 	                </tbody>
 	            </table>
