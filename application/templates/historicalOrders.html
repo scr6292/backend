@@ -1,0 +1,65 @@
+html>
+
+<head> 
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	<link rel=stylesheet type=text/css href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="{{ url_for('static', filename='filter_products.js') }}"></script>
+</head>
+<body>
+	<div class="container">
+	    <h3>{{agricultor.name}}</h3>
+	    <h4>Hola {{current_user.username}}, Tu pedido para la semana {{week}} fue:</h4>
+	    <hr>
+	    <div class="row">
+	        <div class="panel panel-primary filterable">
+	            <div class="panel-heading">
+	                <h3 class="panel-title">Products</h3>
+	                <div class="pull-right">
+	                    <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filter</button>
+	                </div>
+	            </div>
+	            <table class="table">
+	                <thead>
+	                    <tr class="filters">
+	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
+
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                		<tr>
+		                		{% for i in order %}
+								<td>{{i.product_name}}</td>
+	                        	<td>{{i.quantity}}</td>
+	                    		
+	                    	</tr>
+	                    		{% endfor %}
+
+	                </tbody>
+	            </table>
+	            <table class="table">
+	                <thead>
+	                    <tr class="filters">
+	                        <th><input type="text" class="form-control" placeholder="Ver otros pedidos" disabled></th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                		<tr>
+		                		{% for i in weeks %}
+								<td><a href = "{{url_for('historicalOrders', agricultor_id = agricultor.id, week = i.week)}}">Semana {{i.week}}</a></td>
+	                    	</tr>
+	                    		{% endfor %}
+
+	                </tbody>
+	            </table>
+	            <div>
+	                <a href= "{{url_for('onepage')}}">Volver a la homepage</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</body>
+</html>

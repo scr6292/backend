@@ -1,16 +1,54 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from application import db
-from application.models import Agricultor, Producto, Contacto, Productos
+from application import db, application
+from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, Pedido
 from werkzeug.utils import secure_filename
 import parseCSV
+
+# DATES
+import datetime
+from datetime import date
+
+# LOGIN IMPORT
+
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm 
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+from flask_sqlalchemy  import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+
+# Admin
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+admin = Admin(application)
+# app = Flask(__name__)
+# app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////mnt/c/Users/antho/Documents/login-example/database.db'
+Bootstrap(application)
+# db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(application)
+login_manager.login_view = 'login'
+
+# END LOGIN IMPORT
+
+
+
+# test
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+
+
 
 #Being able to store files
 UPLOAD_FOLDER = '/Users/SRoca/PLANTONDEMAND/November/backend/Documents/csvFiles'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'])
 
 # Elastic Beanstalk initalization
-application = Flask(__name__)
+#application = Flask(__name__)
 application.debug=True
 
 # change this to your own value
@@ -46,9 +84,15 @@ def csvFiles(agricultor_id):
     <p>%s</p>
     """ % "<br>".join(os.listdir(application.config['UPLOAD_FOLDER'],))
     
+#OnePage
+@application.route('/', methods=['GET'])
+def onepage():
+    return render_template('testSERGI.html')
+
 
 #Show all agricultures
-@application.route('/', methods=['GET'])
+@application.route('/agricultores', methods=['GET'])
+@login_required
 def listaAgricultores():
     db.session.commit()
     agriList = db.session.query(Agricultor).all()
@@ -57,14 +101,16 @@ def listaAgricultores():
 
 #Show agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info', methods=['GET'])
+@login_required
 def agricultorInfo(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    item = db.session.query(Contacto).filter_by(agricultor_id=agricultor.id).first()
+    item = db.session.query(Contact).filter_by(agricultor_id=agricultor.id).first()
     return render_template('agricultorinfo.html', agricultor=agricultor, item=item)
 
 #Edit agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info/edit', methods=['GET', 'POST'])
+@login_required
 def editInfo(agricultor_id):
     # agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     editedInfo = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).first()
@@ -119,17 +165,61 @@ def editInfo(agricultor_id):
         
 
 
-#Show agricultor products
+#Edit agricultor products
 @application.route('/agricultores/<int:agricultor_id>/', methods=['GET'])
+@login_required
 def agricultorMenu(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     items = db.session.query(Productos)
     return render_template('menu.html', agricultor=agricultor, items=items)
 
+#Order agriculture products
+@application.route('/agricultores/<int:agricultor_id>/order', methods=['GET', 'POST'])
+@login_required
+def agricultorMenuOrder(agricultor_id):
+    db.session.commit()
+    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    items = db.session.query(Productos)
+    if request.method == 'POST':
+        for item in items:
+            if request.form[item.product_title]:
+                order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email)
+                db.session.add(order)
+                try:
+                    db.session.commit()
+                except:
+                    db.session.rollback()
+
+        flash("Tu pedido ha sido procesado!")
+        return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+
+    else:
+        return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username)
+#Post Order page
+@application.route('/agricultores/<int:agricultor_id>/postorder', methods=['GET', 'POST'])
+@login_required
+def postOrder(agricultor_id):
+    db.session.commit()
+    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
+    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
+    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username)
+
+# Historical Orders
+@application.route('/agricultores/<int:agricultor_id>/historicalorder/<int:week>', methods=['GET', 'POST'])
+@login_required
+def historicalOrders(agricultor_id, week):
+    db.session.commit()
+    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
+    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = week)
+    return render_template('historicalOrders.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, week = week)
+
 
 #Add a new agriculture
 @application.route('/agricultores/new', methods=['GET','POST'])
+@login_required
 def newAgricultor():
     if request.method == 'POST':
         newAgri = Agricultor(name = request.form['name'])
@@ -145,6 +235,7 @@ def newAgricultor():
 
 #Edit an agriculture
 @application.route('/agricultores/<int:agricultor_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editAgricultor(agricultor_id):
     editedAgricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
     if request.method == 'POST':
@@ -162,9 +253,10 @@ def editAgricultor(agricultor_id):
 
 #Delete an agricultor
 @application.route('/agricultores/<int:agricultor_id>/delete', methods = ['GET', 'POST'])
+@login_required
 def deleteAgricultor(agricultor_id):
     selectedContacto = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).all()
-    selectedProducts = db.session.query(Producto).filter_by(agricultor_id = agricultor_id).all()
+    selectedProducts = db.session.query(Productos).filter_by(agricultor_id = agricultor_id).all()
     selectedItem = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
     if request.method == 'POST':
         for items in selectedProducts:
@@ -188,9 +280,10 @@ def deleteAgricultor(agricultor_id):
 
 #Add a product
 @application.route('/agricultores/<int:agricultor_id>/new', methods=['GET','POST'])
+@login_required
 def newProduct(agricultor_id):
     if request.method == 'POST':
-        newItem = Producto(name = request.form['name'], description=request.form['description'],
+        newItem = Productos(name = request.form['name'], description=request.form['description'],
                  price=request.form['price'],preciounidad=request.form['preciounidad'], agricultor_id = agricultor_id)
         db.session.add(newItem)
         try:
@@ -205,6 +298,7 @@ def newProduct(agricultor_id):
 
 #Edit a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editMenuItem(agricultor_id, product_id):
     editedItem = db.session.query(Productos).filter_by(product_id = product_id).one()
     if request.method == 'POST':
@@ -227,8 +321,9 @@ def editMenuItem(agricultor_id, product_id):
 
 #Delete a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/delete', methods = ['GET', 'POST'])
+@login_required
 def deleteMenuItem(agricultor_id, product_id):
-    selectedItem = db.session.query(Producto).filter_by(id = product_id).one()
+    selectedItem = db.session.query(Productos).filter_by(id = product_id).one()
     if request.method == 'POST':
         db.session.delete(selectedItem)
         try:
@@ -254,7 +349,7 @@ def agricultoresJSON():
 @application.route('/agricultores/<int:agricultor_id>/JSON')
 def agricultorProductosJSON(agricultor_id):
     agricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
-    items = db.session.query(Producto).filter_by(agricultor_id = agricultor_id).all()
+    items = db.session.query(Productos).filter_by(agricultor_id = agricultor_id).all()
     return jsonify(Products=[i.serialize for i in items])
 
 # Making an API ENDPOINT (getting info for an agricultor on JSON)
@@ -264,6 +359,70 @@ def agricultorInfoJSON(agricultor_id):
     info = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).one()
     return jsonify(Info=info.serialize)
 
+# LOGIN
+
+# class User(UserMixin, db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String(15), unique=True)
+#     email = db.Column(db.String(50), unique=True)
+#     password = db.Column(db.String(80))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# class LoginForm(FlaskForm):
+#     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+#     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+#     remember = BooleanField('remember me')
+
+# class RegisterForm(FlaskForm):
+#     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+#     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+#     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+
+
+@application.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
+
+        return '<h1>Invalid username or password</h1>'
+        #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+
+    return render_template('login.html', form=form)
+
+@application.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return '<h1>New user has been created!</h1>'
+        #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
+
+    return render_template('signup.html', form=form)
+
+
+@application.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+# END LOGIN
+# ADMIN
+admin.add_view(ModelView(User ,db.session))
+admin.add_view(ModelView(Productos ,db.session))
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=5000)
