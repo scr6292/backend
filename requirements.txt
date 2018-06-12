@@ -17,4 +17,10 @@ flask_wtf
 flask_login
 pandas
 numpy
+<<<<<<< HEAD
 flask-admin
+||||||| merged common ancestors
+flask-admin-1.5.1
+=======
+flask-admin
+>>>>>>> 7f02502b178198cc0bcabd70c4e13d849f29da51
