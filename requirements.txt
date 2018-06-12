@@ -17,4 +17,4 @@ flask_wtf
 flask_login
 pandas
 numpy
-flask-admin-1.5.1
+flask-admin
