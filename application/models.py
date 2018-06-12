@@ -103,17 +103,6 @@ class Productos(db.Model):
 	# 	return '<Producto %r>' % self.name
 
 
-# class Order(db.Model):
-# 	__tablename__= 'order'
-	   
-# 	id = db.Column(db.Integer, primary_key = True)
-# 	# user_name = db.Column(db.String(30), db.ForeignKey('user.name'))
-# 	# user = db.relationship(User)
-# 	# quantity = db.Column(db.String(30))
-# 	# week = db.Column(db.Integer)
-# 	# product_name = db.Column(db.String(80), db.ForeignKey('productos.product_title'))
-# 	# product = db.relationship(Productos)
-
 class Pedido(db.Model):
 	__tablename__= 'pedido'
 	   
@@ -121,11 +110,15 @@ class Pedido(db.Model):
 	quantity = db.Column(db.String(30))
 	week = db.Column(db.Integer)
 	product_name = db.Column(db.String(80), db.ForeignKey('productos.product_title'))
+	product_price = db.Column(db.Float(8), db.ForeignKey('productos.unit_price'))
+	product_units = db.Column(db.String(80), db.ForeignKey('productos.units'))
 	user_name = db.Column(db.String(30), db.ForeignKey('user.username'))
 	email = db.Column(db.String(50), db.ForeignKey('user.email'))
 	user_email = db.relationship(User, foreign_keys=[email])
 	user = db.relationship(User, foreign_keys=[user_name])
-	product = db.relationship(Productos)
+	product_price_join = db.relationship(Productos, foreign_keys=[product_price])
+	product_unit_join = db.relationship(Productos, foreign_keys=[product_units])
+	product = db.relationship(Productos, foreign_keys=[product_name])
 	year = db.Column(db.Integer, default=date.today().year)
 	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
 
