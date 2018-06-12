@@ -184,7 +184,7 @@ def agricultorMenuOrder(agricultor_id):
     if request.method == 'POST':
         for item in items:
             if request.form[item.product_title]:
-                order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email)
+                order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price)
                 db.session.add(order)
                 try:
                     db.session.commit()
@@ -407,8 +407,10 @@ def signup():
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+        
+        flash("Te has registrado con exito")
+        return redirect(url_for('login'))
 
-        return '<h1>New user has been created!</h1>'
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
     return render_template('signup.html', form=form)
