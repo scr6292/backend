@@ -11,7 +11,7 @@ from wtforms.validators import InputRequired, Email, Length
 
 
 
-# LOGIN
+# LOGINS
 class User(UserMixin, db.Model):
 	__tablename__ = "user"
 
