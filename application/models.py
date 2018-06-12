@@ -9,9 +9,9 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 
-# Just to try git.....
 
-# login
+
+# LOGIN
 class User(UserMixin, db.Model):
 	__tablename__ = "user"
 
