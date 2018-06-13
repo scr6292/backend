@@ -9,7 +9,7 @@ import parseCSV
 import datetime
 from datetime import date
 
-# LOGIN IMPORT
+# LOGIN IMPORT AND SET UP
 
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm 
@@ -19,19 +19,41 @@ from flask_sqlalchemy  import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
+from functools import wraps
 # Admin
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 admin = Admin(application)
-# app = Flask(__name__)
-# app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////mnt/c/Users/antho/Documents/login-example/database.db'
+
 Bootstrap(application)
-# db = SQLAlchemy(app)
+
 login_manager = LoginManager()
 login_manager.init_app(application)
 login_manager.login_view = 'login'
+
+# Create customized model view class
+
+def login_required(role="ANY"):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+            if not current_user.is_authenticated:
+              return login_manager.unauthorized()
+            elif (current_user.user_role == "ADMIN"):
+                return fn(*args, **kwargs)
+            elif ((current_user.user_role != role) and (role != "ANY")):
+                return login_manager.unauthorized()
+            else: 
+                return fn(*args, **kwargs)
+        return decorated_view
+    return wrapper
+
+class MyModelView(ModelView):
+    def is_accessible(self):
+        if current_user.user_role == "ADMIN" :
+            return True
+        else: return False
 
 # END LOGIN IMPORT
 
@@ -92,7 +114,7 @@ def onepage():
 
 #Show all agricultures
 @application.route('/agricultores', methods=['GET'])
-@login_required
+@login_required(role="CUSTOMER")
 def listaAgricultores():
     db.session.commit()
     agriList = db.session.query(Agricultor).all()
@@ -101,7 +123,7 @@ def listaAgricultores():
 
 #Show agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info', methods=['GET'])
-@login_required
+@login_required(role="CUSTOMER")
 def agricultorInfo(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
@@ -110,7 +132,7 @@ def agricultorInfo(agricultor_id):
 
 #Edit agricultor info
 @application.route('/agricultores/<int:agricultor_id>/info/edit', methods=['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def editInfo(agricultor_id):
     # agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     editedInfo = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).first()
@@ -167,7 +189,7 @@ def editInfo(agricultor_id):
 
 #Edit agricultor products
 @application.route('/agricultores/<int:agricultor_id>/', methods=['GET'])
-@login_required
+@login_required(role="CUSTOMER")
 def agricultorMenu(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
@@ -176,7 +198,7 @@ def agricultorMenu(agricultor_id):
 
 #Order agriculture products
 @application.route('/agricultores/<int:agricultor_id>/order', methods=['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def agricultorMenuOrder(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
@@ -198,17 +220,21 @@ def agricultorMenuOrder(agricultor_id):
         return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username)
 #Post Order page
 @application.route('/agricultores/<int:agricultor_id>/postorder', methods=['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def postOrder(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
-    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username)
+    total = 0
+    for item in order:
+        tot = float(item.product_price)*float(item.quantity)
+        total = total + tot
+    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total)
 
 # Historical Orders
 @application.route('/agricultores/<int:agricultor_id>/historicalorder/<int:week>', methods=['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def historicalOrders(agricultor_id, week):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
@@ -219,7 +245,7 @@ def historicalOrders(agricultor_id, week):
 
 #Add a new agriculture
 @application.route('/agricultores/new', methods=['GET','POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def newAgricultor():
     if request.method == 'POST':
         newAgri = Agricultor(name = request.form['name'])
@@ -235,7 +261,7 @@ def newAgricultor():
 
 #Edit an agriculture
 @application.route('/agricultores/<int:agricultor_id>/edit', methods=['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def editAgricultor(agricultor_id):
     editedAgricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
     if request.method == 'POST':
@@ -253,7 +279,7 @@ def editAgricultor(agricultor_id):
 
 #Delete an agricultor
 @application.route('/agricultores/<int:agricultor_id>/delete', methods = ['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def deleteAgricultor(agricultor_id):
     selectedContacto = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).all()
     selectedProducts = db.session.query(Productos).filter_by(agricultor_id = agricultor_id).all()
@@ -280,7 +306,7 @@ def deleteAgricultor(agricultor_id):
 
 #Add a product
 @application.route('/agricultores/<int:agricultor_id>/new', methods=['GET','POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def newProduct(agricultor_id):
     if request.method == 'POST':
         newItem = Productos(name = request.form['name'], description=request.form['description'],
@@ -298,7 +324,7 @@ def newProduct(agricultor_id):
 
 #Edit a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/edit', methods=['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def editMenuItem(agricultor_id, product_id):
     editedItem = db.session.query(Productos).filter_by(product_id = product_id).one()
     if request.method == 'POST':
@@ -321,7 +347,7 @@ def editMenuItem(agricultor_id, product_id):
 
 #Delete a product
 @application.route('/agricultores/<int:agricultor_id>/<int:product_id>/delete', methods = ['GET', 'POST'])
-@login_required
+@login_required(role="CUSTOMER")
 def deleteMenuItem(agricultor_id, product_id):
     selectedItem = db.session.query(Productos).filter_by(id = product_id).one()
     if request.method == 'POST':
@@ -359,27 +385,11 @@ def agricultorInfoJSON(agricultor_id):
     info = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).one()
     return jsonify(Info=info.serialize)
 
+
 # LOGIN
-
-# class User(UserMixin, db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(15), unique=True)
-#     email = db.Column(db.String(50), unique=True)
-#     password = db.Column(db.String(80))
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-# class LoginForm(FlaskForm):
-#     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-#     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
-#     remember = BooleanField('remember me')
-
-# class RegisterForm(FlaskForm):
-#     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-#     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-#     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
 
 @application.route('/login', methods=['GET', 'POST'])
@@ -394,7 +404,6 @@ def login():
                 return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
 
         return '<h1>Invalid username or password</h1>'
-        #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 
     return render_template('login.html', form=form)
 
@@ -404,7 +413,7 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="CUSTOMER", is_admin=False)
         db.session.add(new_user)
         db.session.commit()
         
@@ -417,14 +426,15 @@ def signup():
 
 
 @application.route('/logout')
-@login_required
+@login_required(role="CUSTOMER")
 def logout():
     logout_user()
     return redirect(url_for('login'))
 # END LOGIN
+
 # ADMIN
-admin.add_view(ModelView(User ,db.session))
-admin.add_view(ModelView(Productos ,db.session))
+admin.add_view(MyModelView(User ,db.session))
+admin.add_view(MyModelView(Productos ,db.session))
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=5000)
