@@ -34,7 +34,7 @@ html>
 		                		{% for i in order %}
 								<td>{{i.product_name}}</td>
 	                        	<td>{{i.quantity}}{{i.product_units}}</td>
-	                        	<td>{{i.product_price}} y tienes {{i.quantity}} {{i.product_units}}</td>
+	                        	<td>{{i.product_price}}EUR/{{i.product_units}} y en total {{(i.quantity|float)*(i.product_price|float)}}EUR</td>
 	                    		
 	                    	</tr>
 	                    		{% endfor %}
@@ -58,6 +58,9 @@ html>
 	            </table>
 	            <div>
 	                <a href= "{{url_for('onepage')}}">Volver a la homepage</a>
+	            </div>
+	           	<div>
+	                {{ total }}EUR
 	            </div>
 	        </div>
 	    </div>

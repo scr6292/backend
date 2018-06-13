@@ -19,6 +19,30 @@ class User(UserMixin, db.Model):
 	username = db.Column(db.String(15), unique=True)
 	email = db.Column(db.String(50), unique=True)
 	password = db.Column(db.String(80))
+	user_role = db.Column(db.String(80))
+	is_active = db.Column(db.Boolean,default=False)
+	is_admin = db.Column(db.Boolean,default=False)
+
+	def __init__(self,username,password,email,is_active,user_role,is_admin):
+		self.username = username
+		self.password = password
+		self.email = email
+		self.user_role = user_role
+		self.is_active = is_active
+		self.is_admin = is_admin
+
+	def get_id(self):
+		return self.id
+	def is_active(self):
+		return self.is_active
+	def activate_user(self):
+		self.is_active = True         
+	def get_username(self):
+		return self.username
+	def get_user_role(self):
+		return self.user_role
+	def get_is_admin(self):
+		return self.is_admin
 
 class LoginForm(FlaskForm):
     username = StringField('Nombre de usuario', validators=[InputRequired(), Length(min=4, max=15)])
