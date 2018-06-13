@@ -15,6 +15,7 @@ flask-aws/*
 
 #*pyc
 /*.pyc
+application/*.pyc
 
 # DS_Store
 .DS_Store
