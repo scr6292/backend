@@ -36,7 +36,7 @@ class User(UserMixin, db.Model):
 	def is_active(self):
 		return self.is_active
 	def activate_user(self):
-		self.is_active = True         
+		self.is_active = True
 	def get_username(self):
 		return self.username
 	def get_user_role(self):
@@ -45,7 +45,7 @@ class User(UserMixin, db.Model):
 		return self.is_admin
 
 class LoginForm(FlaskForm):
-    username = StringField('Nombre de usuario', validators=[InputRequired(), Length(min=4, max=15)])
+    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
     remember = BooleanField('Recuerdame')
 
@@ -83,7 +83,7 @@ class Productos(db.Model):
 	__tablename__ = 'productos'
 
 	#tell SQLAlchemy the name of column and its attributes:
-	product_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False) 
+	product_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
 	units = db.Column(db.String(80))
 	product_title = db.Column(db.String(80))
 	location_origin = db.Column(db.String(80))
@@ -110,7 +110,7 @@ class Productos(db.Model):
 
 class Pedido(db.Model):
 	__tablename__= 'pedido'
-	   
+
 	id = db.Column(db.Integer, primary_key = True)
 	quantity = db.Column(db.String(30))
 	week = db.Column(db.Integer)
@@ -129,7 +129,7 @@ class Pedido(db.Model):
 
 class Contact(db.Model):
 	__tablename__= 'contact'
-	   
+
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(30),nullable=False)
 	phone = db.Column(db.String(15))
@@ -144,7 +144,7 @@ class Contact(db.Model):
 	links= db.Column(db.String(30))
 	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
 	agricultor = db.relationship(Agricultor)
-	
+
 
 	@property
     	def serialize(self):
@@ -162,7 +162,7 @@ class Contact(db.Model):
 	            'encargado': self.encargado,
 	            'links': self.links,
 	            'agricultor_id': self.agricultor_id,
-	            
+
 
 
     	    }
@@ -170,4 +170,3 @@ class Contact(db.Model):
 
 	def __repr__(self):
 		return '<Contacto %r>' % self.name
-

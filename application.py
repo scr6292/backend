@@ -12,7 +12,7 @@ from datetime import date
 # LOGIN IMPORT AND SET UP
 
 from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm 
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy  import SQLAlchemy
@@ -44,7 +44,7 @@ def login_required(role="ANY"):
                 return fn(*args, **kwargs)
             elif ((current_user.user_role != role) and (role != "ANY")):
                 return login_manager.unauthorized()
-            else: 
+            else:
                 return fn(*args, **kwargs)
         return decorated_view
     return wrapper
@@ -99,7 +99,7 @@ def csvFiles(agricultor_id):
     </form>
     <p>%s</p>
     """ % "<br>".join(os.listdir(application.config['UPLOAD_FOLDER'],))
-    
+
 #OnePage
 @application.route('/', methods=['GET'])
 def onepage():
@@ -163,7 +163,7 @@ def editInfo(agricultor_id):
 
             flash("Infor properly edited")
             return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id))
-        else:    
+        else:
             editedInfo = Contacto(name = request.form['name'], email =request.form['email'],
                  phone =request.form['phone'], location = request.form['location'],website = request.form['website'],
                  productos = request.form['productos'],pedido_minimo = request.form['pedido_minimo'],
@@ -174,11 +174,11 @@ def editInfo(agricultor_id):
                 db.session.commit()
             except:
                 db.session.rollback() #Rollback the changes on error
-            return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id)) 
+            return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id))
     else:
         return render_template('editinfo.html', agricultor_id = agricultor_id, item = editedInfo)
-    
-        
+
+
 
 
 #Edit agricultor products
@@ -391,13 +391,13 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
 
-        return '<h1>Invalid username or password</h1>'
+        return '<h1>Tu mail o tu password no son correctos. Vuelve a intentar.</h1>'
 
     return render_template('login.html', form=form)
 
@@ -410,7 +410,7 @@ def signup():
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="CUSTOMER", is_admin=False)
         db.session.add(new_user)
         db.session.commit()
-        
+
         flash("Te has registrado con exito")
         return redirect(url_for('login'))
 
