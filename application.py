@@ -399,7 +399,9 @@ def login():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
 
-        return '<h1>Tu mail o tu password no son correctos. Vuelve a intentar.</h1>'
+        else:
+            invalid_pass = 1
+            return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
 
     return render_template('login.html', form=form)
 
@@ -413,10 +415,8 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Te has registrado con exito")
+        flash("Te has registrado correctamente")
         return redirect(url_for('login'))
-
-        #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
     return render_template('signup.html', form=form)
 

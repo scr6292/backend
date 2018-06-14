@@ -10,7 +10,6 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 
 
-
 # LOGINS
 class User(UserMixin, db.Model):
 	__tablename__ = "user"
@@ -46,13 +45,13 @@ class User(UserMixin, db.Model):
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Introduce un mail'), Length(max=50)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
     remember = BooleanField('Recordar')
 
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Introduce un mail'), Length(max=50)])
-    username = StringField('Usuario', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+    username = StringField('Usuario', validators=[InputRequired(), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
 
 # END LOGIN
 
