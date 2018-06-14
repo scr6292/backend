@@ -21,7 +21,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 
 from functools import wraps
 # Admin
-from flask_admin import Admin
+from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 
 admin = Admin(application)
@@ -49,13 +49,7 @@ def login_required(role="ANY"):
         return decorated_view
     return wrapper
 
-class MyModelView(ModelView):
-    def is_accessible(self):
-        if current_user.user_role == "ADMIN" :
-            return True
-        else: return False
-
-# END LOGIN IMPORT
+# END LOGIN
 
 
 
@@ -433,8 +427,30 @@ def logout():
 # END LOGIN
 
 # ADMIN
+
+class MyModelView(ModelView):
+    def is_accessible(self):
+        if current_user.user_role == "ADMIN" :
+            return True
+        else: return False
+
+class CsvUpdateView(BaseView):
+    @expose('/', methods=('GET', 'POST'))
+    def index(self):
+        if request.method == 'POST':
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
+                parseCSV.parsecsv(filename, 1)
+                return redirect(url_for('admin.index'))
+
+        return self.render('admin/upload_csv.html')
+
+
 admin.add_view(MyModelView(User ,db.session))
 admin.add_view(MyModelView(Productos ,db.session))
+admin.add_view(CsvUpdateView(name = 'Actualizar Productos', endpoint = 'csvUpdate'))
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=5000)

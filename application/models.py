@@ -51,7 +51,7 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+    username = StringField('usuario', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
 # END LOGIN
@@ -79,52 +79,33 @@ class Agricultor(db.Model):
 
 
 class Productos(db.Model):
-    #Tell SQLAlchemy what the table name is and if there's any table-specific arguments it should know about
-    __tablename__ = 'productos'
+	#Tell SQLAlchemy what the table name is and if there's any table-specific arguments it should know about
+	__tablename__ = 'productos'
 
-    #tell SQLAlchemy the name of column and its attributes:
-    product_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False) 
-    units = db.Column(db.String(80))
-    product_title = db.Column(db.String(80))
-    location_origin = db.Column(db.String(80))
-    unit_price = db.Column(db.Float(8))
-    amount = db.Column(db.Float(8))
-    current_price = db.Column(db.Float(8))
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    week = db.Column(db.Integer, default=date.today().isocalendar()[1])
-    year = db.Column(db.Integer, default=date.today().year)
-    agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
-    agricultor = db.relationship(Agricultor)
+	#tell SQLAlchemy the name of column and its attributes:
+	product_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False) 
+	units = db.Column(db.String(80))
+	product_title = db.Column(db.String(80))
+	location_origin = db.Column(db.String(80))
+	unit_price = db.Column(db.Float(8))
+	amount = db.Column(db.Float(8))
+	current_price = db.Column(db.Float(8))
+	created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
+	year = db.Column(db.Integer, default=date.today().year)
+	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
+	agricultor = db.relationship(Agricultor)
 
-	# def __repr__(self):
-	# 	return '<Productos %r>' % self.name
-
-
-# class Producto(db.Model):
-# 	__tablename__ = 'producto'
-
-# 	name = db.Column(db.String(80), nullable = False)
-# 	id = db.Column(db.Integer, primary_key = True)
-# 	description = db.Column(db.String(250))
-# 	price = db.Column(db.String(8))
-# 	preciounidad = db.Column(db.String(8))
-# 	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
-# 	agricultor = db.relationship(Agricultor)
-
-	# @property
- #    	def serialize(self):
- #        	return {
-	#             'name': self.name,
-	#             'description': self.description,
-	#             'id': self.id,
-	#             'price': self.price,
-	#             'preciounidad': self.preciounidad,
-	#             'agricultor_id': self.agricultor_id,
-	            
- #    	    }
-
-	# def __repr__(self):
-	# 	return '<Producto %r>' % self.name
+	@property
+    	def serialize(self):
+			return {
+				'product_title': self.product_title,
+				'units': self.units,
+				'product_id': self.product_id,
+				'unit_price': self.unit_price,
+				'week': self.week,
+				'agricultor_id': self.agricultor_id,
+			}
 
 
 class Pedido(db.Model):
