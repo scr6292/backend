@@ -197,6 +197,8 @@ def agricultorMenuOrder(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     items = db.session.query(Productos)
+    week = db.session.query(Productos.week).first()
+    year = db.session.query(Productos.year).first()
     if request.method == 'POST':
         for item in items:
             if request.form[item.product_title]:
@@ -211,7 +213,7 @@ def agricultorMenuOrder(agricultor_id):
         return redirect(url_for('postOrder', agricultor_id = agricultor_id))
 
     else:
-        return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username)
+        return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year)
 #Post Order page
 @application.route('/agricultores/<int:agricultor_id>/postorder', methods=['GET', 'POST'])
 @login_required(role="CUSTOMER")
