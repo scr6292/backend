@@ -4,55 +4,45 @@
 {% block head %}
 {{ super() }}
 
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-	<link rel=stylesheet type=text/css href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-	<script src="{{ url_for('static', filename='filter_products.js') }}"></script>
-
 {% endblock head %}
 {% block content %}
 
 	<div class="container">
-	    <h3>Nuestras Huertas</h3>
-	    <h4>Hola {{current_user.username}}, qué quieres esta semana?</h4>
-	    <hr>
-	    <div class="row">
-	        <div class="panel panel-primary filterable">
-	            <div class="panel-heading">
-	                <h3 class="panel-title">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
-	                <div class="pull-right">
-	                    <button class="btn btn-default btn-xs btn-filter" style="
-     font-size: 16px;"><span class="glyphicon glyphicon-filter"></span> Filtrar por</button>
-	                </div>
-	            </div>
-	            <table class="table">
-	                <thead>
-	                    <tr class="filters">
-	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Precio" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Procedencia" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-	                	<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
-	                		<tr>
-		                		{% for i in items %}
-	                        	<td>{{i.product_title}}</td>
-	                        	<td>{{i.unit_price}}€/{{i.units}}</td>
-	                        	<td>{{i.location_origin}}</td>
-								<td><input type = 'text' size = '30' name = '{{i.product_title}}' placeholder = '{{i.units}}'></td>
-	                    	</tr>
-	                    {% endfor %}
-	                    	<input type = 'submit' value = 'Finalizar tu pedido!'>
-	                    </form>
-	                </tbody>
-	            </table>
-	        </div>
-	    </div>
+		<div class="row">
+			<div class="col-12">
+				<div class="panel panel-primary filterable">
+					<div class="panel-heading">
+						<h3 class="panel-title">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
+					</div>
+	        <table class="table">
+						<thead>
+							<tr class="filters">
+								<th><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></th>
+							</tr>
+							<tr>
+								<td><b>Producto</b></td>
+								<td><b>Precio</b></td>
+								<td><b>Procedencia</b></td>
+								<td><b>Cantidad</b></td>
+							</tr>
+						</thead>
+						<tbody>
+							<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
+							<input type = 'submit' value = 'Finalizar pedido'>
+								{% for i in items %}
+								<tr>
+									<td>{{i.product_title}}</td>
+									<td>{{i.unit_price}}€/{{i.units}}</td>
+									<td>{{i.location_origin}}</td>
+									<td><input type = 'text' size = '30' name = '{{i.product_title}}' placeholder = '{{i.units}}'></td>
+								</tr>
+								{% endfor %}
+							</form>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
-
 
 {% endblock content %}
