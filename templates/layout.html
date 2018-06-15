@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+	<head>
+		{% block head %}
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='header.css') }}">
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='header_responsive.css') }}">
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='footer.css') }}">
+		<header class="scroll_header_top_area  stick scrolled_not_transparent page_header">
+	<div class="header_inner clearfix">
+				<div class="header_top_bottom_holder">
+			
+			<div class="header_bottom clearfix" style=" background-color:rgba(255, 255, 255, 1);">
+											<div class="header_inner_left">
+																	<div class="mobile_menu_button">
+		<span>
+			<i class="qode_icon_font_awesome fa fa-bars "></i>		</span>
+	</div>
+								<div class="logo_wrapper">
+	<div class="q_logo">
+		<a itemprop="url" href="http://www.nuestrashuertas.com/test/" style="height: 80px; visibility: visible;">
+             <img itemprop="image" class="normal" src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" alt="Logo" style="height: 100%;"> 			 <img itemprop="image" class="light" src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" alt="Logo" style="height: 100%;"> 			 <img itemprop="image" class="dark" src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" alt="Logo" style="height: 100%;"> 			 <img itemprop="image" class="sticky" src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" alt="Logo" style="height: 100%;"> 			 <img itemprop="image" class="mobile" src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" alt="Logo" style="height: 100%;"> 					</a>
+	</div>
+	</div>															</div>
+															<div class="header_inner_right">
+									<div class="side_menu_button_wrapper right">
+																					<div class="header_bottom_right_widget_holder"><div class="widget_text header_bottom_widget widget_custom_html"><div class="textwidget custom-html-widget"><a itemprop="url" href="" target="_self" data-hover-background-color="#ffffff" data-hover-border-color="#6bb207" data-hover-color="#6bb207" class="qbutton  small default" style="color: #ffffff; border-color: #6bb207; border-radius: 100px;-moz-border-radius: 100px;-webkit-border-radius: 100px; background-color: #6bb207;">Iniciar sesión</a>
+
+<a itemprop="url" href="" target="_self" data-hover-background-color="#ffffff" data-hover-border-color="#6bb207" data-hover-color="#6bb207" class="qbutton  small default" style="color: #ffffff; border-color: #6bb207; border-radius: 100px;-moz-border-radius: 100px;-webkit-border-radius: 100px; background-color: #6bb207;">Registrarse</a></div></div></div>
+																														<div class="side_menu_button">
+																																											</div>
+									</div>
+								</div>
+							
+							
+							<nav class="main_menu drop_down right" style="    height: 100px;">
+								<ul id="menu-main-menu" class=""><li id="nav-menu-item-167" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-166 current_page_item active narrow" style="padding-top: 41px;"><a href="http://www.nuestrashuertas.com/test/" class=" current "><i class="menu_icon blank fa"></i><span>Hacer pedido</span><span class="plus"></span></a></li>
+<li id="nav-menu-item-174" class="menu-item menu-item-type-post_type menu-item-object-page  narrow" style="padding-top: 41px;"><a href="http://www.nuestrashuertas.com/test/index.php/huerta-abril/" class=""><i class="menu_icon blank fa"></i><span>Carrito</span><span class="plus"></span></a></li>
+<li id="nav-menu-item-176" class="menu-item menu-item-type-post_type menu-item-object-page  narrow" style="padding-top: 41px;"><a href="http://www.nuestrashuertas.com/test/index.php/mercado-huerta/" class=""><i class="menu_icon blank fa"></i><span>Pedidos realizados</span><span class="plus"></span></a></li>
+<li id="nav-menu-item-192" class="menu-item menu-item-type-post_type menu-item-object-page  narrow" style="padding-top: 41px;"><a href="http://www.nuestrashuertas.com/test/index.php/servicio-domicilio/" class=""><i class="menu_icon blank fa"></i><span>Usuario</span><span class="plus"></span></a></li>
+</ul>							</nav>
+														<nav class="mobile_menu">
+	<ul id="menu-main-menu-1" class=""><li id="mobile-menu-item-167" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-166 current_page_item active"><a href="http://www.nuestrashuertas.com/test/" class=" current "><span>INICIO</span></a><span class="mobile_arrow"><i class="fa fa-angle-right"></i><i class="fa fa-angle-down"></i></span></li>
+<li id="mobile-menu-item-174" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="http://www.nuestrashuertas.com/test/index.php/huerta-abril/" class=""><span>LA HUERTA DE ABRIL</span></a><span class="mobile_arrow"><i class="fa fa-angle-right"></i><i class="fa fa-angle-down"></i></span></li>
+<li id="mobile-menu-item-176" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="http://www.nuestrashuertas.com/test/index.php/mercado-huerta/" class=""><span>MERCADO A PIE DE HUERTA</span></a><span class="mobile_arrow"><i class="fa fa-angle-right"></i><i class="fa fa-angle-down"></i></span></li>
+<li id="mobile-menu-item-192" class="menu-item menu-item-type-post_type menu-item-object-page "><a href="http://www.nuestrashuertas.com/test/index.php/servicio-domicilio/" class=""><span>SERVICIO A DOMICILIO</span></a><span class="mobile_arrow"><i class="fa fa-angle-right"></i><i class="fa fa-angle-down"></i></span></li>
+</ul></nav>											</div>
+			</div>
+		</div>
+
+</header>
+		{% endblock head %}
+	</head>
+	  <body>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      {% block footer %}
+      <div class="footer_inner clearfix">
+				<div class="footer_top_holder">
+            			<div class="footer_top">
+								<div class="container">
+					<div class="container_inner">
+																	<div class="four_columns clearfix">
+								<div class="column1 footer_col1">
+									<div class="column_inner">
+										<div id="nav_menu-4" class="widget widget_nav_menu"><div class="menu-footer-columna-1-container"><ul id="menu-footer-columna-1" class="menu"><li id="menu-item-313" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-313"><a href="http://www.nuestrashuertas.com/test/index.php/huerta-abril/">La huerta de abril</a></li>
+</ul></div></div>									</div>
+								</div>
+								<div class="column2 footer_col2">
+									<div class="column_inner">
+										<div id="nav_menu-3" class="widget widget_nav_menu"><div class="menu-footer-columna-2-container"><ul id="menu-footer-columna-2" class="menu"><li id="menu-item-314" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-314"><a href="http://www.nuestrashuertas.com/test/index.php/mercado-huerta/">Mercado a pie de huerta</a></li>
+</ul></div></div>									</div>
+								</div>
+								<div class="column3 footer_col3">
+									<div class="column_inner">
+										<div id="nav_menu-5" class="widget widget_nav_menu"><div class="menu-footer-columna-3-container"><ul id="menu-footer-columna-3" class="menu"><li id="menu-item-315" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-315"><a href="http://www.nuestrashuertas.com/test/index.php/servicio-domicilio/">Servicio a domicilio</a></li>
+</ul></div></div>									</div>
+								</div>
+								<div class="column4 footer_col4">
+									<div class="column_inner">
+										<div id="nav_menu-6" class="widget widget_nav_menu"><div class="menu-footer-columna-4-container"><ul id="menu-footer-columna-4" class="menu"><li id="menu-item-316" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-316"><a href="http://www.nuestrashuertas.com/test/index.php/contacto/">Contacto</a></li>
+</ul></div></div>									</div>
+								</div>
+							</div>
+															</div>
+				</div>
+							</div>
+					</div>
+							<div class="footer_bottom_holder">
+                                    <div style="background-color: #3d3e3c;height: 1px" class="footer_bottom_border "></div>
+                								<div class="container">
+					<div class="container_inner">
+										<div class="three_columns footer_bottom_columns clearfix">
+					<div class="column1 footer_bottom_column">
+						<div class="column_inner">
+							<div class="footer_bottom">
+															</div>
+						</div>
+					</div>
+					<div class="column2 footer_bottom_column">
+						<div class="column_inner">
+							<div class="footer_bottom">
+											<div class="textwidget"><p>Desarrollado por Plant On Demand</p>
+</div>
+									</div>
+						</div>
+					</div>
+					<div class="column3 footer_bottom_column">
+						<div class="column_inner">
+							<div class="footer_bottom">
+											<div class="textwidget"><div class="qodef-footer-bottom-right">
+<h4 style="color: #ffffff;">Seguidnos en</h4>
+<span data-type="normal" data-hover-icon-color="#86af49" class="qode_icon_shortcode  q_font_awsome_icon fa-lg  " style="margin: 0 17px 0 18px ; "><span aria-hidden="true" class="qode_icon_font_elegant social_facebook qode_icon_element" style="font-size: 15px;color: #ffffff;"></span></span>
+</div>
+</div>
+									</div>
+						</div>
+					</div>
+				</div>
+									</div>
+			</div>
+						</div>
+				</div>
+      {% endblock %}
+    </div>
+  </body>
+</html>

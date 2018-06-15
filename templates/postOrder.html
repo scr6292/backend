@@ -1,5 +1,7 @@
 <html>
-
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
 <head> 
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 	<link rel=stylesheet type=text/css href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
@@ -8,7 +10,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="{{ url_for('static', filename='filter_products.js') }}"></script>
 </head>
-<body>
+{% endblock head %}
+{% block content %}
+
 	<div class="container">
 	    <h3>{{agricultor.name}}</h3>
 	    <h4>Hola {{current_user.username}}, Tu pedido para esta semana es:</h4>
@@ -70,5 +74,5 @@
 	        </div>
 	    </div>
 	</div>
-</body>
-</html>
+
+{% endblock content %}
