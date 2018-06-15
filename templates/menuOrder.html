@@ -18,7 +18,8 @@
 	            <div class="panel-heading">
 	                <h3 class="panel-title">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
 	                <div class="pull-right">
-	                    <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filter</button>
+	                    <button class="btn btn-default btn-xs btn-filter" style="
+     font-size: 16px;"><span class="glyphicon glyphicon-filter"></span> Filtrar por</button>
 	                </div>
 	            </div>
 	            <table class="table">
@@ -40,13 +41,10 @@
 								<td><input type = 'text' size = '30' name = '{{i.product_title}}' placeholder = '{{i.units}}'></td>
 	                    	</tr>
 	                    {% endfor %}
-	                    	<input type = 'submit' value = 'Haz tu pedido!'>
+	                    	<input type = 'submit' value = 'Finalizar tu pedido!'>
 	                    </form>
 	                </tbody>
 	            </table>
-	            <div>
-	                <a href= "{{url_for('onepage')}}">Volver a la homepage</a>
-	            </div>
 	        </div>
 	    </div>
 	</div>
