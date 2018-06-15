@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from application import db, application
-from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, Pedido
+from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, UpdateInfoForm, Pedido
 from werkzeug.utils import secure_filename
 import parseCSV
 
@@ -357,6 +357,47 @@ def deleteMenuItem(agricultor_id, product_id):
 
     else:
         return render_template('deletemenuitem.html', agricultor_id = agricultor_id, product_id = product_id, item = selectedItem)
+
+#Users page
+@application.route('/user', methods=['GET', 'POST'])
+# @login_required(role="CUSTOMER")
+def user():
+    # currentuser = db.session.query(User).filter_by(username = current_user.username).one()
+    # if request.method == 'POST':
+    #     if request.form.validate_on_submit():
+    #         if request.form['name']:
+    #             currentuser.username = request.form['name']
+    #         if request.form['email']:
+    #             currentuser.email = request.form['email']
+    #         if request.form['password']:
+    #             hashed_password = generate_password_hash(request.form['password'], method='sha256')
+    #             currentuser.password = hashed_password
+    #         db.session.add(currentuser)
+    #         try:
+    #             db.session.commit()
+    #         except:
+    #             db.session.rollback() #Rollback the changes on error        
+    #         return redirect(url_for('user'))
+    form = UpdateInfoForm()
+
+    if form.validate_on_submit():
+        currentuser = current_user
+        if form.username.data:
+            currentuser.username = form.username.data
+        if form.email.data:
+            currentuser.username = form.username.data
+        if form.password.data:
+            hashed_password = generate_password_hash(form.password.data, method='sha256')
+            currentuser.password = hashed_password           
+        db.session.add(currentuser)
+        try: 
+            db.session.commit()
+        except: 
+            db.session.rollback() #Rollback the changes on error
+        return redirect(url_for('user'))
+
+    else:
+        return render_template('user.html', form=form)
 
 
 
