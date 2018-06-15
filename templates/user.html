@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+{% block content %}
+
+<h2>Hola {{current_user.username}}, en esta página puedes editar to información de usuario</h2>
+
+
+<!-- <form action = "{{url_for('user')}}" method = 'POST'>
+
+	<p>Nuevo nombre se usuario:</p>
+		<input type = 'text' size = '30' name = 'name' placeholder = '{{current_user.username}}'>
+
+	<p>Nuevo email:</p>
+		<input type ='text' size='30' name='email' placeholder = '{{current_user.email}}'>
+
+	<p>Nueva password:</p>
+		<input type ='text' size='30' name='password' placeholder = 'password'>
+
+<input type = 'submit' value = 'Confirmar cambios'>
+</form> -->
+
+<div class="container">
+
+  <form class="form-signin" method="POST" action="/user">
+    <h2 class="form-signin-heading"></h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.username) }}
+    {{ wtf.form_field(form.email) }}
+    {{ wtf.form_field(form.password) }}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Confirmar cambios</button>
+    <p> Ya tienes cuenta? <a class ="inline-block" href= "/login">Iniciar sesión</a></p>
+  </form>
+
+</div> <!-- /container -->
+
+
+{% endblock content %}
