@@ -1,0 +1,38 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="panel panel-primary filterable">
+        <table class="table">
+            <thead>
+                <tr class="filters">
+                	<th><input type="text" class="form-control" placeholder="Usuario" disabled></th>
+                    <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
+                    <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
+                    <th><input type="text" class="form-control" placeholder="Precio Unidad" disabled></th>
+                    <th><input type="text" class="form-control" placeholder="Total" disabled></th>
+
+                </tr>
+            </thead>
+            <tbody>
+            		<tr>
+                		{% for i in order %}
+                		<td><a href = "{{url_for('orderuser', agricultor_id = agricultor_id, username = i.user_name)}}">{{i.user_name}}</a></td>                		
+                	</tr>
+                		{% endfor %}
+                	<tr>
+                	<tr>
+                		{% for i in weeks %}
+                		<td>Semana {{i.week}}</td>
+                	</tr>
+                		{% endfor %}
+                		<td>TOTAL</td>
+                		<td></td>
+                		<td></td>
+                		<td style="color: red; font-weight: bold">{{ total }}€</td>
+
+            </tbody>
+        </table>
+
+{% endblock body %}

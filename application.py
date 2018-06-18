@@ -466,7 +466,7 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="CUSTOMER", is_admin=False)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="ADMIN", is_admin=False)
         db.session.add(new_user)
         db.session.commit()
 
@@ -494,20 +494,45 @@ class MyModelView(ModelView):
 class CsvUpdateView(BaseView):
     @expose('/', methods=('GET', 'POST'))
     def index(self):
-        if request.method == 'POST':
-            file = request.files['file']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
-                parseCSV.parsecsv(filename, 1)
-                return redirect(url_for('admin.index'))
+        if current_user.user_role == "ADMIN" :
+            if request.method == 'POST':
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
+                    parseCSV.parsecsv(filename, 1)
+                    return redirect(url_for('admin.index'))
 
-        return self.render('admin/upload_csv.html')
+            return self.render('admin/upload_csv.html')
+        return False
 
+class OrderView(BaseView):
+    @expose('/')
+    def pedidos(self):
+        if current_user.user_role == "ADMIN" :
+            order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).group_by(Pedido.user_name).all()
+            weeks = db.session.query(Pedido.week).distinct()
+            return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1)
+        return False
+
+@application.route('/admin/adminorder/<int:agricultor_id>/<username>')
+# @login_required(role="ADMIN")
+def orderuser(agricultor_id, username):
+    db.session.commit()
+    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+    weeks = db.session.query(Pedido.week).filter_by(user_name = username).distinct()
+    order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1])
+    total = 0
+    for item in order:
+        tot = float(item.product_price)*float(item.quantity)
+        total = total + tot
+    return render_template('adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total)
 
 admin.add_view(MyModelView(User ,db.session))
 admin.add_view(MyModelView(Productos ,db.session))
+admin.add_view(MyModelView(Pedido ,db.session))
 admin.add_view(CsvUpdateView(name = 'Actualizar Productos', endpoint = 'csvUpdate'))
+admin.add_view(OrderView(name = 'Pedidos', endpoint = 'adminorders'))
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=5000)
