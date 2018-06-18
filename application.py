@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from application import db, application
-from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, UpdateInfoForm, Pedido
+from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, UpdateUsernameForm, UpdatePassForm, UpdateEmailForm, Pedido
 from werkzeug.utils import secure_filename
 import parseCSV
 
@@ -378,16 +378,31 @@ def user():
     #         except:
     #             db.session.rollback() #Rollback the changes on error        
     #         return redirect(url_for('user'))
-    form = UpdateInfoForm()
-
-    if form.validate_on_submit():
-        currentuser = current_user
-        if form.username.data:
-            currentuser.username = form.username.data
-        if form.email.data:
-            currentuser.username = form.username.data
-        if form.password.data:
-            hashed_password = generate_password_hash(form.password.data, method='sha256')
+    form_user = UpdateUsernameForm()
+    form_pass = UpdatePassForm()
+    form_email = UpdateEmailForm()
+    currentuser = db.session.query(User).filter_by(username=current_user.username).first()
+    if form_user.validate_on_submit():
+        if form_user.username.data:
+            currentuser.username = form_user.username.data
+        db.session.add(currentuser)
+        try: 
+            db.session.commit()
+        except: 
+            db.session.rollback()
+        return redirect(url_for('user'))
+    if form_email.validate_on_submit():
+        if form_email.email.data:
+            currentuser.email = form_email.email.data
+        db.session.add(currentuser)
+        try: 
+            db.session.commit()
+        except: 
+            db.session.rollback()
+        return redirect(url_for('user'))
+    if form_pass.validate_on_submit():
+        if form_pass.password.data:
+            hashed_password = generate_password_hash(form_pass.password.data, method='sha256')
             currentuser.password = hashed_password           
         db.session.add(currentuser)
         try: 
@@ -396,8 +411,7 @@ def user():
             db.session.rollback() #Rollback the changes on error
         return redirect(url_for('user'))
 
-    else:
-        return render_template('user.html', form=form)
+    return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email)
 
 
 

@@ -53,10 +53,14 @@ class RegisterForm(FlaskForm):
     username = StringField('Usuario', validators=[InputRequired(), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
 
-class UpdateInfoForm(FlaskForm):
-    email = StringField('Email', validators=[Email(message='Introduce un mail'), Length(max=50)])
-    password = PasswordField('Password', validators=[Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
-    username = StringField('Usuario', validators=[Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+class UpdateUsernameForm(FlaskForm):
+    username = StringField('Usuario', validators=[InputRequired(), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+
+class UpdateEmailForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Email(message='Introduce un mail'), Length(max=50)])
+
+class UpdatePassForm(FlaskForm):
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
 # END LOGIN
 
 
