@@ -376,7 +376,7 @@ def user():
     #         try:
     #             db.session.commit()
     #         except:
-    #             db.session.rollback() #Rollback the changes on error        
+    #             db.session.rollback() #Rollback the changes on error
     #         return redirect(url_for('user'))
     form_user = UpdateUsernameForm()
     form_pass = UpdatePassForm()
@@ -386,28 +386,28 @@ def user():
         if form_user.username.data:
             currentuser.username = form_user.username.data
         db.session.add(currentuser)
-        try: 
+        try:
             db.session.commit()
-        except: 
+        except:
             db.session.rollback()
         return redirect(url_for('user'))
     if form_email.validate_on_submit():
         if form_email.email.data:
             currentuser.email = form_email.email.data
         db.session.add(currentuser)
-        try: 
+        try:
             db.session.commit()
-        except: 
+        except:
             db.session.rollback()
         return redirect(url_for('user'))
     if form_pass.validate_on_submit():
         if form_pass.password.data:
             hashed_password = generate_password_hash(form_pass.password.data, method='sha256')
-            currentuser.password = hashed_password           
+            currentuser.password = hashed_password
         db.session.add(currentuser)
-        try: 
+        try:
             db.session.commit()
-        except: 
+        except:
             db.session.rollback() #Rollback the changes on error
         return redirect(url_for('user'))
 
@@ -526,11 +526,10 @@ def orderuser(agricultor_id, username):
     for item in order:
         tot = float(item.product_price)*float(item.quantity)
         total = total + tot
-    return render_template('adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total)
+    return render_template('admin/adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total)
 
 admin.add_view(MyModelView(User ,db.session))
 admin.add_view(MyModelView(Productos ,db.session))
-admin.add_view(MyModelView(Pedido ,db.session))
 admin.add_view(CsvUpdateView(name = 'Actualizar Productos', endpoint = 'csvUpdate'))
 admin.add_view(OrderView(name = 'Pedidos', endpoint = 'adminorders'))
 
