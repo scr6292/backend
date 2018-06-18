@@ -492,28 +492,33 @@ class MyModelView(ModelView):
         else: return False
 
 class CsvUpdateView(BaseView):
+    def is_accessible(self):
+        if current_user.user_role == "ADMIN" :
+            return True
+        else: return False    
     @expose('/', methods=('GET', 'POST'))
     def index(self):
-        if current_user.user_role == "ADMIN" :
-            if request.method == 'POST':
-                file = request.files['file']
-                if file and allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
-                    parseCSV.parsecsv(filename, 1)
-                    return redirect(url_for('admin.index'))
+        if request.method == 'POST':
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
+                parseCSV.parsecsv(filename, 1)
+                return redirect(url_for('admin.index'))
 
-            return self.render('admin/upload_csv.html')
-        return False
+        return self.render('admin/upload_csv.html')
 
 class OrderView(BaseView):
+    def is_accessible(self):
+        if current_user.user_role == "ADMIN" :
+            return True
+        else: return False
     @expose('/')
     def pedidos(self):
-        if current_user.user_role == "ADMIN" :
-            order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).group_by(Pedido.user_name).all()
-            weeks = db.session.query(Pedido.week).distinct()
-            return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1)
-        return False
+        order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).group_by(Pedido.user_name).all()
+        weeks = db.session.query(Pedido.week).distinct()
+        return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1)
+
 
 @application.route('/admin/adminorder/<int:agricultor_id>/<username>')
 # @login_required(role="ADMIN")
