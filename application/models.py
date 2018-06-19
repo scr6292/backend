@@ -64,6 +64,8 @@ class UpdatePassForm(FlaskForm):
 # END LOGIN
 
 
+#END FORMS
+
 class Agricultor(db.Model):
 	__tablename__ = 'agricultor'
 

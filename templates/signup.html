@@ -23,5 +23,15 @@ Registro
     <p> Ya tienes cuenta? <a class ="inline-block" href= "/login">Iniciar sesión</a></p>
   </form>
 
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 </div> <!-- /container -->
 {% endblock %}

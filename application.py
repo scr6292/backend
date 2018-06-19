@@ -4,6 +4,7 @@ from application import db, application
 from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, UpdateUsernameForm, UpdatePassForm, UpdateEmailForm, Pedido
 from werkzeug.utils import secure_filename
 import parseCSV
+from sqlalchemy import func
 
 # DATES
 import datetime
@@ -202,8 +203,18 @@ def agricultorMenuOrder(agricultor_id):
     if request.method == 'POST':
         for item in items:
             if request.form[item.product_title]:
-                order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price)
-                db.session.add(order)
+                already_exist = db.session.query(Pedido).filter_by(product_name = item.product_title, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+                if already_exist:
+                    already_exist.quantity = str(int(already_exist.quantity) + int(request.form[item.product_title]))
+                    db.session.add(already_exist)
+                    try:
+                        db.session.commit()
+                    except:
+                        db.session.rollback()
+
+                else:
+                    order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price)
+                    db.session.add(order)
                 try:
                     db.session.commit()
                 except:
@@ -221,12 +232,30 @@ def postOrder(agricultor_id):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
+    items = db.session.query(Productos)
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
     total = 0
     for item in order:
         tot = float(item.product_price)*float(item.quantity)
         total = total + tot
-    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total)
+    
+    if request.method == 'POST':
+        for item in order:
+            if request.form.get(item.product_name, False):
+                updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+                updateorder.quantity = request.form[item.product_name]
+                db.session.add(updateorder)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+
+        flash("Tus cambios ya estan en el carrito")
+        return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+    
+
+    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total) 
+
 
 # Historical Orders
 @application.route('/agricultores/<int:agricultor_id>/historicalorder/<int:week>', methods=['GET', 'POST'])
@@ -452,10 +481,16 @@ def signup():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="ADMIN", is_admin=False)
         db.session.add(new_user)
+        # try: 
         db.session.commit()
-
         flash("Te has registrado correctamente")
         return redirect(url_for('login'))
+        # except: 
+        #     db.session.rollback() #Rollback the changes on error
+        #     flash("El email o nombre de usuario que has introducido ya existe, por favor introduce unos distintos")
+        #     return redirect(url_for('signup'))
+
+
 
     return render_template('signup.html', form=form)
 
