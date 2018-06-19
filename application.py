@@ -360,24 +360,8 @@ def deleteMenuItem(agricultor_id, product_id):
 
 #Users page
 @application.route('/user', methods=['GET', 'POST'])
-# @login_required(role="CUSTOMER")
+@login_required(role="CUSTOMER")
 def user():
-    # currentuser = db.session.query(User).filter_by(username = current_user.username).one()
-    # if request.method == 'POST':
-    #     if request.form.validate_on_submit():
-    #         if request.form['name']:
-    #             currentuser.username = request.form['name']
-    #         if request.form['email']:
-    #             currentuser.email = request.form['email']
-    #         if request.form['password']:
-    #             hashed_password = generate_password_hash(request.form['password'], method='sha256')
-    #             currentuser.password = hashed_password
-    #         db.session.add(currentuser)
-    #         try:
-    #             db.session.commit()
-    #         except:
-    #             db.session.rollback() #Rollback the changes on error
-    #         return redirect(url_for('user'))
     form_user = UpdateUsernameForm()
     form_pass = UpdatePassForm()
     form_email = UpdateEmailForm()
@@ -509,34 +493,50 @@ class CsvUpdateView(BaseView):
         return self.render('admin/upload_csv.html')
 
 class OrderView(BaseView):
+    
     def is_accessible(self):
         if current_user.user_role == "ADMIN" :
             return True
         else: return False
+    
     @expose('/')
     def pedidos(self):
         order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).group_by(Pedido.user_name).all()
         weeks = db.session.query(Pedido.week).distinct()
-        return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1)
+        week = db.session.query(Pedido.week).first()
+        return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1, week = week)
+    
+    @expose('/user/<int:agricultor_id>/<username>/<int:week>')
+    def orderuser(self, agricultor_id, username, week):
+        db.session.commit()
+        agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+        weeks = db.session.query(Pedido.week).filter_by(user_name = username).distinct()
+        order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1])
+        total = 0
+        for item in order:
+            tot = float(item.product_price)*float(item.quantity)
+            total = total + tot
+        return self.render('admin/adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total, week = week)
 
 
-@application.route('/admin/adminorder/<int:agricultor_id>/<username>')
-# @login_required(role="ADMIN")
-def orderuser(agricultor_id, username):
-    db.session.commit()
-    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    weeks = db.session.query(Pedido.week).filter_by(user_name = username).distinct()
-    order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1])
-    total = 0
-    for item in order:
-        tot = float(item.product_price)*float(item.quantity)
-        total = total + tot
-    return render_template('admin/adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total)
+# @application.route('/admin/adminorder/<int:agricultor_id>/<username>')
+# # @login_required(role="ADMIN")
+# def orderuser(agricultor_id, username):
+#     db.session.commit()
+#     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+#     weeks = db.session.query(Pedido.week).filter_by(user_name = username).distinct()
+#     order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1])
+#     total = 0
+#     for item in order:
+#         tot = float(item.product_price)*float(item.quantity)
+#         total = total + tot
+#     return render_template('admin/adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total)
 
 admin.add_view(MyModelView(User ,db.session))
 admin.add_view(MyModelView(Productos ,db.session))
 admin.add_view(CsvUpdateView(name = 'Actualizar Productos', endpoint = 'csvUpdate'))
 admin.add_view(OrderView(name = 'Pedidos', endpoint = 'adminorders'))
+
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=5000)

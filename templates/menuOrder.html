@@ -2,6 +2,7 @@
 {% extends "layout.html" %}
 
 {% block head %}
+
 {{ super() }}
 
 {% endblock head %}
@@ -12,14 +13,25 @@
 			<div class="col-12">
 				<div class="panel panel-primary filterable">
 					<div class="panel-heading">
-						<h3 class="panel-title">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
+						
 					</div>
 	        <table class="table">
 						<thead>
 							<tr class="filters">
+								<th></th>
 								<th><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></th>
+								<th><img src="{{url_for('static', filename='vectorpaint (2).svg')}}" alt="Farm icons" style="height: 38px;">
+									<img src="{{url_for('static', filename='vectorpaint (6).svg')}}" alt="Farm icons" style="height: 38px;">
+								</th>
+								<th>
+								<img src="{{url_for('static', filename='vectorpaint (3).svg')}}" alt="Farm icons" style="height: 38px;">
+								<img src="{{url_for('static', filename='vectorpaint (7).svg')}}" alt="Farm icons" style="height: 38px;">
+								</th>
+								<th>
+								<img src="{{url_for('static', filename='vectorpaint (4).svg')}}" alt="Farm icons" style="height: 38px;">
+								<img src="{{url_for('static', filename='vectorpaint (5).svg')}}" alt="Farm icons" style="height: 38px;"></th>
 							</tr>
-							<tr>
+							<tr><td></td>
 								<td><b>Producto</b></td>
 								<td><b>Precio</b></td>
 								<td><b>Procedencia</b></td>
@@ -28,9 +40,14 @@
 						</thead>
 						<tbody>
 							<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
-							<input type = 'submit' value = 'Finalizar pedido'>
+								<h3 class="panel-title" style="float:left; margin-top: 21px;">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
+							<div class="add-to-cart" style="border: solid;float: right;">
+								<input type = 'submit' value = 'Finalizar pedido' style="position: relative; float: right; background: none; border: none; top: 24px; color: white;     margin-right: 4px;">
+								<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: right; margin-right: 15px; height: 72px;">
+							</div>
 								{% for i in items %}
 								<tr>
+									<td><img src= "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/201703/15/00118110600014____1__600x600.jpg" style="height: 37px;"></td>
 									<td>{{i.product_title}}</td>
 									<td>{{i.unit_price}}€/{{i.units}}</td>
 									<td>{{i.location_origin}}</td>
@@ -46,3 +63,7 @@
 	</div>
 
 {% endblock content %}
+
+
+
+

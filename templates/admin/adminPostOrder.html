@@ -1,11 +1,8 @@
-<html>
-{% extends "layout.html" %}
-{% block head %}
-{{ super() }}
-{% endblock head %}
-{% block content %}
+{% extends 'admin/master.html' %}
 
-	<div class="container">
+{% block body %}
+
+
 	    <div class="row">
 	        <div class="panel panel-primary filterable">
 	            <div class="panel-heading">
@@ -42,6 +39,5 @@
 
 	        </div>
 	    </div>
-	</div>
 
-{% endblock content %}
+{% endblock body %}

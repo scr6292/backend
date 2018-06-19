@@ -23,3 +23,19 @@
 .filterable .filters input[disabled]:-ms-input-placeholder {
     color: #333;
 }
+
+/*Add_to_cart*/
+.add-to-cart{
+    color: rgb(255, 255, 255);
+    border-color: rgb(107, 178, 7);
+    border-top-color: rgb(107, 178, 7);
+    border-right-color: rgb(107, 178, 7);
+    border-bottom-color: rgb(107, 178, 7);
+    border-left-color: rgb(107, 178, 7);
+    border-radius: 100px;
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-color: rgb(107, 178, 7)
+    }
