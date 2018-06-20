@@ -38,7 +38,7 @@
 								</div>
 		                		<tr>
 			                		{% for i in order %}
-									<td><a href="{{url_for('deleteItem', agricultor_id = agricultor.id, pedido_id = i.id)}}">Eliminar</a></td>
+									<td><a href="{{url_for('deleteItem', agricultor_id = agricultor.id, pedido_id = i.id)}}"><img src="{{url_for('static', filename='trash_bin.svg')}}" style="height: 23px;"></a></td>
 									<td>
 										{{i.product_name}}
 									</td>
