@@ -22,6 +22,7 @@
 	            <table class="table">
 	                <thead>
 	                    <tr class="filters">
+	                    	<th><input type="text" class="form-control" placeholder="Eliminar" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Precio Unidad" disabled></th>
@@ -37,6 +38,7 @@
 								</div>
 		                		<tr>
 			                		{% for i in order %}
+									<td><a href="{{url_for('deleteItem', agricultor_id = agricultor.id, pedido_id = i.id)}}">Eliminar</a></td>
 									<td>
 										{{i.product_name}}
 									</td>

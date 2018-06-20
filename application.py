@@ -256,6 +256,33 @@ def postOrder(agricultor_id):
 
     return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total) 
 
+@application.route('/agricultores/<int:agricultor_id>/postorder/delete/<pedido_id>', methods=['GET','POST'])
+@login_required(role="CUSTOMER")
+def deleteItem(agricultor_id, pedido_id):
+
+#     if form_delete.validate_on_submit():
+#         if form_delete.delete.data :
+
+#             db.session.commit()
+#             updateorder = db.session.query(Pedido).filter_by(product_name = form_delete.delete.data, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+#             db.session.delete(updateorder)
+#             db.session.commit()
+#     return postOrder(agricultor_id)
+
+#         #     currentuser.username = form_user.username.data
+#         # db.session.add(currentuser)
+#         # try:
+#         #     db.session.commit()
+#         # except:
+#         #     db.session.rollback()
+#         # return redirect(url_for('user'))
+
+
+    db.session.commit()
+    updateorder = db.session.query(Pedido).filter_by(id = pedido_id, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+    db.session.delete(updateorder)
+    db.session.commit()
+    return postOrder(agricultor_id)
 
 # Historical Orders
 @application.route('/agricultores/<int:agricultor_id>/historicalorder/<int:week>', methods=['GET', 'POST'])
