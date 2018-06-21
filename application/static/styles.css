@@ -26,6 +26,11 @@
 
 /*Add_to_cart*/
 .add-to-cart{
+    float: left;
+    background-color: rgb(107, 178, 7);
+    border-radius: 100px;
+    color: white;
+}
     /*color: rgb(255, 255, 255);*/
    /* border-color: rgb(107, 178, 7);
     border-top-color: rgb(107, 178, 7);
