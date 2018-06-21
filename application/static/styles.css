@@ -64,7 +64,7 @@
     color: #86af49 !important;
 }
 
-.logout {
+/*.logout {
     color: #ffffff !important;
     border-color: #6bb207!important;
     border-radius: 100px !important;
@@ -82,7 +82,7 @@
     letter-spacing: 0.2px !important;
 
     margin-right: 4px !important;
-}
+}*/
 
 @media (min-width: 992px){
     .navbar-expand-lg .navbar-nav .nav-link{
@@ -96,7 +96,7 @@ nav.navbar-light {
     border-bottom-width: 2px;
 }
 
-.shopping-cart {
+/*.shopping-cart {
     color: #ffffff !important;
     border-color: #6bb207!important;
     border-radius: 100px !important;
@@ -114,7 +114,7 @@ nav.navbar-light {
     letter-spacing: 0.2px !important;
 
     margin-right: 4px !important;
-}
+}*/
 
 .logo .navbar-brand{
     height: 112px;
