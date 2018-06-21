@@ -41,26 +41,28 @@
 						<tbody>
 							<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
 								<h3 class="panel-title" style="float:left; margin-top: 21px;">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
-							<div class="add-to-cart" style="border: solid;float: right;">
-								<input type = 'submit' value = 'Finalizar pedido' style="position: relative; float: right; background: none; border: none; top: 24px; color: white;     margin-right: 4px;">
-								<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: right; margin-right: 15px; height: 72px;">
+							<div class="add-to-cart" style="float: right; height: 57px;">
+									<button class='btn btn-lg 'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
+										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
+										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Enviar al carrito</a>
+									</button>
 							</div>
-								{% for i in items %}
-								<tr>
-									<td><img src= "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/201703/15/00118110600014____1__600x600.jpg" style="height: 37px;"></td>
-									<td>{{i.product_title}}</td>
-									<td>{{i.unit_price}}€/{{i.units}}</td>
-									<td>{{i.location_origin}}</td>
-									<td><input type = 'text' size = '30' name = '{{i.product_title}}' placeholder = '{{i.units}}'></td>
-								</tr>
-								{% endfor %}
-							</form>
-						</tbody>
-					</table>
-				</div>
+							{% for i in items %}
+							<tr>
+								<td><img src= "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/201703/15/00118110600014____1__600x600.jpg" style="height: 37px;"></td>
+								<td>{{i.product_title}}</td>
+								<td>{{i.unit_price}}€/{{i.units}}</td>
+								<td>{{i.location_origin}}</td>
+								<td><input type = 'text' size = '30' name = '{{i.product_title}}' placeholder = '{{i.units}}'></td>
+							</tr>
+							{% endfor %}
+						</form>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
+</div>
 
 {% endblock content %}
 

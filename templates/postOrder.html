@@ -25,6 +25,7 @@
 	                    	<th><input type="text" class="form-control" placeholder="Eliminar" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Un poquito más?" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Precio Unidad" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Total" disabled></th>
 
@@ -41,11 +42,10 @@
 
 
 							<form action = "{{url_for('postOrder',agricultor_id=agricultor.id)}}" method = 'POST'>
-								<div class="add-to-cart" style="float: left;">
+								<div class="add-to-cart" style="float: left; height: 57px;">
 									<button class='btn btn-lg 'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
-										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 72px;">
-										<h4 style="display: inline-block; float:right; padding-top: 20px;">Actualiza tu compra</h4><img style="position: relative; float: left; padding-top: 34px;
-										" src="{{url_for('static', filename='click2.svg')}}">
+										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
+										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Actualiza tu compra</a>
 									</button>
 								</div>
 		                		<tr>
@@ -53,6 +53,9 @@
 									<td><a href="{{url_for('deleteItem', agricultor_id = agricultor.id, pedido_id = i.id)}}"><img src="{{url_for('static', filename='trash_bin.svg')}}" style="height: 23px;"></a></td>
 									<td>
 										{{i.product_name}}
+									</td>
+									<td>
+										{{i.quantity}}{{i.product_units}}
 									</td>
 		                        	<td>
     									<input type = 'text' size = '30' name = '{{i.product_name}}' placeholder = '{{i.quantity}}{{i.product_units}}'>
@@ -65,6 +68,7 @@
 	                    	</form>
 	                    	<tr>
 	                    		<td>TOTAL</td>
+	                    		<td></td>
 	                    		<td></td>
 	                    		<td></td>
 	                    		<td></td>
