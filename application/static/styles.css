@@ -57,9 +57,13 @@
     letter-spacing: 0px !important;
     text-transform: uppercase !important;
 }
-.navbar-expand-lg .navbar-nav .nav-link {
-    color: #171717 !important;
+
+.nav-link.active{
+    color:rgb(107, 178, 7)!important;
 }
+/*.navbar-expand-lg .navbar-nav .nav-link {
+    color: #171717 !important;
+}*/
 .navbar-expand-lg .navbar-nav .nav-link:hover {
     color: #86af49 !important;
 }
