@@ -277,11 +277,15 @@ def deleteItem(agricultor_id, pedido_id):
 #         #     db.session.rollback()
 #         # return redirect(url_for('user'))
 
-
+    
     db.session.commit()
     updateorder = db.session.query(Pedido).filter_by(id = pedido_id, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
-    db.session.delete(updateorder)
-    db.session.commit()
+
+    try:
+        db.session.delete(updateorder)
+        db.session.commit()
+    except:
+        db.session.rollback()
     return postOrder(agricultor_id)
 
 # Historical Orders
