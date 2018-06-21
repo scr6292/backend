@@ -64,25 +64,58 @@
     color: #86af49 !important;
 }
 
-/*.logout {
-    color: #ffffff !important;
-    border-color: #6bb207!important;
-    border-radius: 100px !important;
-    -moz-border-radius: 100px !important;
-    -webkit-border-radius: 100px !important;
-    background-color: #6bb207 !important;
+.logout {
+    border-radius:100px!important;
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(107, 178, 7) !important;
+    border-color: rgb(107, 178, 7) !important;
+    border-top-color: rgb(107, 178, 7) !important;
+    border-right-color: rgb(107, 178, 7) !important;
+    border-bottom-color: rgb(107, 178, 7) !important;
+    border-left-color: rgb(107, 178, 7) !important;
 
-    font-size: 13px !important;
-    line-height: 50px !important;
-    height: 50px !important;
-    font-weight: 600 !important;
+    line-height: 30px !important;
+    font-size: 12px !important;
+
+
     padding-left: 37px !important;
     padding-right: 37px !important;
 
-    letter-spacing: 0.2px !important;
+    height: 55px !important;
+}
 
-    margin-right: 4px !important;
-}*/
+.logout:hover {
+    background-color: white !important;
+    color: rgb(107, 178, 7) !important;
+    }
+
+.shopping-cart {
+    border-radius:100px!important; 
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(107, 178, 7) !important;
+    border-color: rgb(107, 178, 7) !important;
+    border-top-color: rgb(107, 178, 7) !important;
+    border-right-color: rgb(107, 178, 7) !important;
+    border-bottom-color: rgb(107, 178, 7) !important;
+    border-left-color: rgb(107, 178, 7) !important;
+
+    line-height: 30px !important;
+    font-size: 12px !important;
+
+
+    padding-left: 37px !important;
+    padding-right: 37px !important;
+
+    height: 55px !important;
+}
+
+.shopping-cart:hover {
+    background-color: white !important;
+    color: rgb(107, 178, 7) !important;
+    }
+
 
 @media (min-width: 992px){
     .navbar-expand-lg .navbar-nav .nav-link{
@@ -96,25 +129,7 @@ nav.navbar-light {
     border-bottom-width: 2px;
 }
 
-/*.shopping-cart {
-    color: #ffffff !important;
-    border-color: #6bb207!important;
-    border-radius: 100px !important;
-    -moz-border-radius: 100px !important;
-    -webkit-border-radius: 100px !important;
-    background-color: #6bb207 !important;
 
-    font-size: 13px !important;
-    line-height: 50px !important;
-    height: 50px !important;
-    font-weight: 600 !important;
-    padding-left: 37px !important;
-    padding-right: 37px !important;
-
-    letter-spacing: 0.2px !important;
-
-    margin-right: 4px !important;
-}*/
 
 .logo .navbar-brand{
     height: 112px;
