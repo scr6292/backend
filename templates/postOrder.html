@@ -9,12 +9,12 @@
 {% block content %}
 
 	<div class="container">
-	    <h3>{{agricultor.name}}</h3>
-	    <h4>Hola {{current_user.username}}, Tu pedido para esta semana es:</h4>
+		<br>
 	    <div class="row">
 	        <div class="panel panel-primary filterable">
 	            <div class="panel-heading" style="margin-bottom: 20px">
-	                <h3 class="panel-title" style="position: relative; float: left">Confirmar pedido realizado</h3>
+	            	<h4 style="position: relative;
+    					float: left;">Hola {{current_user.username}}, Actualiza o confirma los productos de tu ecoCesta</h4>
 	                <a href="{{url_for('agricultorMenuOrder', agricultor_id = agricultor.id)}}"><h4 style= "position: relative; float: right">Añadir más productos al carrito</h4></a>
 	                <div class="pull-right">
 	                </div>
@@ -32,8 +32,8 @@
 	                </thead>
 	                <tbody>
 							<form action = "{{url_for('postOrder',agricultor_id=agricultor.id)}}" method = 'POST'>
-								<div class="add-to-cart" style="border: solid;float: right;">
-									<input type = 'submit' value = 'Añadir al carrito' style="position: relative; float: right; background: none; border: none; top: 24px; color: white;     margin-right: 4px;">
+								<div class="add-to-cart" style="float: left;">
+									<input type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; top: 24px; color: #333;     margin-right: 4px;">
 									<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: right; margin-right: 15px; height: 72px;">
 								</div>
 		                		<tr>
