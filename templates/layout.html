@@ -9,18 +9,28 @@
 
 		<!-- Navbar -->
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  		<a class="navbar-brand" href="#">Nuestras Huertas</a>
-  		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    		<span class="navbar-toggler-icon"></span>
-  		</button>
-	  	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-	    	<div class="navbar-nav">
-	      	<a class="nav-item nav-link" href="#">Hacer pedido</a> <!-- url_for('agricultorMenuOrder',agricultor_id=agricultor_id) -->
-	      	<a class="nav-item nav-link" href="#">Carrito</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
-	      	<a class="nav-item nav-link disabled" href="#">Pedidos realizados</a>
-	      	<a class="nav-item nav-link disabled" href="#">Usuario</a>
-	    	</div>
-	  	</div>
+  			<div class="logo">
+  				<a class="navbar-brand" href="#">
+  					<img src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" class="normal">
+  				</a>
+  			</div>
+  			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    			<span class="navbar-toggler-icon"></span>
+  			</button>
+		  		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+		    		<div class="navbar-nav ml-auto">
+		      			<a class="nav-item nav-link" href="#">Hacer pedido</a> <!-- url_for('agricultorMenuOrder',agricultor_id=agricultor_id) -->
+				      	<a class="nav-item nav-link" href="#">Carrito</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
+				      	<a class="nav-item nav-link disabled" href="#">Pedidos realizados</a>
+				      	<a class="nav-item nav-link disabled" href="#">Usuario</a>
+		    		</div>
+		  		</div>
+		  		<div class="navbar-sign" id="navbarNavAltMarkup">
+		    		<div class="navbar-nav ml-auto">
+				      	<a class="logout" href="#">Ver carrito</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
+				      	<a class="shopping-cart" href="#">Cerrar sesión</a>
+		    		</div>
+		  		</div>
 		</nav>
 		{% endblock head %}
 

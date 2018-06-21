@@ -39,3 +39,73 @@
     border-bottom-left-radius: 100px;
     background-color: rgb(107, 178, 7)
     }
+
+/*Header*/
+.navbar {
+    padding-left: 45px !important;
+    padding-right: 45px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+/*
+.main_menu {
+    position: relative !important;
+    left: auto !important;
+    float: right !important;
+}*/
+
+.logout {
+    color: #ffffff;
+    border-color: #6bb207;
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    background-color: #6bb207;
+
+    font-size: 13px;
+    line-height: 50px;
+    height: 50px;
+    font-weight: 600;
+    padding-left: 37px;
+    padding-right: 37px;
+
+    letter-spacing: 0.2px;
+
+    margin-right: 4px;
+}
+
+@media (min-width: 992px){
+    .navbar-expand-lg .navbar-nav .nav-link{
+        padding-right: 1.5rem;
+        padding-left: 1.5rem
+    }
+}
+
+.shopping-cart {
+    color: #ffffff;
+    border-color: #6bb207;
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    background-color: #6bb207;
+
+    font-size: 13px;
+    line-height: 50px;
+    height: 50px;
+    font-weight: 600;
+    padding-left: 37px;
+    padding-right: 37px;
+
+    letter-spacing: 0.2px;
+}
+
+.logo .navbar-brand{
+    height: 112px;
+}
+
+.logo .navbar-brand img{
+    height: 100%;
+}
+
+
+/*end of Header*/
