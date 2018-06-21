@@ -65,23 +65,23 @@
 }
 
 .logout {
-    color: #ffffff;
-    border-color: #6bb207;
-    border-radius: 100px;
-    -moz-border-radius: 100px;
-    -webkit-border-radius: 100px;
-    background-color: #6bb207;
+    color: #ffffff !important;
+    border-color: #6bb207!important;
+    border-radius: 100px !important;
+    -moz-border-radius: 100px !important;
+    -webkit-border-radius: 100px !important;
+    background-color: #6bb207 !important;
 
-    font-size: 13px;
-    line-height: 50px;
-    height: 50px;
-    font-weight: 600;
-    padding-left: 37px;
-    padding-right: 37px;
+    font-size: 13px !important;
+    line-height: 50px !important;
+    height: 50px !important;
+    font-weight: 600 !important;
+    padding-left: 37px !important;
+    padding-right: 37px !important;
 
-    letter-spacing: 0.2px;
+    letter-spacing: 0.2px !important;
 
-    margin-right: 4px;
+    margin-right: 4px !important;
 }
 
 @media (min-width: 992px){
@@ -97,21 +97,23 @@ nav.navbar-light {
 }
 
 .shopping-cart {
-    color: #ffffff;
-    border-color: #6bb207;
-    border-radius: 100px;
-    -moz-border-radius: 100px;
-    -webkit-border-radius: 100px;
-    background-color: #6bb207;
+    color: #ffffff !important;
+    border-color: #6bb207!important;
+    border-radius: 100px !important;
+    -moz-border-radius: 100px !important;
+    -webkit-border-radius: 100px !important;
+    background-color: #6bb207 !important;
 
-    font-size: 13px;
-    line-height: 50px;
-    height: 50px;
-    font-weight: 600;
-    padding-left: 37px;
-    padding-right: 37px;
+    font-size: 13px !important;
+    line-height: 50px !important;
+    height: 50px !important;
+    font-weight: 600 !important;
+    padding-left: 37px !important;
+    padding-right: 37px !important;
 
-    letter-spacing: 0.2px;
+    letter-spacing: 0.2px !important;
+
+    margin-right: 4px !important;
 }
 
 .logo .navbar-brand{
