@@ -81,6 +81,15 @@
 	                <thead>
 	                    <tr class="filters">
 	                        <th><input type="text" class="form-control" placeholder="Ver mis pedidos de otras semanas" disabled></th>
+	                        <th>
+	                        	<div class="add-to-cart" style="float: right; height: 57px;">
+									<button type="button" onclick="window.location.href='{{url_for('orderConfirm', agricultor_id=agricultor.id)}}'" class='btn btn-lg 'style='background-color:transparent; color: white;'value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
+										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
+										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Confirma tu compra</a>
+									</button>
+								</div>
+
+	                        </th>
 	                    </tr>
 	                </thead>
 	                <tbody>

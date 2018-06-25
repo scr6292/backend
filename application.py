@@ -256,28 +256,31 @@ def postOrder(agricultor_id):
 
     return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total) 
 
+@application.route('/agricultores/<int:agricultor_id>/postorder/confirm', methods=['GET'])
+@login_required(role="CUSTOMER")
+def orderConfirm(agricultor_id):
+
+    db.session.commit()
+    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
+    total = 0
+    for item in order:
+        tot = float(item.product_price)*float(item.quantity)
+        total = total + tot
+
+    for item in order:
+        item.is_confirmed = True
+        try:
+            db.session.add(item)
+            db.session.commit()
+        except:
+            db.session.rollback()
+    return render_template('confirmation.html', user_name = current_user.username, total = total, order = order)
+
+
 @application.route('/agricultores/<int:agricultor_id>/postorder/delete/<pedido_id>', methods=['GET','POST'])
 @login_required(role="CUSTOMER")
 def deleteItem(agricultor_id, pedido_id):
 
-#     if form_delete.validate_on_submit():
-#         if form_delete.delete.data :
-
-#             db.session.commit()
-#             updateorder = db.session.query(Pedido).filter_by(product_name = form_delete.delete.data, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
-#             db.session.delete(updateorder)
-#             db.session.commit()
-#     return postOrder(agricultor_id)
-
-#         #     currentuser.username = form_user.username.data
-#         # db.session.add(currentuser)
-#         # try:
-#         #     db.session.commit()
-#         # except:
-#         #     db.session.rollback()
-#         # return redirect(url_for('user'))
-
-    
     db.session.commit()
     updateorder = db.session.query(Pedido).filter_by(id = pedido_id, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
 
@@ -567,7 +570,7 @@ class OrderView(BaseView):
     
     @expose('/')
     def pedidos(self):
-        order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).group_by(Pedido.user_name).all()
+        order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).filter_by(is_confirmed=True).group_by(Pedido.user_name).all()
         weeks = db.session.query(Pedido.week).distinct()
         week = db.session.query(Pedido.week).first()
         return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1, week = week)
@@ -577,7 +580,7 @@ class OrderView(BaseView):
         db.session.commit()
         agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
         weeks = db.session.query(Pedido.week).filter_by(user_name = username).distinct()
-        order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1])
+        order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1], is_confirmed = True)
         total = 0
         for item in order:
             tot = float(item.product_price)*float(item.quantity)

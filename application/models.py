@@ -84,11 +84,7 @@ class UpdatePassForm(FlaskForm):
 # END LOGIN
 
 # OTHER FORMS
-class DeleteForm(FlaskForm):
-    delete = StringField('Delete', validators=[Length(max=50)])
 
-class UpdateQtyForm(FlaskForm):
-    update = StringField('Update', validators=[Length(max=50)])
 
 #END FORMS
 
@@ -162,6 +158,7 @@ class Pedido(db.Model):
 	product_join = db.relationship(Productos, foreign_keys=[product_name])
 	year = db.Column(db.Integer, default=date.today().year)
 	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
+	is_confirmed = db.Column(db.Boolean,default=False)
 
 class Contact(db.Model):
 	__tablename__= 'contact'
