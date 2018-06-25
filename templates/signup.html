@@ -6,21 +6,6 @@
 
 {{ super() }}
 
-
-<<<<<<< HEAD
-=======
-  <form class="form-signin" method="POST" action="/signup">
-    <h2 class="form-signin-heading">Regístrate</h2>
-    {{ form.hidden_tag() }}
-    {{ wtf.form_field(form.username) }}
-    {{ wtf.form_field(form.email) }}
-    {{ wtf.form_field(form.password) }}
-    {{ wtf.form_field(form.pickup) }}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Registrar</button>
-    <p> Ya tienes cuenta? <a class ="inline-block" href= "/login">Iniciar sesión</a></p>
-  </form>
->>>>>>> e86aea1d0ceb3590b184bf705825a9f99bdc935d
-
 {% endblock head %}
 
 {% block content %}
@@ -34,6 +19,7 @@
         {{ wtf.form_field(form.username) }}
         {{ wtf.form_field(form.email) }}
         {{ wtf.form_field(form.password) }}
+        {{ wtf.form_field(form.pickup) }}
         <button class="btn btn-lg btn-success btn-block" type="submit">Registrar</button>
         <p> Ya tienes cuenta? <a class ="inline-block" href= "/login">Iniciar sesión</a></p>
       </form>
