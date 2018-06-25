@@ -6,8 +6,33 @@
 
 {% endblock head %}
 {% block content %}
-
-<h2>Hola {{current_user.username}}, en esta página puedes editar tu información de usuario</h2>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <h3>Editar tu información de usuario</h3>
+      <form class="form-signin" method="POST" action="{{url_for('user')}}">
+        <h4 class="form-signin-heading">Cambia tu nombre de usuario</h4>
+        {{ formuser.hidden_tag() }}
+        {{ wtf.form_field(formuser.username) }}
+        <button class="btn btn-success" type="submit">Confirmar cambios</button>
+      </form>
+      <hr>
+      <form class="form-signin" method="POST" action="{{url_for('user')}}">
+        <h4 class="form-signin-heading">Cambia tu email</h4>
+        {{ formemail.hidden_tag() }}
+        {{ wtf.form_field(formemail.email) }}
+        <button class="btn btn-success" type="submit">Confirmar cambios</button>
+      </form>
+      <hr>
+      <form class="form-signin" method="POST" action="{{url_for('user')}}">
+        <h4 class="form-signin-heading">Cambia tu password</h4>
+        {{ formpass.hidden_tag() }}
+        {{ wtf.form_field(formpass.password) }}
+        <button class="btn btn-success" type="submit">Confirmar cambios</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 
 <!-- <form action = "{{url_for('user')}}" method = 'POST'>
@@ -23,29 +48,6 @@
 
 <input type = 'submit' value = 'Confirmar cambios'>
 </form> -->
-
-<div class="container">
-
-  <form class="form-signin" method="POST" action="{{url_for('user')}}">
-    <h2 class="form-signin-heading">Cambia tu usuario</h2>
-    {{ formuser.hidden_tag() }}
-    {{ wtf.form_field(formuser.username) }}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Confirmar cambios</button>
-  </form>
-    <form class="form-signin" method="POST" action="{{url_for('user')}}">
-    <h2 class="form-signin-heading">Cambia tu email</h2>
-    {{ formemail.hidden_tag() }}
-    {{ wtf.form_field(formemail.email) }}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Confirmar cambios</button>
-  </form>
-    <form class="form-signin" method="POST" action="{{url_for('user')}}">
-    <h2 class="form-signin-heading">Cambia tu password</h2>
-    {{ formpass.hidden_tag() }}
-    {{ wtf.form_field(formpass.password) }}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Confirmar cambios</button>
-  </form>
-
-</div> <!-- /container -->
 
 
 {% endblock content %}

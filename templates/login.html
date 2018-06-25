@@ -1,30 +1,39 @@
-{% extends "bootstrap/base.html" %}
+<html>
+{% extends "layout_login.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}
-Iniciar sesión
-{% endblock %}
+{% block head %}
 
-{% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
-{% endblock %}
+{{ super() }}
+
+
+
+{% endblock head %}
 
 {% block content %}
     <div class="container">
-
-      <form class="form-signin" method="POST" action="/login">
-        <h2 class="form-signin-heading">Iniciar sesión</h2>
-        {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.email) }}
-        {{ wtf.form_field(form.password) }}
-        {% if invalid_pass %}
-         <p class="text-danger"> La contraseña no es válida </p>
-        {% endif %}
-        {{ wtf.form_field(form.remember) }}
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
-        <p> No tienes cuenta? <a class ="inline-block" href= "/signup">Regístrate</a></p>
-      </form>
+      <!--<div class="row">
+        <div class="col-md-2 col-sm-2 col-xs-12">
+            <img src="{{url_for('.static', filename='img/ajos.jpg')}}" class="img-fluid" alt="Responsive image">
+        </div>
+      </div> -->
+      <div class = "row">
+        <div class = "col-md-6 col-sm-6 col-xs-12 align-self-center">
+          <form class="form-signin" method="POST" action="/login">
+            <h2 class="form-signin-heading">Iniciar sesión</h2>
+              
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.email) }}
+            {{ wtf.form_field(form.password) }}
+            {% if invalid_pass %}
+             <p class="text-danger"> La contraseña no es válida </p>
+            {% endif %}
+            {{ wtf.form_field(form.remember) }}
+            <button class="btn btn-lg btn-success btn-block" type="submit">Entrar</button>
+            <p> No tienes cuenta? <a class ="inline-block" href= "/signup">Regístrate</a></p>
+          </form>
+        </div>
+      </div>
 
 
     </div> <!-- /container -->
