@@ -6,11 +6,21 @@ from datetime import date
 
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import InputRequired, Email, Length
 
 
 # LOGINS
+
+class Pickup(db.Model):
+	__tablename__='pickup'
+
+	id = db.Column(db.Integer, primary_key = True)
+	name = db.Column(db.String(30),nullable=False)
+
+	def __repr__(self):
+		return '<Recogida %r>' % self.name
+
 class User(UserMixin, db.Model):
 	__tablename__ = "user"
 
@@ -19,16 +29,19 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(50), unique=True)
 	password = db.Column(db.String(80))
 	user_role = db.Column(db.String(80))
+	pickup = db.Column(db.String(80), db.ForeignKey('pickup.name'), nullable=False)
+	pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
 	is_active = db.Column(db.Boolean,default=False)
 	is_admin = db.Column(db.Boolean,default=False)
 
-	def __init__(self,username,password,email,is_active,user_role,is_admin):
+	def __init__(self,username,password,email,is_active,user_role,is_admin,pickup):
 		self.username = username
 		self.password = password
 		self.email = email
 		self.user_role = user_role
 		self.is_active = is_active
 		self.is_admin = is_admin
+		self.pickup = pickup
 
 	def get_id(self):
 		return self.id
@@ -42,6 +55,8 @@ class User(UserMixin, db.Model):
 		return self.user_role
 	def get_is_admin(self):
 		return self.is_admin
+	def get_pickup(self):
+		return self.pickup
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
@@ -52,6 +67,11 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
     username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
     password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
+    pickup = SelectField('Punto de entrega', validators=[InputRequired(message='Por favor, selecciona un punto de recogida')], coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.pickup.choices = [(a.id, a.name) for a in db.session.query(Pickup).order_by('name')]
 
 class UpdateUsernameForm(FlaskForm):
     username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
@@ -62,6 +82,8 @@ class UpdateEmailForm(FlaskForm):
 class UpdatePassForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
 # END LOGIN
+
+# OTHER FORMS
 
 
 #END FORMS
@@ -117,6 +139,7 @@ class Productos(db.Model):
 			}
 
 
+
 class Pedido(db.Model):
 	__tablename__= 'pedido'
 
@@ -128,13 +151,14 @@ class Pedido(db.Model):
 	product_units = db.Column(db.String(80), db.ForeignKey('productos.units'))
 	user_name = db.Column(db.String(30), db.ForeignKey('user.username'))
 	email = db.Column(db.String(50), db.ForeignKey('user.email'))
-	user_email = db.relationship(User, foreign_keys=[email])
-	user = db.relationship(User, foreign_keys=[user_name])
+	user_email_join = db.relationship(User, foreign_keys=[email])
+	user_join = db.relationship(User, foreign_keys=[user_name])
 	product_price_join = db.relationship(Productos, foreign_keys=[product_price])
 	product_unit_join = db.relationship(Productos, foreign_keys=[product_units])
-	product = db.relationship(Productos, foreign_keys=[product_name])
+	product_join = db.relationship(Productos, foreign_keys=[product_name])
 	year = db.Column(db.Integer, default=date.today().year)
 	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
+	is_confirmed = db.Column(db.Boolean,default=False)
 
 class Contact(db.Model):
 	__tablename__= 'contact'
@@ -179,3 +203,4 @@ class Contact(db.Model):
 
 	def __repr__(self):
 		return '<Contacto %r>' % self.name
+
