@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from application import db, application
-from application.models import Agricultor, Contact, Productos, User, LoginForm, RegisterForm, UpdateUsernameForm, UpdatePassForm, UpdateEmailForm, Pedido
+from application.models import Agricultor, Contact, Pickup, Productos, User, LoginForm, RegisterForm, UpdateUsernameForm, UpdatePassForm, UpdateEmailForm, Pedido
 from werkzeug.utils import secure_filename
 import parseCSV
 from sqlalchemy import func
@@ -510,7 +510,7 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="ADMIN", is_admin=False)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="ADMIN", is_admin=False, pickup=form.pickup.data)
         db.session.add(new_user)
         # try: 
         db.session.commit()
@@ -602,6 +602,7 @@ admin.add_view(MyModelView(User ,db.session))
 admin.add_view(MyModelView(Productos ,db.session))
 admin.add_view(CsvUpdateView(name = 'Actualizar Productos', endpoint = 'csvUpdate'))
 admin.add_view(OrderView(name = 'Pedidos', endpoint = 'adminorders'))
+admin.add_view(MyModelView(Pickup ,db.session, name = 'Puntos de entrega'))
 
 
 if __name__ == '__main__':

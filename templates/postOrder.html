@@ -19,15 +19,15 @@
 	                <div class="pull-right">
 	                </div>
 	            </div>
-	            <table class="table">
+	            <table class="table postorder">
 	                <thead>
-	                    <tr class="filters">
-	                    	<th><input type="text" class="form-control" placeholder="Eliminar" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Un poquito más?" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Precio Unidad" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="Total" disabled></th>
+	                    <tr class="filters postorder" style="font-weight: bold">
+	                    	<th><input type="text" class="form-control postorder-head" placeholder="Eliminar" disabled></th>
+	                        <th><input type="text" class="form-control postorder-head" placeholder="Producto" disabled></th>
+	                        <th><input type="text" class="form-control postorder-head" placeholder="Cantidad" disabled></th>
+	                        <th><input type="text" class="form-control postorder-head" placeholder="Un poquito más?" disabled></th>
+	                        <th><input type="text" class="form-control postorder-head" placeholder="Precio Unidad" disabled></th>
+	                        <th><input type="text" class="form-control postorder-head" placeholder="Total" disabled></th>
 
 	                    </tr>
 	                </thead>
@@ -40,16 +40,16 @@
  <i class="fa fa-sync"></i> Edit
 </button> -->
 
-
-							<form action = "{{url_for('postOrder',agricultor_id=agricultor.id)}}" method = 'POST'>
+							<form action = "{{url_for('postOrder',agricultor_id=agricultor.id)}}" method = 'POST' >
 								<div class="add-to-cart" style="float: left; height: 57px;">
 									<button class='btn btn-lg 'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
 										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
 										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Actualiza tu compra</a>
 									</button>
 								</div>
-		                		<tr>
-			                		{% for i in order %}
+		                			{% for i in order %}
+		                			<tr class="postorder">
+			                		
 									<td><a href="{{url_for('deleteItem', agricultor_id = agricultor.id, pedido_id = i.id)}}"><img src="{{url_for('static', filename='trash_bin.svg')}}" style="height: 23px;"></a></td>
 									<td>
 										{{i.product_name}}
@@ -66,6 +66,7 @@
 		                    	</tr>
 		                    		{% endfor %}
 	                    	</form>
+
 	                    	<tr>
 	                    		<td>TOTAL</td>
 	                    		<td></td>
