@@ -7,10 +7,12 @@
         <table class="table">
             <tbody>
             <tr>
+            	{% if week %}
            {% for row in week %}
             <h2>Pedidos de la semana 
              {{row}} 
          </h2></tr>{% endfor %}
+					{% endif %}         
              
             		<tr>
                 		{% for i in order %}
@@ -23,6 +25,7 @@
                 		<td><a href = "{{url_for('adminorders.pedidos')}}">Semana {{i.week}}</a></td>
                 	</tr>
                 		{% endfor %}
+
 
             </tbody>
 

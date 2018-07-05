@@ -25,6 +25,13 @@ from functools import wraps
 from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 
+# Email
+
+from flask import Flask, request, url_for
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+
+
 admin = Admin(application)
 
 Bootstrap(application)
@@ -32,6 +39,49 @@ Bootstrap(application)
 login_manager = LoginManager()
 login_manager.init_app(application)
 login_manager.login_view = 'login'
+
+
+
+# test
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+
+#Being able to store files
+UPLOAD_FOLDER = '/Users/SRoca/PLANTONDEMAND/November/backend/Documents/csvFiles'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'])
+
+# Elastic Beanstalk initalization
+#application = Flask(__name__)
+application.debug=True
+
+# Must be secret
+application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
+
+#Set Upload folder
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+# Email
+
+# application.config.from_pyfile('config.cfg')
+
+application.config.update(dict(
+    DEBUG = True,
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = 587,
+    MAIL_USE_TLS = True,
+    MAIL_USE_SSL = False,
+    MAIL_USERNAME = 'plantondemand@gmail.com',
+    MAIL_PASSWORD = '@Fumies9933',
+))
+
+mail = Mail(application)
+
+s = URLSafeTimedSerializer(application.secret_key)
+
+# End Email
+
+# LOGIN
 
 # Create customized model view class
 
@@ -49,30 +99,6 @@ def login_required(role="ANY"):
                 return fn(*args, **kwargs)
         return decorated_view
     return wrapper
-
-# END LOGIN
-
-
-
-# test
-SQLALCHEMY_TRACK_MODIFICATIONS = True
-
-
-
-
-#Being able to store files
-UPLOAD_FOLDER = '/Users/SRoca/PLANTONDEMAND/November/backend/Documents/csvFiles'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'])
-
-# Elastic Beanstalk initalization
-#application = Flask(__name__)
-application.debug=True
-
-# change this to your own value
-application.secret_key = 'q7xsaGX1vwEYfFRV+GTuZP1ISrE8JL7QlkoIAvVe'
-
-#Set Upload folder
-application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #alloed files
 def allowed_file(filename):
@@ -107,90 +133,6 @@ def onepage():
     return render_template('testSERGI.html')
 
 
-#Show all agricultures
-@application.route('/agricultores', methods=['GET'])
-@login_required(role="CUSTOMER")
-def listaAgricultores():
-    db.session.commit()
-    agriList = db.session.query(Agricultor).all()
-    return render_template('agriList.html', agriList = agriList)
-
-
-#Show agricultor info
-@application.route('/agricultores/<int:agricultor_id>/info', methods=['GET'])
-@login_required(role="CUSTOMER")
-def agricultorInfo(agricultor_id):
-    db.session.commit()
-    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    item = db.session.query(Contact).filter_by(agricultor_id=agricultor.id).first()
-    return render_template('agricultorinfo.html', agricultor=agricultor, item=item)
-
-#Edit agricultor info
-@application.route('/agricultores/<int:agricultor_id>/info/edit', methods=['GET', 'POST'])
-@login_required(role="CUSTOMER")
-def editInfo(agricultor_id):
-    # agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    editedInfo = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).first()
-    if request.method == 'POST':
-        if editedInfo:
-            if request.form['name']:
-                editedInfo.name = request.form['name']
-            if request.form['email']:
-                editedInfo.email = request.form['email']
-            if request.form['phone']:
-                editedInfo.phone = request.form['phone']
-            if request.form['location']:
-                editedInfo.location = request.form['location']
-            if request.form['website']:
-                editedInfo.website = request.form['website']
-            if request.form['productos']:
-                editedInfo.productos = request.form['productos']
-            if request.form['pedido_minimo']:
-                editedInfo.pedido_minimo = request.form['pedido_minimo']
-            if request.form['diasreparto']:
-                editedInfo.diasreparto = request.form['diasreparto']
-            if request.form['logistica']:
-                editedInfo.logistica = request.form['logistica']
-            if request.form['encargado']:
-                editedInfo.encargado = request.form['encargado']
-            if request.form['links']:
-                editedInfo.links = request.form['links']
-
-            db.session.add(editedInfo)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback() #Rollback the changes on error
-
-            flash("Infor properly edited")
-            return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id))
-        else:
-            editedInfo = Contacto(name = request.form['name'], email =request.form['email'],
-                 phone =request.form['phone'], location = request.form['location'],website = request.form['website'],
-                 productos = request.form['productos'],pedido_minimo = request.form['pedido_minimo'],
-                 diasreparto = request.form['diasreparto'],logistica = request.form['logistica'],
-                 encargado = request.form['encargado'],links = request.form['links'],  agricultor_id = agricultor_id)
-            db.session.add(editedInfo)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback() #Rollback the changes on error
-            return redirect(url_for('agricultorInfo', agricultor_id = agricultor_id))
-    else:
-        return render_template('editinfo.html', agricultor_id = agricultor_id, item = editedInfo)
-
-
-
-
-#Edit agricultor products
-@application.route('/agricultores/<int:agricultor_id>/', methods=['GET'])
-@login_required(role="CUSTOMER")
-def agricultorMenu(agricultor_id):
-    db.session.commit()
-    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    items = db.session.query(Productos)
-    return render_template('menu.html', agricultor=agricultor, items=items)
-
 #Order agriculture products
 @application.route('/agricultores/<int:agricultor_id>/order', methods=['GET', 'POST'])
 @login_required(role="CUSTOMER")
@@ -215,13 +157,17 @@ def agricultorMenuOrder(agricultor_id):
                 else:
                     order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price)
                     db.session.add(order)
-                try:
+                # try:
                     db.session.commit()
-                except:
-                    db.session.rollback()
+                # except:
+                #     db.session.rollback()
 
-        flash("Tu pedido ha sido procesado!")
-        return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+                flash("Tu pedido ha sido procesado!")
+                return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+
+        flash("No has seleccionado ningun producto")
+        return redirect(url_for('agricultorMenuOrder', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year))
+
 
     else:
         return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year)
@@ -301,126 +247,6 @@ def historicalOrders(agricultor_id, week):
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = week)
     return render_template('historicalOrders.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, week = week)
 
-
-#Add a new agriculture
-@application.route('/agricultores/new', methods=['GET','POST'])
-@login_required(role="CUSTOMER")
-def newAgricultor():
-    if request.method == 'POST':
-        newAgri = Agricultor(name = request.form['name'])
-        db.session.add(newAgri)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        flash("New agricultor created!")
-        return redirect(url_for('listaAgricultores'))
-    else:
-        return render_template('newagriculture.html')
-
-#Edit an agriculture
-@application.route('/agricultores/<int:agricultor_id>/edit', methods=['GET', 'POST'])
-@login_required(role="CUSTOMER")
-def editAgricultor(agricultor_id):
-    editedAgricultor = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
-    if request.method == 'POST':
-        if request.form['new name']:
-            editedAgricultor.name = request.form['new name']
-        db.session.add(editedAgricultor)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        flash("Agricultor properly edited")
-        return redirect(url_for('listaAgricultores'))
-    else:
-        return render_template('editagricultor.html', agricultor_id = agricultor_id, item = editedAgricultor)
-
-#Delete an agricultor
-@application.route('/agricultores/<int:agricultor_id>/delete', methods = ['GET', 'POST'])
-@login_required(role="CUSTOMER")
-def deleteAgricultor(agricultor_id):
-    selectedContacto = db.session.query(Contacto).filter_by(agricultor_id = agricultor_id).all()
-    selectedProducts = db.session.query(Productos).filter_by(agricultor_id = agricultor_id).all()
-    selectedItem = db.session.query(Agricultor).filter_by(id = agricultor_id).one()
-    if request.method == 'POST':
-        for items in selectedProducts:
-            db.session.delete(items)
-            db.session.commit()
-        for items in selectedContacto:
-            db.session.delete(items)
-            db.session.commit()
-
-        db.session.delete(selectedItem)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        flash("Item properly deleted")
-        return redirect(url_for('listaAgricultores'))
-
-    else:
-        return render_template('deleteagricultor.html', agricultor_id = agricultor_id, item = selectedItem)
-
-
-#Add a product
-@application.route('/agricultores/<int:agricultor_id>/new', methods=['GET','POST'])
-@login_required(role="CUSTOMER")
-def newProduct(agricultor_id):
-    if request.method == 'POST':
-        newItem = Productos(name = request.form['name'], description=request.form['description'],
-                 price=request.form['price'],preciounidad=request.form['preciounidad'], agricultor_id = agricultor_id)
-        db.session.add(newItem)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        flash("New menu item created!")
-        return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
-    else:
-        return render_template('newmenuitem.html', agricultor_id = agricultor_id)
-
-
-#Edit a product
-@application.route('/agricultores/<int:agricultor_id>/<int:product_id>/edit', methods=['GET', 'POST'])
-@login_required(role="CUSTOMER")
-def editMenuItem(agricultor_id, product_id):
-    editedItem = db.session.query(Productos).filter_by(product_id = product_id).one()
-    if request.method == 'POST':
-        if request.form['name']:
-            editedItem.product_title = request.form['name']
-        if request.form['price']:
-            editedItem.unit_price = request.form['price']
-        if request.form['units']:
-            editedItem.units = request.form['units']
-        db.session.add(editedItem)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        flash("Item properly edited")
-        return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
-    else:
-        return render_template('editmenuitem.html', agricultor_id = agricultor_id, product_id = product_id, item = editedItem)
-
-
-#Delete a product
-@application.route('/agricultores/<int:agricultor_id>/<int:product_id>/delete', methods = ['GET', 'POST'])
-@login_required(role="CUSTOMER")
-def deleteMenuItem(agricultor_id, product_id):
-    selectedItem = db.session.query(Productos).filter_by(id = product_id).one()
-    if request.method == 'POST':
-        db.session.delete(selectedItem)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        flash("Item properly deleted")
-        return redirect(url_for('agricultorMenu', agricultor_id = agricultor_id))
-
-    else:
-        return render_template('deletemenuitem.html', agricultor_id = agricultor_id, product_id = product_id, item = selectedItem)
-
 #Users page
 @application.route('/user', methods=['GET', 'POST'])
 @login_required(role="CUSTOMER")
@@ -484,7 +310,9 @@ def agricultorInfoJSON(agricultor_id):
     return jsonify(Info=info.serialize)
 
 
-# LOGIN
+# login
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -497,9 +325,11 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            if check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
-                return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
+            if user.is_active == True:
+                if check_password_hash(user.password, form.password.data):
+                    login_user(user, remember=form.remember.data)
+                    return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
+            else: return '<h1>El link de confirmacion ha expirado</h1>'
 
         else:
             invalid_pass = 1
@@ -513,12 +343,26 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=True, user_role="ADMIN", is_admin=False, pickup=form.pickup.data)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup=form.pickup.data)
         db.session.add(new_user)
         # try: 
         db.session.commit()
-        flash("Te has registrado correctamente")
-        return redirect(url_for('login'))
+        # flash("Te has registrado correctamente")
+
+        email = form.email.data
+        token = s.dumps(email, salt='email-confirm')
+
+        msg = Message('Confirm Email', sender='srocapuertas@gmail.com', recipients=[email])
+
+        link = url_for('confirm_email', token=token, _external=True)
+
+        msg.body = 'Your link is {}'.format(link)
+
+        mail.send(msg)
+
+        return '<h1>Por favor, para validar tu usuario clica en el link de confirmacion que hemos enviado a tu email {}.</h1>'.format(email)
+        
+        # return redirect(url_for('login'))
         # except: 
         #     db.session.rollback() #Rollback the changes on error
         #     flash("El email o nombre de usuario que has introducido ya existe, por favor introduce unos distintos")
@@ -527,6 +371,26 @@ def signup():
 
 
     return render_template('signup.html', form=form)
+
+
+@application.route('/confirm_email/<token>')
+def confirm_email(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+    except SignatureExpired:
+        user = User.query.filter_by(email=email).first()
+        db.session.delete(user)
+        db.session.commit()
+        return '<h1>Tu link de validación ha expirado, por favor, registrate de nuevo</h1>'    
+    
+    user = User.query.filter_by(email=email).first()
+    user.is_active = True
+    db.session.add(user)
+    db.session.commit()
+
+    flash("Tu email se ha validado correctamente, por favor, inicia sesion")
+    return redirect(url_for('login'))
+    # # end test email
 
 
 @application.route('/logout')
@@ -587,19 +451,6 @@ class OrderView(BaseView):
             total = total + tot
         return self.render('admin/adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total, week = week)
 
-
-# @application.route('/admin/adminorder/<int:agricultor_id>/<username>')
-# # @login_required(role="ADMIN")
-# def orderuser(agricultor_id, username):
-#     db.session.commit()
-#     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-#     weeks = db.session.query(Pedido.week).filter_by(user_name = username).distinct()
-#     order = db.session.query(Pedido).filter_by(user_name = username, week = date.today().isocalendar()[1])
-#     total = 0
-#     for item in order:
-#         tot = float(item.product_price)*float(item.quantity)
-#         total = total + tot
-#     return render_template('admin/adminPostOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = username, total = total)
 
 admin.add_view(MyModelView(User ,db.session))
 admin.add_view(MyModelView(Productos ,db.session))

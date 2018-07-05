@@ -11,6 +11,17 @@
 {% endblock head %}
 
 {% block content %}
+<!-- Flash -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<!-- End flash -->
     <div class="container">
       <!--<div class="row">
         <div class="col-md-2 col-sm-2 col-xs-12">

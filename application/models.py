@@ -29,12 +29,12 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(50), unique=True)
 	password = db.Column(db.String(80))
 	user_role = db.Column(db.String(80))
-	pickup = db.Column(db.String(80), db.ForeignKey('pickup.name'), nullable=False)
-	pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
 	is_active = db.Column(db.Boolean,default=False)
 	is_admin = db.Column(db.Boolean,default=False)
+	pickup = db.Column(db.String(80), db.ForeignKey('pickup.name'), nullable=False)
+	pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
 
-	def __init__(self,username,password,email,is_active,user_role,is_admin,pickup):
+	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup):
 		self.username = username
 		self.password = password
 		self.email = email
@@ -45,10 +45,10 @@ class User(UserMixin, db.Model):
 
 	def get_id(self):
 		return self.id
-	def is_active(self):
-		return self.is_active
-	def activate_user(self):
-		self.is_active = True
+	# def is_active(self):
+	# 	return self.is_active
+	# def activate_user(self):
+	# 	self.is_active = True
 	def get_username(self):
 		return self.username
 	def get_user_role(self):

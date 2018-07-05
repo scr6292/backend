@@ -25,7 +25,7 @@
 				      	<a class="nav-item nav-link" href="#">Pedidos realizados</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
 				      	<a class="nav-item nav-link" href="/user">Usuario</a>
 				      	<a class="nav-item nav-link" href="http://www.nuestrashuertas.com/test/">Volver al blog</a>
-				      	<div class="navbar-nav ml-auto">
+				      	<div class="navbar-nav mr-auto">
 				      	<button type="button" class="btn btn-success logout" onclick="window.location='/agricultores/1/postorder';">Ver carrito</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
 				      	<button type="button" class="btn btn-success shopping-cart" href="#">Cerrar sesión</a>
 		    		</div>
@@ -36,6 +36,18 @@
 
 	</head>
 	  <body>
+<!-- Flash -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<!-- End flash -->
+
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">
       {% block footer %}
