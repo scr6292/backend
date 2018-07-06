@@ -157,16 +157,19 @@ def agricultorMenuOrder(agricultor_id):
                 else:
                     order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price)
                     db.session.add(order)
-                # try:
+                try:
                     db.session.commit()
-                # except:
-                #     db.session.rollback()
+                except:
+                    db.session.rollback()
 
-                flash("Tu pedido ha sido procesado!")
-                return redirect(url_for('postOrder', agricultor_id = agricultor_id))
-
-        flash("No has seleccionado ningun producto")
-        return redirect(url_for('agricultorMenuOrder', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year))
+         
+        order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+        if order != None:
+            flash("Tu pedido ha sido procesado!")
+            return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+        else:
+            flash("No has seleccionado ningun producto")
+            return redirect(url_for('agricultorMenuOrder', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year))
 
 
     else:
@@ -220,6 +223,11 @@ def orderConfirm(agricultor_id):
             db.session.commit()
         except:
             db.session.rollback()
+    msg = Message("Confirmacion de pedido",
+                sender="plantondemand@gmail.com",
+                recipients=[current_user.email])
+    msg.html = render_template('confirmation.html', user_name=current_user.username, total = total, order = order)
+    mail.send(msg)
     return render_template('confirmation.html', user_name = current_user.username, total = total, order = order)
 
 
@@ -378,6 +386,7 @@ def confirm_email(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
     except SignatureExpired:
+        email = s.loads(token, salt='email-confirm')
         user = User.query.filter_by(email=email).first()
         db.session.delete(user)
         db.session.commit()
