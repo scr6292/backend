@@ -381,7 +381,7 @@ def confirm_email(token):
         user = User.query.filter_by(email=email).first()
         db.session.delete(user)
         db.session.commit()
-        return '<h1>Tu link de validación ha expirado, por favor, registrate de nuevo</h1>'    
+        return '<h1>Tu link de validacion ha expirado, por favor, registrate de nuevo</h1>'    
     
     user = User.query.filter_by(email=email).first()
     user.is_active = True
