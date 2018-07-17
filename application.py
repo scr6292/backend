@@ -43,7 +43,7 @@ login_manager.login_view = 'login'
 
 
 # test
-SQLALCHEMY_TRACK_MODIFICATIONS = True
+# SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 #Being able to store files

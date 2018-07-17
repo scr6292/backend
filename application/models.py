@@ -31,8 +31,9 @@ class User(UserMixin, db.Model):
 	user_role = db.Column(db.String(80))
 	is_active = db.Column(db.Boolean,default=False)
 	is_admin = db.Column(db.Boolean,default=False)
-	pickup = db.Column(db.String(80), db.ForeignKey('pickup.name'), nullable=False)
+	pickup = db.Column(db.String(30), db.ForeignKey('pickup.name'), nullable=False)
 	pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
+
 
 	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup):
 		self.username = username
@@ -149,13 +150,13 @@ class Pedido(db.Model):
 	product_name = db.Column(db.String(80), db.ForeignKey('productos.product_title'))
 	product_price = db.Column(db.Float(8), db.ForeignKey('productos.unit_price'))
 	product_units = db.Column(db.String(80), db.ForeignKey('productos.units'))
-	user_name = db.Column(db.String(30), db.ForeignKey('user.username'))
-	email = db.Column(db.String(50), db.ForeignKey('user.email'))
-	user_email_join = db.relationship(User, foreign_keys=[email])
-	user_join = db.relationship(User, foreign_keys=[user_name])
+	user_name = db.Column(db.String(15), db.ForeignKey('user.username'), unique=True)
+	email = db.Column(db.String(50), db.ForeignKey('user.email'), unique=True)
 	product_price_join = db.relationship(Productos, foreign_keys=[product_price])
 	product_unit_join = db.relationship(Productos, foreign_keys=[product_units])
 	product_join = db.relationship(Productos, foreign_keys=[product_name])
+	user_email_join = db.relationship(User, foreign_keys=[email])
+	user_join = db.relationship(User, foreign_keys=[user_name])
 	year = db.Column(db.Integer, default=date.today().year)
 	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
 	is_confirmed = db.Column(db.Boolean,default=False)
