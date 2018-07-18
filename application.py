@@ -43,7 +43,7 @@ login_manager.login_view = 'login'
 
 
 # test
-SQLALCHEMY_TRACK_MODIFICATIONS = True
+# SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 #Being able to store files
@@ -145,7 +145,7 @@ def agricultorMenuOrder(agricultor_id):
     if request.method == 'POST':
         for item in items:
             if request.form[item.product_title]:
-                already_exist = db.session.query(Pedido).filter_by(product_name = item.product_title, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+                already_exist = db.session.query(Pedido).filter_by(product_name = item.product_title, user_id = current_user.username, week = date.today().isocalendar()[1]).first()
                 if already_exist:
                     already_exist.quantity = str(int(already_exist.quantity) + int(request.form[item.product_title]))
                     db.session.add(already_exist)
@@ -351,7 +351,7 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup=form.pickup.data)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup_name=form.pickup.data)
         db.session.add(new_user)
         # try: 
         db.session.commit()

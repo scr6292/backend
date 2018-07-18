@@ -41,53 +41,53 @@ def parsecsv(filename, id):
     # session.configure(bind=engine)
     # s = session()
 
-    try:
-        column_names = ['units','product_title','location_origin','unit_price','amount','current_price']
-        df=pd.read_csv(open(filename), names=column_names, delimiter=';',skiprows=9, encoding='latin-1')
-        # df.to_sql('Productos', engine, if_exists=replace')
+    # try:
+    column_names = ['units','product_title','location_origin','unit_price','amount','current_price']
+    df=pd.read_csv(open(filename), names=column_names, delimiter=';',skiprows=9, encoding='latin-1')
+    # df.to_sql('Productos', engine, if_exists=replace')
 
-        df=df.dropna(thresh=1)
+    df=df.dropna(thresh=1)
 
-        df['current_price']=df['current_price']
-        df['units']=df['units'].str.replace('nan','')
-        df['unit_price']=df['unit_price'].str.replace(' _','').str.replace(',','.').astype(float)
-        df['current_price']=df['current_price'].str.replace(' _','').str.replace(',','.').astype(float)
-        df['amount']=df['amount'].str.replace(',','.').astype(float)
-        df['product_title']=df['product_title']
-        df['location_origin']=df['location_origin']
-        df['product_title']=df['product_title'].str.replace('nan','')
-        df['location_origin']=df['location_origin'].str.replace('nan','')
-        df['current_price']=df['current_price']
-        df['units']=df['units'].str.replace('nan','')
+    df['current_price']=df['current_price']
+    df['units']=df['units'].str.replace('nan','')
+    df['unit_price']=df['unit_price'].str.replace(' _','').str.replace(',','.').astype(float)
+    df['current_price']=df['current_price'].str.replace(' _','').str.replace(',','.').astype(float)
+    df['amount']=df['amount'].str.replace(',','.').astype(float)
+    df['product_title']=df['product_title']
+    df['location_origin']=df['location_origin']
+    df['product_title']=df['product_title'].str.replace('nan','')
+    df['location_origin']=df['location_origin'].str.replace('nan','')
+    df['current_price']=df['current_price']
+    df['units']=df['units'].str.replace('nan','')
 
-        #df.index.name ='product_id'
-        df = df.as_matrix()
+    #df.index.name ='product_id'
+    df = df.as_matrix()
 
-        #fill up record var with SQL table data
-        for i in df:
-        #         print type(i[4])
-            record = Productos(**{
+    #fill up record var with SQL table data
+    for i in df:
+    #         print type(i[4])
+        record = Productos(**{
 
-                        'units' : i[0],
-                        'product_title' : i[1],
-                        'location_origin' : i[2],
-                        'unit_price' : i[3],
-                        'amount' : i[4],
-                        'current_price' : i[5],
-                        'agricultor_id' : id,
-            })
-            db.session.add(record) #Add all the records
-        db.session.commit() #Attempt to commit all the records
+                    'units' : i[0],
+                    'product_title' : i[1],
+                    'location_origin' : i[2],
+                    'unit_price' : i[3],
+                    # 'amount' : i[4],
+                    'current_price' : i[5],
+                    'agricultor_id' : id,
+        })
+        db.session.add(record) #Add all the records
+    db.session.commit() #Attempt to commit all the records
 
-    except:
-        db.session.rollback() #Rollback the changes on error
-    finally:
-        Tabla = db.session.query(Productos).all()
-        Tabla
-        for i in Tabla:
-            print i.product_title
+    # except:
+    #     db.session.rollback() #Rollback the changes on error
+    # finally:
+    #     Tabla = db.session.query(Productos).all()
+    #     Tabla
+    #     for i in Tabla:
+    #         print i.product_title
 
-        db.session.close() #Close the connection
+    #     db.session.close() #Close the connection
     print "Time elapsed: " + str(time() - t) + " s." #0.091s
 
     
