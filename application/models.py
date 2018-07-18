@@ -31,18 +31,19 @@ class User(UserMixin, db.Model):
 	user_role = db.Column(db.String(80))
 	is_active = db.Column(db.Boolean,default=False)
 	is_admin = db.Column(db.Boolean,default=False)
-	pickup = db.Column(db.String(30), db.ForeignKey('pickup.name'), nullable=False)
-	pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
+	pickup_id = db.Column(db.Integer, db.ForeignKey('pickup.id'), nullable=False)
+	pickup_join = db.relationship(Pickup)
 
 
-	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup):
+
+	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup_id):
 		self.username = username
 		self.password = password
 		self.email = email
 		self.user_role = user_role
 		self.is_active = is_active
 		self.is_admin = is_admin
-		self.pickup = pickup
+		self.pickup_id = pickup_id
 
 	def get_id(self):
 		return self.id
@@ -57,7 +58,7 @@ class User(UserMixin, db.Model):
 	def get_is_admin(self):
 		return self.is_admin
 	def get_pickup(self):
-		return self.pickup
+		return self.pickup_id
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
@@ -128,6 +129,25 @@ class Productos(db.Model):
 	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
 	agricultor = db.relationship(Agricultor)
 
+	# pedido_join = db.relationship("Pedido")
+
+	def __init__(self,product_id,units,product_title,location_origin,unit_price,amount,current_price,created_date,week,year,agricultor_id,agricultor):
+		self.product_id = product_id
+		self.units = units
+		self.product_title = product_title
+		self.location_origin = location_origin
+		self.unit_price = unit_price
+		self.amount = amount
+		self.current_price = current_price
+		self.created_date = created_date
+		self.week = week
+		self.year = year
+		self.agricultor_id = agricultor_id
+		self.agricultor = agricultor
+
+	def __repr__(self):
+		return '<Nombre %r>' % self.product_title
+
 	@property
     	def serialize(self):
 			return {
@@ -146,17 +166,16 @@ class Pedido(db.Model):
 
 	id = db.Column(db.Integer, primary_key = True)
 	quantity = db.Column(db.String(30))
-	week = db.Column(db.Integer)
-	product_name = db.Column(db.String(80), db.ForeignKey('productos.product_title'))
-	product_price = db.Column(db.Float(8), db.ForeignKey('productos.unit_price'))
-	product_units = db.Column(db.String(80), db.ForeignKey('productos.units'))
-	user_name = db.Column(db.String(15), db.ForeignKey('user.username'), unique=True)
-	email = db.Column(db.String(50), db.ForeignKey('user.email'), unique=True)
-	product_price_join = db.relationship(Productos, foreign_keys=[product_price])
-	product_unit_join = db.relationship(Productos, foreign_keys=[product_units])
-	product_join = db.relationship(Productos, foreign_keys=[product_name])
-	user_email_join = db.relationship(User, foreign_keys=[email])
-	user_join = db.relationship(User, foreign_keys=[user_name])
+	product_id = db.Column(db.Integer, db.ForeignKey('productos.product_id'))
+	# product_price = db.Column(db.Float(8), db.ForeignKey('productos.unit_price'))
+	# product_units = db.Column(db.String(80), db.ForeignKey('productos.units'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	# user_email = db.Column(db.String(50), db.ForeignKey('user.email'), unique=True)
+	product_id_join = db.relationship(Productos, foreign_keys=[product_id])	
+	# product_price_join = db.relationship(Productos, foreign_keys=[product_price])
+	# product_unit_join = db.relationship(Productos, foreign_keys=[product_units])
+	user_join = db.relationship(User, foreign_keys=[user_id])
+	# user_join = db.relationship(User, foreign_keys=[user_name])
 	year = db.Column(db.Integer, default=date.today().year)
 	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
 	is_confirmed = db.Column(db.Boolean,default=False)

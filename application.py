@@ -351,7 +351,7 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup=form.pickup.data)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup_name=form.pickup.data)
         db.session.add(new_user)
         # try: 
         db.session.commit()
