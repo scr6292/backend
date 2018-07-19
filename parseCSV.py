@@ -72,7 +72,7 @@ def parsecsv(filename, id):
                         'product_title' : i[1],
                         'location_origin' : i[2],
                         'unit_price' : i[3],
-                        'amount' : i[4],
+                        # 'amount' : i[4],
                         'current_price' : i[5],
                         'agricultor_id' : id,
             })
