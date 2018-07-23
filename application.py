@@ -155,7 +155,7 @@ def agricultorMenuOrder(agricultor_id):
                         db.session.rollback()
 
                 else:
-                    order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price)
+                    order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price, week = date.today().isocalendar()[1])
                     db.session.add(order)
                 try:
                     db.session.commit()
@@ -360,7 +360,7 @@ def signup():
         email = form.email.data
         token = s.dumps(email, salt='email-confirm')
 
-        msg = Message('Confirm Email', sender='srocapuertas@gmail.com', recipients=[email])
+        msg = Message('Confirm Email', sender='plantondemand@gmail.com', recipients=[email])
 
         link = url_for('confirm_email', token=token, _external=True)
 
