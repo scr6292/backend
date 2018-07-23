@@ -1,0 +1,34 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="panel panel-primary filterable">
+        <table class="table">
+            <tbody>
+            <tr>
+            	{% if week %}
+           {% for row in week %}
+            <h2>Pedidos de la semana 
+             {{row}} 
+         </h2></tr>{% endfor %}
+					{% endif %}         
+             
+            		<tr>
+                		{% for i in order %}
+                		<td><a href = "{{url_for('adminorders.orderuser', agricultor_id = agricultor_id, username = i.user_name, week = i.week)}}">{{i.user_name}}</a></td>                		
+                	</tr>
+                		{% endfor %}
+                	<tr>
+                	<tr>
+                		{% for i in weeks %}
+                		<td><a href = "{{url_for('adminorders.pedidos')}}">Semana {{i.week}}</a></td>
+                	</tr>
+                		{% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+{% endblock body %}

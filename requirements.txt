@@ -18,4 +18,4 @@ flask_login
 pandas
 numpy
 flask-admin
-
+Flask-Mail

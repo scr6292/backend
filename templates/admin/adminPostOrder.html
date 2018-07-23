@@ -1,0 +1,43 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+
+	    <div class="row">
+	        <div class="panel panel-primary filterable">
+	            <div class="panel-heading">
+	                <h3 class="panel-title">Pedido</h3>
+	            </div>
+	            <table class="table">
+	                <thead>
+	                    <tr class="filters">
+	                        <th><input type="text" class="form-control" placeholder="Producto" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Cantidad" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Precio Unidad" disabled></th>
+	                        <th><input type="text" class="form-control" placeholder="Total" disabled></th>
+
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                		<tr>
+		                		{% for i in order %}
+								<td>{{i.product_name}}</td>
+	                        	<td>{{i.quantity}}{{i.product_units}}</td>
+	                        	<td>{{i.product_price}}€/{{i.product_units}}</td>
+	                        	<td>{{(i.quantity|float)*(i.product_price|float)}}€</td>
+
+	                    	</tr>
+	                    		{% endfor %}
+	                    	<tr>
+	                    		<td>TOTAL</td>
+	                    		<td></td>
+	                    		<td></td>
+	                    		<td style="color: red; font-weight: bold">{{ total }}€</td>
+
+	                </tbody>
+	            </table>
+
+	        </div>
+	    </div>
+
+{% endblock body %}

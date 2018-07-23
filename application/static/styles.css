@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400');
 
+body, table{
+    font-family: 'Source Sans Pro', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+}
 
 .filterable {
     margin-top: 15px;
@@ -23,3 +29,161 @@
 .filterable .filters input[disabled]:-ms-input-placeholder {
     color: #333;
 }
+
+/*Add_to_cart*/
+.add-to-cart{
+    float: left;
+    background-color: rgb(107, 178, 7);
+    border-radius: 100px;
+    color: white;
+    margin-bottom: 10px;
+}
+    /*color: rgb(255, 255, 255);*/
+   /* border-color: rgb(107, 178, 7);
+    border-top-color: rgb(107, 178, 7);
+    border-right-color: rgb(107, 178, 7);
+    border-bottom-color: rgb(107, 178, 7);
+    border-left-color: rgb(107, 178, 7);
+    border-radius: 100px;
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-color: rgb(107, 178, 7)*/
+    }
+
+/*Header*/
+.navbar {
+    padding-left: 45px !important;
+    padding-right: 45px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+.navbar-nav{
+
+    color: #86af49 !important;
+    font-family: 'Source Sans Pro', sans-serif !important;
+    font-size: 14px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    letter-spacing: 0px !important;
+    text-transform: uppercase !important;
+}
+
+.nav-link.active{
+    color:rgb(107, 178, 7)!important;
+}
+/*.navbar-expand-lg .navbar-nav .nav-link {
+    color: #171717 !important;
+}*/
+.navbar-expand-lg .navbar-nav .nav-link:hover {
+    color: #86af49 !important;
+}
+
+.logout {
+    border-radius:100px!important;
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(107, 178, 7) !important;
+    border-color: rgb(107, 178, 7) !important;
+    border-top-color: rgb(107, 178, 7) !important;
+    border-right-color: rgb(107, 178, 7) !important;
+    border-bottom-color: rgb(107, 178, 7) !important;
+    border-left-color: rgb(107, 178, 7) !important;
+
+    line-height: 30px !important;
+    font-size: 12px !important;
+
+
+    padding-left: 37px !important;
+    padding-right: 37px !important;
+
+    height: 55px !important;
+}
+
+.logout:hover {
+    background-color: white !important;
+    color: rgb(107, 178, 7) !important;
+    }
+
+.shopping-cart {
+    border-radius:100px!important; 
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(107, 178, 7) !important;
+    border-color: rgb(107, 178, 7) !important;
+    border-top-color: rgb(107, 178, 7) !important;
+    border-right-color: rgb(107, 178, 7) !important;
+    border-bottom-color: rgb(107, 178, 7) !important;
+    border-left-color: rgb(107, 178, 7) !important;
+
+    line-height: 30px !important;
+    font-size: 12px !important;
+
+
+    padding-left: 37px !important;
+    padding-right: 37px !important;
+
+    height: 55px !important;
+}
+
+.shopping-cart:hover {
+    background-color: white !important;
+    color: rgb(107, 178, 7) !important;
+    }
+
+
+@media (min-width: 992px){
+    .navbar-expand-lg .navbar-nav .nav-link{
+        padding-right: 1.5rem !important;
+        padding-left: 1.5rem !important;
+    }
+}
+
+nav.navbar-light {
+    border-bottom: solid;
+    border-bottom-width: 2px;
+}
+
+
+
+.logo .navbar-brand{
+    height: 112px;
+}
+
+.logo .navbar-brand img{
+    height: 100%;
+}
+
+
+/*end of Header*/
+
+/*postOrder*/
+.postorder {
+    /*display: inline-block;*/
+    /*float: right;*/
+    /*padding-top: 5px;*/
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    line-height: 30px !important;
+    font-size: 14px !important;
+    /*padding-right: 37px !important;*/
+}
+
+.postorder-head{
+    /*display: inline-block;*/
+    /*float: right;*/
+    /*padding-top: 5px;*/
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    line-height: 30px !important;
+    font-size: 14px !important;
+    font-weight: bold;
+    /*padding-right: 37px !important;*/
+}
+.table.postorder{
+    vertical-align: middle;
+    position: relative;
+    display: inline;
+}
+/*end Postorder*/
