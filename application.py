@@ -337,11 +337,14 @@ def login():
                 if check_password_hash(user.password, form.password.data):
                     login_user(user, remember=form.remember.data)
                     return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
+                else:
+                    invalid_pass = 1
+                    return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
             else: return '<h1>El link de confirmacion ha expirado</h1>'
 
         else:
-            invalid_pass = 1
-            return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
+            invalid_email = 1
+            return render_template('/login.html',methods=['GET','POST'], form=form, invalid_email = invalid_email)
 
     return render_template('login.html', form=form)
 

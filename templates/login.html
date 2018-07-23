@@ -36,8 +36,14 @@
             {{ form.hidden_tag() }}
             {{ wtf.form_field(form.email) }}
             {{ wtf.form_field(form.password) }}
+            {% if invalid_email %}
+             <p class="text-danger">El email no es válido, por favor inténtalo de nuevo, regístrate si aún no tienes cuenta</p>
+            {% endif %}
             {% if invalid_pass %}
-             <p class="text-danger"> La contraseña no es válida </p>
+             <p class="text-danger">La contraseña no es válida, por favor inténtalo de nuevo, regístrate si aún no tienes cuenta</p>
+            {% endif %}
+            {% if link_expired %}
+             <p class="text-danger">Tu link de validación ha expirado, por favor, regístrate de nuevo</p>
             {% endif %}
             {{ wtf.form_field(form.remember) }}
             <button class="btn btn-lg btn-success btn-block" type="submit">Entrar</button>
