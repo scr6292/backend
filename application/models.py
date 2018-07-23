@@ -34,14 +34,17 @@ class User(UserMixin, db.Model):
 	pickup = db.Column(db.String(30), nullable=False)
 	# pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
 
-	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup):
+
+
+
+	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup_id):
 		self.username = username
 		self.password = password
 		self.email = email
 		self.user_role = user_role
 		self.is_active = is_active
 		self.is_admin = is_admin
-		self.pickup = pickup
+		self.pickup_id = pickup_id
 
 	def get_id(self):
 		return self.id
@@ -56,7 +59,7 @@ class User(UserMixin, db.Model):
 	def get_is_admin(self):
 		return self.is_admin
 	def get_pickup(self):
-		return self.pickup
+		return self.pickup_id
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
@@ -126,6 +129,25 @@ class Productos(db.Model):
 	year = db.Column(db.Integer, default=date.today().year)
 	agricultor_id = db.Column(db.Integer, db.ForeignKey('agricultor.id'))
 	agricultor = db.relationship(Agricultor)
+
+	# pedido_join = db.relationship("Pedido")
+
+	def __init__(self,product_id,units,product_title,location_origin,unit_price,amount,current_price,created_date,week,year,agricultor_id,agricultor):
+		self.product_id = product_id
+		self.units = units
+		self.product_title = product_title
+		self.location_origin = location_origin
+		self.unit_price = unit_price
+		self.amount = amount
+		self.current_price = current_price
+		self.created_date = created_date
+		self.week = week
+		self.year = year
+		self.agricultor_id = agricultor_id
+		self.agricultor = agricultor
+
+	def __repr__(self):
+		return '<Nombre %r>' % self.product_title
 
 	@property
     	def serialize(self):
