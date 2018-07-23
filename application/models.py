@@ -37,14 +37,14 @@ class User(UserMixin, db.Model):
 
 
 
-	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup_id):
+	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup):
 		self.username = username
 		self.password = password
 		self.email = email
 		self.user_role = user_role
 		self.is_active = is_active
 		self.is_admin = is_admin
-		self.pickup_id = pickup_id
+		self.pickup = pickup
 
 	def get_id(self):
 		return self.id

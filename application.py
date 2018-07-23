@@ -340,7 +340,7 @@ def login():
                 else:
                     invalid_pass = 1
                     return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
-            else: return '<h1>El link de confirmacion ha expirado</h1>'
+            else: return render_template('/login.html',methods=['GET','POST'], form=form, link_expired = link_expired)
 
         else:
             invalid_email = 1
@@ -354,24 +354,35 @@ def signup():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup_name=form.pickup.data)
-        db.session.add(new_user)
-        # try: 
-        db.session.commit()
-        # flash("Te has registrado correctamente")
+        user_email = User.query.filter_by(email=form.email.data).first()
+        user_name = User.query.filter_by(username=form.username.data).first()
+        if user_email:
+            user_exist = 1
+            return render_template('signup.html', form=form, user_exist = user_exist)
+        if user_name:
+            user_name_exist = 1
+            return render_template('signup.html', form=form, user_name_exist = user_name_exist)
+        else:
+            new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup=form.pickup.data)
+            db.session.add(new_user)
+            try: 
+                db.session.commit() 
+            except:
+                db.session.rollback()
 
-        email = form.email.data
-        token = s.dumps(email, salt='email-confirm')
 
-        msg = Message('Confirm Email', sender='plantondemand@gmail.com', recipients=[email])
+            email = form.email.data
+            token = s.dumps(email, salt='email-confirm')
 
-        link = url_for('confirm_email', token=token, _external=True)
+            msg = Message('Confirm Email', sender='plantondemand@gmail.com', recipients=[email])
 
-        msg.body = 'Your link is {}'.format(link)
+            link = url_for('confirm_email', token=token, _external=True)
 
-        mail.send(msg)
+            msg.body = 'Your link is {}'.format(link)
 
-        return '<h1>Por favor, para validar tu usuario clica en el link de confirmacion que hemos enviado a tu email {}.</h1>'.format(email)
+            mail.send(msg)
+
+            return '<h1>Por favor, para validar tu usuario clica en el link de confirmacion que hemos enviado a tu email {}.</h1>'.format(email)
         
         # return redirect(url_for('login'))
         # except: 
