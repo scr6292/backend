@@ -382,7 +382,7 @@ def signup():
 
             mail.send(msg)
 
-            return '<h1>Por favor, para validar tu usuario clica en el link de confirmacion que hemos enviado a tu email {}.</h1>'.format(email)
+            return render_template('confirmation_link.html', email = email)
         
         # return redirect(url_for('login'))
         # except: 
