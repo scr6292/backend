@@ -1,0 +1,54 @@
+<html>
+{% extends "layout.html" %}
+
+{% block head %}
+
+{{ super() }}
+
+{% endblock head %}
+{% block content %}
+
+
+<body>
+  <section class="intro">
+    <row>
+      <div class="col-lg-6 col-sm-12 left">
+        <div class="col" style="text-align: center;">
+          <div class="card">
+            <img class="card-img-top" src="{{url_for('static', filename='user-icon.svg')}}" alt="Farm icons">
+            <div class="card-body">
+              <a href="{{url_for('user')}}" class="btn btn-primary">Tu Usuario</a>
+            </div>
+          </div>
+        </div>
+        <div class="col" style="text-align: center;">
+          <div class="card">
+            <img class="card-img-top" src="{{url_for('static', filename='calculator.svg')}}" alt="Farm icons">
+            <div class="card-body">
+              <a href="#" class="btn btn-primary">Tus Pedidos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-12 right">
+        <div class="col" style="text-align: center;">
+          <div class="card mx-auto" style="width: 48%;">
+            <img class="card-img-top" src="{{url_for('static', filename='basket-icon.svg')}}" alt="Farm icons">
+            <div class="card-body">
+              <a href="{{url_for('agricultorMenuOrder', agricultor_id = 1)}}" class="btn btn-primary">Haz tu pedido</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </row>
+  </section>
+  <section class="about">
+    <div>
+      <p>
+        About
+      </p>
+    </div>
+  </section>
+</body>
+
+{% endblock content %}

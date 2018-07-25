@@ -130,7 +130,7 @@ def csvFiles(agricultor_id):
 #OnePage
 @application.route('/', methods=['GET'])
 def onepage():
-    return render_template('testSERGI.html')
+    return render_template('homepage.html')
 
 
 #Order agriculture products
@@ -211,6 +211,9 @@ def orderConfirm(agricultor_id):
 
     db.session.commit()
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
+    pickup = db.session.query(Pickup).filter_by(id = current_user.pickup).first()
+    # for i in pickup:
+    pickup = pickup.name
     total = 0
     for item in order:
         tot = float(item.product_price)*float(item.quantity)
@@ -226,9 +229,9 @@ def orderConfirm(agricultor_id):
     msg = Message("Confirmacion de pedido",
                 sender="plantondemand@gmail.com",
                 recipients=[current_user.email])
-    msg.html = render_template('confirmation.html', user_name=current_user.username, total = total, order = order)
+    msg.html = render_template('confirmation.html', user_name=current_user.username, total = total, order = order, pickup = pickup)
     mail.send(msg)
-    return render_template('confirmation.html', user_name = current_user.username, total = total, order = order)
+    return render_template('confirmation.html', user_name = current_user.username, total = total, order = order, pickup = pickup)
 
 
 @application.route('/agricultores/<int:agricultor_id>/postorder/delete/<pedido_id>', methods=['GET','POST'])
