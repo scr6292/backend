@@ -10,6 +10,20 @@
 
 	<div class="container">
 		<br>
+		<section class=nav-order>
+			<div class="row">
+				<div class="col-sm">
+					<button type="button" class="btn btn-outline-danger" onclick="window.location.href='{{url_for('agricultorMenuOrder',agricultor_id = agricultor.id)}}'">Volver al listado</button>
+				</div>
+				<div class="col-sm">
+					<button type="button" class="btn btn-outline-warning update-order-2" onclick="document.getElementsByClassName('update-order')[0].click()">Actualizar la cesta</button>
+				</div>
+				<div class="col-sm">
+					<button type="button" class="btn btn-outline-success" onclick="window.location.href='{{url_for('orderConfirm', agricultor_id=agricultor.id)}}'">Confirmar y tramitar pedido</button>
+				</div>
+			</div>
+		</section>
+		<br>
 	    <div class="row">
 	        <div class="panel panel-primary filterable">
 	            <div class="panel-heading" style="margin-bottom: 20px">
@@ -24,16 +38,15 @@
 	                	<tr>
 							<td><b>Eliminar</b></td>
 							<td><b>Producto</b></td>
-							<td><b>Cantidad</b></td>
-							<td><b>¿Un poquito más?</b></td>
 							<td><b>Precio</b></td>
+							<td><b>¿Un poquito más?</b></td>
 							<td><b>Total</b></td>
 						</tr>
 	                </thead>
 	                <tbody>
 							<form action = "{{url_for('postOrder',agricultor_id=agricultor.id)}}" method = 'POST' >
 								<div class="add-to-cart" style="float: left; height: 57px;">
-									<button class='btn btn-lg 'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
+									<button class='btn btn-lg update-order'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
 										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
 										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Actualiza tu compra</a>
 									</button>
@@ -45,19 +58,22 @@
 									<td>
 										{{i.product_name}}
 									</td>
-									<td>
-										{{i.quantity}}{{i.product_units}}
-									</td>
+		                        	<td>{{i.product_price}}€/{{i.product_units}}</td>
 		                        	<td>
     									<input type = 'text' size = '30' name = '{{i.product_name}}' placeholder = '{{i.quantity}}{{i.product_units}}'>
     								</td>
-		                        	<td>{{i.product_price}}€/{{i.product_units}}</td>
 		                        	<td>{{(i.quantity|float)*(i.product_price|float)}}€</td>
 		                    		
 		                    	</tr>
 		                    		{% endfor %}
 	                    	</form>
-
+	                    	<tr>
+	                    		<td><b>Los gastos de envío</b></td>
+	                    		<td></td>
+	                    		<td></td>
+	                    		<td></td>
+	                    		<td style="color: red; font-weight: bold">€€€€</td>
+	                    		<td></td>
 	                    	<tr>
 	                    		<td><b>TOTAL</b></td>
 	                    		<td></td>
@@ -97,6 +113,19 @@
 	            </div>
 	        </div>
 	    </div>
+		<section class=nav-order>
+			<div class="row">
+				<div class="col-sm">
+					<button type="button" class="btn btn-outline-danger" onclick="window.location.href='{{url_for('agricultorMenuOrder',agricultor_id = agricultor.id)}}'">Volver al listado</button>
+				</div>
+				<div class="col-sm">
+					<button type="button" class="btn btn-outline-warning update-order-2" onclick="document.getElementsByClassName('update-order')[0].click()">Actualizar la cesta</button>
+				</div>
+				<div class="col-sm">
+					<button type="button" class="btn btn-outline-success" onclick="window.location.href='{{url_for('orderConfirm', agricultor_id=agricultor.id)}}'">Confirmar y tramitar pedido</button>
+				</div>
+			</div>
+		</section>
 	</div>
 
 {% endblock content %}

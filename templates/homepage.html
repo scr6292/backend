@@ -25,7 +25,7 @@
           <div class="card">
             <img class="card-img-top" src="{{url_for('static', filename='calculator.svg')}}" alt="Farm icons">
             <div class="card-body">
-              <a href="#" class="btn btn-primary">Tus Pedidos</a>
+              <a href="{{url_for('historicalOrders', agricultor_id = 1, week = week)}}" class="btn btn-primary">Tus Pedidos</a>
             </div>
           </div>
         </div>

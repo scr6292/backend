@@ -166,7 +166,7 @@ class Pedido(db.Model):
 	__tablename__= 'pedido'
 
 	id = db.Column(db.Integer, primary_key = True)
-	quantity = db.Column(db.String(30))
+	quantity = db.Column(db.Float(8))
 	week = db.Column(db.Integer)
 	product_name = db.Column(db.String(80))
 	product_price = db.Column(db.Float(8))

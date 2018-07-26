@@ -127,10 +127,16 @@ def csvFiles(agricultor_id):
     <p>%s</p>
     """ % "<br>".join(os.listdir(application.config['UPLOAD_FOLDER'],))
 
-#OnePage
+#Home
 @application.route('/', methods=['GET'])
 def onepage():
-    return render_template('homepage.html')
+    return render_template('testSERGI.html')
+
+#Home
+@application.route('/home', methods=['GET'])
+def home():
+    week = str(date.today().isocalendar()[1])
+    return render_template('homepage.html', week = week)
 
 
 #Order agriculture products
@@ -144,10 +150,16 @@ def agricultorMenuOrder(agricultor_id):
     year = db.session.query(Productos.year).first()
     if request.method == 'POST':
         for item in items:
+            try:
+                if request.form[item.product_title]:
+                    float(request.form[item.product_title].replace(',','.'))
+            except: 
+                return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year)
+        for item in items:
             if request.form[item.product_title]:
                 already_exist = db.session.query(Pedido).filter_by(product_name = item.product_title, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
                 if already_exist:
-                    already_exist.quantity = str(int(already_exist.quantity) + int(request.form[item.product_title]))
+                    already_exist.quantity = str(float(already_exist.quantity) + float(request.form[item.product_title].replace(',','.')))
                     db.session.add(already_exist)
                     try:
                         db.session.commit()
@@ -173,6 +185,7 @@ def agricultorMenuOrder(agricultor_id):
 
 
     else:
+        flash("Por favor, introduce in valor numerico")
         return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year)
 #Post Order page
 @application.route('/agricultores/<int:agricultor_id>/postorder', methods=['GET', 'POST'])
@@ -189,6 +202,13 @@ def postOrder(agricultor_id):
         total = total + tot
     
     if request.method == 'POST':
+        for item in order:
+            try: 
+                if request.form[item.product_name]:
+                    float(request.form[item.product_name].replace(',','.'))
+            except: 
+                flash("Por favor introduce valores numericos")
+                return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total) 
         for item in order:
             if request.form.get(item.product_name, False):
                 updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
@@ -229,9 +249,9 @@ def orderConfirm(agricultor_id):
     msg = Message("Confirmacion de pedido",
                 sender="plantondemand@gmail.com",
                 recipients=[current_user.email])
-    msg.html = render_template('confirmation.html', user_name=current_user.username, total = total, order = order, pickup = pickup)
+    msg.html = render_template('confirmation.html', user_name=current_user.username, total = total, order = order, pickup = pickup, agricultor_id = agricultor_id)
     mail.send(msg)
-    return render_template('confirmation.html', user_name = current_user.username, total = total, order = order, pickup = pickup)
+    return render_template('confirmation.html', user_name = current_user.username, total = total, order = order, pickup = pickup, agricultor_id = agricultor_id)
 
 
 @application.route('/agricultores/<int:agricultor_id>/postorder/delete/<pedido_id>', methods=['GET','POST'])
@@ -339,7 +359,7 @@ def login():
             if user.is_active == True:
                 if check_password_hash(user.password, form.password.data):
                     login_user(user, remember=form.remember.data)
-                    return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
+                    return redirect(url_for('home'))
                 else:
                     invalid_pass = 1
                     return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
