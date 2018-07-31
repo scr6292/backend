@@ -198,16 +198,6 @@
 	}
 	updatePrice();
 
-	//Sum total price (products + pikcup)
-
-	// if ($('#pickup option:selected')[0].value = "10"){		
-	// 	$('.precio-total')[0].innerHTML = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])
-	// } else if ($('#pickup option:selected')[0].value = "11"){
-	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-entrega')[0].innerHTML.split('€')[0])
-	// } else if ($('#pickup option:selected')[0].value = "12"){
-	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-punto-entrega')[0].innerHTML.split('€')[0])
-	// 	}
-	
 </script>
 
 <script>
@@ -217,22 +207,22 @@
 	elem.onchange = function(){
     
     var hiddenDiv = document.getElementById("showMe-1");
-    hiddenDiv.style.opacity = (this.value == "10" || this.value == "12") ? 0 : 1;
+    hiddenDiv.style.opacity = (this.value == "1" || this.value == "3") ? 0 : 1;
     
     var hiddenDiv2 = document.getElementById("showMe-2");
-    hiddenDiv2.style.opacity = (this.value == "11" || this.value == "10") ? 0 : 1;
+    hiddenDiv2.style.opacity = (this.value == "1" || this.value == "2") ? 0 : 1;
     
     var hiddenDiv3 = document.getElementById("showMe-3");
-    hiddenDiv3.style.opacity = (this.value == "10") ? 1 : 0;
+    hiddenDiv3.style.opacity = (this.value == "1") ? 1 : 0;
 
     var priceBustarviejo = document.getElementById("showMe-4");
-    priceBustarviejo.style.display = (this.value == "10") ? "block" : "none";
+    priceBustarviejo.style.display = (this.value == "1") ? "block" : "none";
 
     var priceDomicilio = document.getElementById("showMe-5");
-    priceDomicilio.style.display = (this.value == "11" || this.value == "10") ? "none" : "block";
+    priceDomicilio.style.display = (this.value == "1" || this.value == "2") ? "none" : "block";
 
     var pricePuntoEntrega = document.getElementById("showMe-6");
-    pricePuntoEntrega.style.display = (this.value == "10" || this.value == "12") ? "none" : "block";
+    pricePuntoEntrega.style.display = (this.value == "1" || this.value == "3") ? "none" : "block";
 
 
 // opacity:0;pointer-events: none; cursor: default;
@@ -249,9 +239,9 @@
 	var priceTotal11 = $('.precio-total-11')[0];
 	var priceTotal12 = $('.precio-total-12')[0];
 
-	priceTotal10.style.display = (this.value == "10") ? "block":"none"
-	priceTotal11.style.display = (this.value == "12" || this.value == "10") ? "none":"block";
-	priceTotal12.style.display = (this.value == "11" || this.value == "10") ? "none":"block";
+	priceTotal10.style.display = (this.value == "1") ? "block":"none"
+	priceTotal11.style.display = (this.value == "1" || this.value == "2") ? "none":"block";
+	priceTotal12.style.display = (this.value == "1" || this.value == "3") ? "none":"block";
 
 
 
