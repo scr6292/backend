@@ -211,12 +211,43 @@ def postOrder(agricultor_id):
             # pickup = pointform.pickup_point.data
 
             if pickchoice_form.pickup.data == "1":
+                if (total < 25):
+                    pickup_total = 2.0
+                elif (25 < total < 40):
+                    pickup_total = 1.0
+                else:
+                    pickup_total = 0.0
                 pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
             elif (pickchoice_form.pickup.data == "2"):
+                if (total < 25):
+                    flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+                elif (25 < total < 40):
+                    pickup_total = 2.0
+                elif (40 < total < 60):
+                    pickup_total = 1.5
+                else:
+                    pickup_total = 0.0
                 choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
                 pickup = choice.name
             elif (pickchoice_form.pickup.data == "3"):
-                pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
+                if (total < 25):
+                    flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+                elif (25 < total < 40):
+                    pickup_total = 5.0
+                elif (40 < total < 60):
+                    pickup_total = 4.0
+                elif (60 < total < 100):
+                    pickup_total = 3.0
+                else:
+                    pickup_total = 0.0
+                if (pickupform.street.data != "" and pickupform.city.data != "" and pickupform.cp.data != None):
+                    pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
+                else:
+                    flash("Por favor introduce datos de entrega")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+
 
 # 
 
@@ -238,14 +269,14 @@ def postOrder(agricultor_id):
                     db.session.rollback()
 
             flash("Tus cambios ya estan en el carrito")
-            return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup))
+            return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup, pickup_total =pickup_total))
     
 
     return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
 
-@application.route('/agricultores/<int:agricultor_id>/postorder/confirm/<pickup>', methods=['GET'])
+@application.route('/agricultores/<int:agricultor_id>/postorder/confirm/<pickup>/<float:pickup_total>', methods=['GET'])
 @login_required(role="CUSTOMER")
-def orderConfirm(agricultor_id, pickup):
+def orderConfirm(agricultor_id, pickup, pickup_total):
     week = date.today().isocalendar()[1]
     year = date.today().year
     order_id = str(week) + str(year) + str(current_user.id)
@@ -259,6 +290,7 @@ def orderConfirm(agricultor_id, pickup):
         tot = float(item.product_price)*float(item.quantity)
         total = total + tot
 
+    total = total + pickup_total
     new_order.precio_total = total
     try:
         db.session.add(new_order)
