@@ -210,12 +210,12 @@ def postOrder(agricultor_id):
             # pickup = pickchoice_form.pickup.data
             # pickup = pointform.pickup_point.data
 
-            if pickchoice_form.pickup.data == "10":
+            if pickchoice_form.pickup.data == "1":
                 pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
-            elif (pickchoice_form.pickup.data == "11"):
+            elif (pickchoice_form.pickup.data == "2"):
                 choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
                 pickup = choice.name
-            elif (pickchoice_form.pickup.data == "12"):
+            elif (pickchoice_form.pickup.data == "3"):
                 pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
 
 # 
