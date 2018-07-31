@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from application import db, application
-from application.models import Agricultor, Contact, Pickup, Productos, User, LoginForm, RegisterForm, UpdateUsernameForm, UpdatePassForm, UpdateEmailForm, Pedido
+from application.models import Agricultor, Contact, Pickup, Productos, User, LoginForm, RegisterForm, UpdateUsernameForm, UpdatePassForm, UpdateEmailForm, PickupForm, PickupChoiceForm, PickupHome, Pedido, Order
 from werkzeug.utils import secure_filename
 import parseCSV
 from sqlalchemy import func
@@ -185,7 +185,7 @@ def agricultorMenuOrder(agricultor_id):
 
 
     else:
-        flash("Por favor, introduce in valor numerico")
+        flash("Por favor, introduce un valor numerico")
         return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year)
 #Post Order page
 @application.route('/agricultores/<int:agricultor_id>/postorder', methods=['GET', 'POST'])
@@ -200,52 +200,83 @@ def postOrder(agricultor_id):
     for item in order:
         tot = float(item.product_price)*float(item.quantity)
         total = total + tot
-    
+    pointform = PickupForm()
+    pickchoice_form = PickupChoiceForm()
+    pickupform = PickupHome()    
     if request.method == 'POST':
-        for item in order:
-            try: 
-                if request.form[item.product_name]:
-                    float(request.form[item.product_name].replace(',','.'))
-            except: 
-                flash("Por favor introduce valores numericos")
-                return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total) 
-        for item in order:
-            if request.form.get(item.product_name, False):
-                updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
-                updateorder.quantity = request.form[item.product_name]
-                db.session.add(updateorder)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
 
-        flash("Tus cambios ya estan en el carrito")
-        return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+        # if pickchoice_form.validate_on_submit():
+        #     pickup = "TEST"
+            # pickup = pickchoice_form.pickup.data
+            # pickup = pointform.pickup_point.data
+
+            if pickchoice_form.pickup.data == "10":
+                pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
+            elif (pickchoice_form.pickup.data == "11"):
+                choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
+                pickup = choice.name
+            elif (pickchoice_form.pickup.data == "12"):
+                pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
+
+# 
+
+            for item in order:
+                try: 
+                    if request.form[item.product_name]:
+                        float(request.form[item.product_name].replace(',','.'))
+                except: 
+                    flash("Por favor introduce valores numericos")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+            for item in order:
+                if request.form.get(item.product_name, False):
+                    updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+                    updateorder.quantity = request.form[item.product_name]
+                    db.session.add(updateorder)
+                try:
+                    db.session.commit()
+                except:
+                    db.session.rollback()
+
+            flash("Tus cambios ya estan en el carrito")
+            return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup))
     
 
-    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total) 
+    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
 
-@application.route('/agricultores/<int:agricultor_id>/postorder/confirm', methods=['GET'])
+@application.route('/agricultores/<int:agricultor_id>/postorder/confirm/<pickup>', methods=['GET'])
 @login_required(role="CUSTOMER")
-def orderConfirm(agricultor_id):
-
+def orderConfirm(agricultor_id, pickup):
+    week = date.today().isocalendar()[1]
+    year = date.today().year
+    order_id = str(week) + str(year) + str(current_user.id)
+    new_order = Order(id = order_id, pickup = pickup)
+    
     db.session.commit()
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
-    pickup = db.session.query(Pickup).filter_by(id = current_user.pickup).first()
-    # for i in pickup:
-    pickup = pickup.name
     total = 0
     for item in order:
+
         tot = float(item.product_price)*float(item.quantity)
         total = total + tot
 
+    new_order.precio_total = total
+    try:
+        db.session.add(new_order)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        flash('Ya has realizado pedido esta semana')
+        return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+
     for item in order:
+        item.order_id = order_id
         item.is_confirmed = True
         try:
             db.session.add(item)
             db.session.commit()
         except:
             db.session.rollback()
+
     msg = Message("Confirmacion de pedido",
                 sender="plantondemand@gmail.com",
                 recipients=[current_user.email])
@@ -363,10 +394,15 @@ def login():
                 else:
                     invalid_pass = 1
                     return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
-            else: return render_template('/login.html',methods=['GET','POST'], form=form, link_expired = link_expired)
+            else: 
+                link_expired = 1
+                user
+                return render_template('/login.html',methods=['GET','POST'], form=form, link_expired = link_expired)
 
         else:
             invalid_email = 1
+            db.session.delete(user)
+            db.session.commit()
             return render_template('/login.html',methods=['GET','POST'], form=form, invalid_email = invalid_email)
 
     return render_template('login.html', form=form)

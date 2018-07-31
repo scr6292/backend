@@ -18,9 +18,6 @@
 				<div class="col-sm">
 					<button type="button" class="btn btn-outline-warning update-order-2" onclick="document.getElementsByClassName('update-order')[0].click()">Actualizar la cesta</button>
 				</div>
-				<div class="col-sm">
-					<button type="button" class="btn btn-outline-success" onclick="window.location.href='{{url_for('orderConfirm', agricultor_id=agricultor.id)}}'">Confirmar y tramitar pedido</button>
-				</div>
 			</div>
 		</section>
 		<br>
@@ -43,7 +40,7 @@
 							<td><b>Total</b></td>
 						</tr>
 	                </thead>
-	                <tbody>
+	                <tbody> {% from "_formhelpers.html" import render_field %}
 							<form action = "{{url_for('postOrder',agricultor_id=agricultor.id)}}" method = 'POST' >
 								<div class="add-to-cart" style="float: left; height: 57px;">
 									<button class='btn btn-lg update-order'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
@@ -66,13 +63,79 @@
 		                    		
 		                    	</tr>
 		                    		{% endfor %}
+		                    	<tr>
+		                    		<td><b>TOTAL PRODUCTOS</b></td>
+		                    		<td></td>
+		                    		<td></td>
+		                    		<td></td>
+		                    		<td></td>
+		                    		<td class="precio-total-productos" style="color: green; font-weight: bold">{{ total }}€</td>
+		                    	</tr>
+		                    	<tr>
+		                    		<td>
+		                    			{{ pickchoice_form.hidden_tag() }}
+		                    			{{ wtf.form_field(pickchoice_form.pickup) }}
+		                    			
+		                    		</td>
+		                    		<td id="showMe-1" style="opacity:0">
+		                    			{{ pointform.hidden_tag() }}
+		                    			{{ wtf.form_field(pointform.pickup_point) }}
+		                    		</td>
+		                    		<td id="showMe-2" style="opacity:1">
+		                    			{{ pickupform.hidden_tag() }}
+		                    			{{ wtf.form_field(pickupform.city) }}
+		                    			{{ wtf.form_field(pickupform.street) }}
+		                    			{{ wtf.form_field(pickupform.cp) }}
+		                    		</td>
+		                    		<td id="showMe-3" style="opacity:0">
+		                    			*El gasto asociado es exclusivo de logística de las cajas
+		                    		</td>
+		                    		<td></td>
+		                    		<td></td>
+		                    		<td></td>
+		                    	</tr>
 	                    	</form>
 	                    	<tr>
 	                    		<td><b>Los gastos de envío</b></td>
 	                    		<td></td>
 	                    		<td></td>
 	                    		<td></td>
-	                    		<td style="color: red; font-weight: bold">€€€€</td>
+	                    		<td id = "showMe-4" class="precio-entrega precio-bustarviejo" style="color: red; font-weight: bold; display:none">
+	                    			{% if total < 25 %}
+	                    			2.0€
+	                    			{% elif 25 < total < 40 %}
+	                    			1.0€
+	                    			{% elif 40 < total %}
+	                    			0.0€
+	                    			{% endif %}
+	                    		</td>
+	                    		<td id = "showMe-5" class="precio-entrega precio-domicilio" style="color: red; font-weight: bold; display:block">
+	                    			{% if total < 25 %}
+	                    			No llegas al pedido mínimo (25€) para realizar envíos a domicilio
+	                    			{% elif 25 < total < 40 %}
+	                    			5.0€
+	                    			{% elif 40 < total < 60 %}
+	                    			4.0€
+	                    			{% elif 60 < total < 100 %}
+	                    			3.0€
+	                    			{% elif 100 < total %}
+	                    			0.0€
+	                    			{% endif %}
+	                    		</td>
+	                    		<td id = "showMe-6" class="precio-entrega precio-punto-entrega" style="color: red; font-weight: bold; display:none">
+	                    			{% if total < 25 %}
+	                    			No llegas al pedido mínimo (25€) para realizar envíos a domicilio
+	                    			{% elif 25 < total < 40 %}
+	                    			2.0€
+	                    			{% elif 40 < total < 60 %}
+	                    			1.5€
+	                    			{% elif 60 < total < 100 %}
+	                    			0.0€
+	                    			{% elif 100 < total %}
+	                    			0.0€
+	                    			{% endif %}
+
+	                    		</td>
 	                    		<td></td>
 	                    	<tr>
 	                    		<td><b>TOTAL</b></td>
@@ -80,7 +143,10 @@
 	                    		<td></td>
 	                    		<td></td>
 	                    		<td></td>
-	                    		<td style="color: green; font-weight: bold">{{ total }}€</td>
+	                    		<td class="precio-total-10" style="color: green; font-weight: bold; display:none"></td>
+	                    		<td class="precio-total-11" style="color: green; font-weight: bold; display:none;"></td>
+	                    		<td class="precio-total-12" style="color: green; font-weight: bold; display:block"></td>
+	                    	</tr>
 
 	                </tbody>
 	            </table>
@@ -89,12 +155,6 @@
 	                    <tr class="filters">
 	                        <th><input type="text" class="form-control" placeholder="Ver mis pedidos de otras semanas" disabled></th>
 	                        <th>
-	                        	<div class="add-to-cart" style="float: right; height: 57px;">
-									<button type="button" onclick="window.location.href='{{url_for('orderConfirm', agricultor_id=agricultor.id)}}'" class='btn btn-lg 'style='background-color:transparent; color: white;'value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
-										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
-										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Confirma tu compra</a>
-									</button>
-								</div>
 
 	                        </th>
 	                    </tr>
@@ -121,11 +181,95 @@
 				<div class="col-sm">
 					<button type="button" class="btn btn-outline-warning update-order-2" onclick="document.getElementsByClassName('update-order')[0].click()">Actualizar la cesta</button>
 				</div>
-				<div class="col-sm">
-					<button type="button" class="btn btn-outline-success" onclick="window.location.href='{{url_for('orderConfirm', agricultor_id=agricultor.id)}}'">Confirmar y tramitar pedido</button>
-				</div>
 			</div>
 		</section>
 	</div>
+
+<script>
+
+	function updatePrice(){
+	var priceTotal10 = $('.precio-total-10')[0];
+	var priceTotal11 = $('.precio-total-11')[0];
+	var priceTotal12 = $('.precio-total-12')[0];
+	var priceSubTot = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0])
+	priceTotal10.innerHTML = priceSubTot + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0]) + "€"
+	priceTotal12.innerHTML = priceSubTot + parseFloat($('.precio-domicilio')[0].innerHTML.split('€')[0]) + "€"
+	priceTotal11.innerHTML = priceSubTot + parseFloat($('.precio-punto-entrega')[0].innerHTML.split('€')[0]) + "€"
+	}
+	updatePrice();
+
+	//Sum total price (products + pikcup)
+
+	// if ($('#pickup option:selected')[0].value = "10"){		
+	// 	$('.precio-total')[0].innerHTML = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])
+	// } else if ($('#pickup option:selected')[0].value = "11"){
+	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-entrega')[0].innerHTML.split('€')[0])
+	// } else if ($('#pickup option:selected')[0].value = "12"){
+	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-punto-entrega')[0].innerHTML.split('€')[0])
+	// 	}
+	
+</script>
+
+<script>
+
+//Show/hide the proper divs in the pickup section
+	var elem = document.getElementById("pickup");
+	elem.onchange = function(){
+    
+    var hiddenDiv = document.getElementById("showMe-1");
+    hiddenDiv.style.opacity = (this.value == "10" || this.value == "12") ? 0 : 1;
+    
+    var hiddenDiv2 = document.getElementById("showMe-2");
+    hiddenDiv2.style.opacity = (this.value == "11" || this.value == "10") ? 0 : 1;
+    
+    var hiddenDiv3 = document.getElementById("showMe-3");
+    hiddenDiv3.style.opacity = (this.value == "10") ? 1 : 0;
+
+    var priceBustarviejo = document.getElementById("showMe-4");
+    priceBustarviejo.style.display = (this.value == "10") ? "block" : "none";
+
+    var priceDomicilio = document.getElementById("showMe-5");
+    priceDomicilio.style.display = (this.value == "11" || this.value == "10") ? "none" : "block";
+
+    var pricePuntoEntrega = document.getElementById("showMe-6");
+    pricePuntoEntrega.style.display = (this.value == "10" || this.value == "12") ? "none" : "block";
+
+
+// opacity:0;pointer-events: none; cursor: default;
+
+	// if ($('#pickup option:selected')[0].value = "10"){		
+	// 	$('.precio-total')[0].innerHTML = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])
+	// } else if ($('#pickup option:selected')[0].value = "11"){
+	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-entrega')[0].innerHTML.split('€')[0])
+	// } else if ($('#pickup option:selected')[0].value = "12"){
+	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-punto-entrega')[0].innerHTML.split('€')[0])
+	// }
+
+	var priceTotal10 = $('.precio-total-10')[0];
+	var priceTotal11 = $('.precio-total-11')[0];
+	var priceTotal12 = $('.precio-total-12')[0];
+
+	priceTotal10.style.display = (this.value == "10") ? "block":"none"
+	priceTotal11.style.display = (this.value == "12" || this.value == "10") ? "none":"block";
+	priceTotal12.style.display = (this.value == "11" || this.value == "10") ? "none":"block";
+
+
+
+	// var priceSubTot = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0])
+	// priceTotal10.innerHTML = (this.value == "10") ? (priceSubTot + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])) : "";
+
+	// priceTotal10.innerHTML = (this.value == "12") ? (priceSubTot + parseFloat($('.precio-domicilio')[0].innerHTML.split('€')[0])) : "";
+
+	// priceTotal10.innerHTML = (this.value == "11") ? (priceSubTot + parseFloat($('.precio-entrega')[0].innerHTML.split('€')[0])) : "";
+
+
+
+
+
+
+};
+
+</script>
+
 
 {% endblock content %}

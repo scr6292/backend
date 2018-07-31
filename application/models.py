@@ -6,17 +6,26 @@ from datetime import date
 
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from wtforms import StringField, PasswordField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SelectField, IntegerField
 from wtforms.validators import InputRequired, Email, Length
 
 
-# LOGINS
+
 
 class Pickup(db.Model):
 	__tablename__='pickup'
 
 	id = db.Column(db.Integer, primary_key = True)
-	name = db.Column(db.String(30),nullable=False)
+	name = db.Column(db.String(90),nullable=False, unique = True)
+
+	def __repr__(self):
+		return '<Recogida %r>' % self.name
+
+class PickupMethod(db.Model):
+	__tablename__='pickupmethod'
+
+	id = db.Column(db.Integer, primary_key = True)
+	name = db.Column(db.String(90),nullable=False, unique = True)
 
 	def __repr__(self):
 		return '<Recogida %r>' % self.name
@@ -61,35 +70,7 @@ class User(UserMixin, db.Model):
 	def get_pickup(self):
 		return self.pickup_id
 
-class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
-    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
-    remember = BooleanField('Recordar')
 
-class RegisterForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
-    username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
-    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
-    pickup = SelectField('Punto de entrega', validators=[InputRequired(message='Por favor, selecciona un punto de recogida')], coerce=int)
-
-    def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
-        self.pickup.choices = [(a.id, a.name) for a in db.session.query(Pickup).order_by('name')]
-
-class UpdateUsernameForm(FlaskForm):
-    username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
-
-class UpdateEmailForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
-
-class UpdatePassForm(FlaskForm):
-    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
-# END LOGIN
-
-# OTHER FORMS
-
-
-#END FORMS
 
 class Agricultor(db.Model):
 	__tablename__ = 'agricultor'
@@ -132,19 +113,19 @@ class Productos(db.Model):
 
 	# pedido_join = db.relationship("Pedido")
 
-	def __init__(self,product_id,units,product_title,location_origin,unit_price,amount,current_price,created_date,week,year,agricultor_id,agricultor):
-		self.product_id = product_id
-		self.units = units
-		self.product_title = product_title
-		self.location_origin = location_origin
-		self.unit_price = unit_price
-		self.amount = amount
-		self.current_price = current_price
-		self.created_date = created_date
-		self.week = week
-		self.year = year
-		self.agricultor_id = agricultor_id
-		self.agricultor = agricultor
+	# def __init__(self,product_id,units,product_title,location_origin,unit_price,amount,current_price,created_date,week,year,agricultor_id,agricultor):
+	# 	self.product_id = product_id
+	# 	self.units = units
+	# 	self.product_title = product_title
+	# 	self.location_origin = location_origin
+	# 	self.unit_price = unit_price
+	# 	self.amount = amount
+	# 	self.current_price = current_price
+	# 	self.created_date = created_date
+	# 	self.week = week
+	# 	self.year = year
+	# 	self.agricultor_id = agricultor_id
+	# 	self.agricultor = agricultor
 
 	def __repr__(self):
 		return '<Nombre %r>' % self.product_title
@@ -160,7 +141,12 @@ class Productos(db.Model):
 				'agricultor_id': self.agricultor_id,
 			}
 
+class Order(db.Model):
+	__tablename__= 'order'
 
+	id = db.Column(db.Integer, primary_key = True)
+	pickup = db.Column(db.String(90),nullable=False)
+	precio_total = db.Column(db.Float(8))
 
 class Pedido(db.Model):
 	__tablename__= 'pedido'
@@ -178,6 +164,8 @@ class Pedido(db.Model):
 	# product_price_join = db.relationship(Productos, foreign_keys=[product_price])
 	# product_unit_join = db.relationship(Productos, foreign_keys=[product_units])
 	# product_join = db.relationship(Productos, foreign_keys=[product_name])
+	order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+	order = db.relationship(Order)
 	year = db.Column(db.Integer, default=date.today().year)
 	week = db.Column(db.Integer, default=date.today().isocalendar()[1])
 	is_confirmed = db.Column(db.Boolean,default=False)
@@ -225,4 +213,51 @@ class Contact(db.Model):
 
 	def __repr__(self):
 		return '<Contacto %r>' % self.name
+
+# FORMS
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
+    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
+    remember = BooleanField('Recordar')
+
+class RegisterForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
+    username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
+    pickup = SelectField('Punto de entrega', validators=[InputRequired(message='Por favor, selecciona un punto de recogida')], coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.pickup.choices = [(a.id, a.name) for a in db.session.query(Pickup).order_by('name')]
+
+class UpdateUsernameForm(FlaskForm):
+    username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+
+class UpdateEmailForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
+
+class UpdatePassForm(FlaskForm):
+    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
+
+class PickupForm(FlaskForm):
+    pickup_point = SelectField('Punto de entrega')
+
+    def __init__(self, *args, **kwargs):
+        super(PickupForm, self).__init__(*args, **kwargs)
+        self.pickup_point.choices = [(a.id, a.name) for a in db.session.query(Pickup).order_by('name')]
+
+class PickupChoiceForm(FlaskForm):
+    pickup = SelectField('Tipo de entrega', validators=[InputRequired(message='Por favor, selecciona un punto de recogida')], default='')
+
+    def __init__(self, *args, **kwargs):
+        super(PickupChoiceForm, self).__init__(*args, **kwargs)
+        self.pickup.choices = [(a.id, a.name) for a in db.session.query(PickupMethod).order_by('name')]
+
+class PickupHome(FlaskForm):
+	city = StringField('Localidad')
+	street = StringField('Direccion')
+	cp = IntegerField('CP')
+
+#END FORMS
 

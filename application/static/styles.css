@@ -204,7 +204,7 @@ body{
   display : flex;
   justify-content : center;
   align-items : center;
-  background-color:white;
+  background-color:rgb(107, 178, 7);
   height : 100%;
   color : #FFF;
   float: left;

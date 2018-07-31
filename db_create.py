@@ -1,13 +1,25 @@
 from application import db
-from application.models import Agricultor, Contact, Productos, RegisterForm, LoginForm, User, Pedido, Pickup
+from application.models import Agricultor, Contact, Productos, RegisterForm, LoginForm, User, Pedido, Pickup, PickupMethod, Order
 
 db.create_all()
 
-default_pickup = Pickup(name="Default")
+default_pickup = Pickup(name="Punto de entrega 1")
 db.session.add(default_pickup)
 db.session.commit()
 
-admin = User(username='Admin', email='admin@admin.com', password='sha256$RiJPq3hT$74f39e5334d7650bfb30e8294aac9b4275d304507e0e140abc2bec7c6ecebf50', is_active=True, user_role="ADMIN", is_admin=True, pickup_id= '1')
+default_pickup = PickupMethod(name="Recogida en Bustarviejo (Calle Maruste 18)")
+db.session.add(default_pickup)
+db.session.commit()
+
+default_pickup = PickupMethod(name="Recogida en punto de entrega")
+db.session.add(default_pickup)
+db.session.commit()
+
+default_pickup = PickupMethod(name="Entrega a individual a domicilio")
+db.session.add(default_pickup)
+db.session.commit()
+
+admin = User(username='Admin', email='admin@admin.com', password='sha256$RiJPq3hT$74f39e5334d7650bfb30e8294aac9b4275d304507e0e140abc2bec7c6ecebf50', is_active=True, user_role="ADMIN", is_admin=True, pickup="admin")
 db.session.add(admin)
 db.session.commit()
 
