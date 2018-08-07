@@ -130,7 +130,7 @@ def csvFiles(agricultor_id):
 #Home
 @application.route('/', methods=['GET'])
 def onepage():
-    return render_template('testSERGI.html')
+    return redirect(url_for('login'))
 
 #Home
 @application.route('/home', methods=['GET'])
@@ -153,7 +153,7 @@ def agricultorMenuOrder(agricultor_id):
             try:
                 if request.form[item.product_title]:
                     float(request.form[item.product_title].replace(',','.'))
-            except: 
+            except:
                 return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year)
         for item in items:
             if request.form[item.product_title]:
@@ -174,7 +174,7 @@ def agricultorMenuOrder(agricultor_id):
                 except:
                     db.session.rollback()
 
-         
+
         order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1]).first()
         if order != None:
             flash("Tu pedido ha sido procesado!")
@@ -202,7 +202,7 @@ def postOrder(agricultor_id):
         total = total + tot
     pointform = PickupForm()
     pickchoice_form = PickupChoiceForm()
-    pickupform = PickupHome()    
+    pickupform = PickupHome()
     if request.method == 'POST':
 
         # if pickchoice_form.validate_on_submit():
@@ -221,7 +221,7 @@ def postOrder(agricultor_id):
             elif (pickchoice_form.pickup.data == "2"):
                 if (total < 25):
                     flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
-                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
                 elif (25 < total < 40):
                     pickup_total = 2.0
                 elif (40 < total < 60):
@@ -233,7 +233,7 @@ def postOrder(agricultor_id):
             elif (pickchoice_form.pickup.data == "3"):
                 if (total < 25):
                     flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
-                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
                 elif (25 < total < 40):
                     pickup_total = 5.0
                 elif (40 < total < 60):
@@ -246,18 +246,18 @@ def postOrder(agricultor_id):
                     pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
                 else:
                     flash("Por favor introduce datos de entrega")
-                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
 
 
-# 
+#
 
             for item in order:
-                try: 
+                try:
                     if request.form[item.product_name]:
                         float(request.form[item.product_name].replace(',','.'))
-                except: 
+                except:
                     flash("Por favor introduce valores numericos")
-                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
             for item in order:
                 if request.form.get(item.product_name, False):
                     updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
@@ -270,9 +270,9 @@ def postOrder(agricultor_id):
 
             flash("Tus cambios ya estan en el carrito")
             return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup, pickup_total =pickup_total))
-    
 
-    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform) 
+
+    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
 
 @application.route('/agricultores/<int:agricultor_id>/postorder/confirm/<pickup>/<float:pickup_total>', methods=['GET'])
 @login_required(role="CUSTOMER")
@@ -281,7 +281,7 @@ def orderConfirm(agricultor_id, pickup, pickup_total):
     year = date.today().year
     order_id = str(week) + str(year) + str(current_user.id)
     new_order = Order(id = order_id, pickup = pickup)
-    
+
     db.session.commit()
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
     total = 0
@@ -426,7 +426,7 @@ def login():
                 else:
                     invalid_pass = 1
                     return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
-            else: 
+            else:
                 link_expired = 1
                 user
                 return render_template('/login.html',methods=['GET','POST'], form=form, link_expired = link_expired)
@@ -456,8 +456,8 @@ def signup():
         else:
             new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup=form.pickup.data)
             db.session.add(new_user)
-            try: 
-                db.session.commit() 
+            try:
+                db.session.commit()
             except:
                 db.session.rollback()
 
@@ -474,9 +474,9 @@ def signup():
             mail.send(msg)
 
             return render_template('confirmation_link.html', email = email)
-        
+
         # return redirect(url_for('login'))
-        # except: 
+        # except:
         #     db.session.rollback() #Rollback the changes on error
         #     flash("El email o nombre de usuario que has introducido ya existe, por favor introduce unos distintos")
         #     return redirect(url_for('signup'))
@@ -495,8 +495,8 @@ def confirm_email(token):
         user = User.query.filter_by(email=email).first()
         db.session.delete(user)
         db.session.commit()
-        return '<h1>Tu link de validacion ha expirado, por favor, registrate de nuevo</h1>'    
-    
+        return '<h1>Tu link de validacion ha expirado, por favor, registrate de nuevo</h1>'
+
     user = User.query.filter_by(email=email).first()
     user.is_active = True
     db.session.add(user)
@@ -526,7 +526,7 @@ class CsvUpdateView(BaseView):
     def is_accessible(self):
         if current_user.user_role == "ADMIN" :
             return True
-        else: return False    
+        else: return False
     @expose('/', methods=('GET', 'POST'))
     def index(self):
         if request.method == 'POST':
@@ -540,19 +540,19 @@ class CsvUpdateView(BaseView):
         return self.render('admin/upload_csv.html')
 
 class OrderView(BaseView):
-    
+
     def is_accessible(self):
         if current_user.user_role == "ADMIN" :
             return True
         else: return False
-    
+
     @expose('/')
     def pedidos(self):
         order = db.session.query(Pedido).filter_by(week = date.today().isocalendar()[1]).filter_by(is_confirmed=True).group_by(Pedido.user_name).all()
         weeks = db.session.query(Pedido.week).distinct()
         week = db.session.query(Pedido.week).first()
         return self.render('admin/adminorder.html', order = order, weeks = weeks, agricultor_id = 1, week = week)
-    
+
     @expose('/user/<int:agricultor_id>/<username>/<int:week>')
     def orderuser(self, agricultor_id, username, week):
         db.session.commit()

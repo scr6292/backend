@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
 body, table{
-    font-family: 'Source Sans Pro', sans-serif !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-weight: 400;
 }
 
 .filterable {
@@ -54,10 +54,11 @@ body, table{
 
 /*Header*/
 .navbar {
-    padding-left: 45px !important;
-    padding-right: 45px !important;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
+  padding-left: 45px !important;
+  padding-right: 45px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding: 0px !important;
 }
 .navbar-nav{
 
@@ -107,7 +108,7 @@ body, table{
     }
 
 .shopping-cart {
-    border-radius:100px!important; 
+    border-radius:100px!important;
     text-transform: uppercase;
     font-family: 'Poppins', sans-serif;
     background-color: rgb(107, 178, 7) !important;
@@ -133,22 +134,15 @@ body, table{
     }
 
 
-@media (min-width: 992px){
-    .navbar-expand-lg .navbar-nav .nav-link{
-        padding-right: 1.5rem !important;
-        padding-left: 1.5rem !important;
-    }
-}
 
-nav.navbar-light {
-    border-bottom: solid;
-    border-bottom-width: 2px;
+.row-padding-top {
+  padding-top: 40px;
 }
 
 
 
 .logo .navbar-brand{
-    height: 112px;
+    height: 50px;
 }
 
 .logo .navbar-brand img{
@@ -218,7 +212,7 @@ body{
   height : 100%;
   color : #3d231b;
 }
-@media (max-width: 1200px) { 
+@media (max-width: 1200px) {
   .left{
     height:50%
   }
@@ -236,3 +230,55 @@ body{
 }
 
 /*end homepage*/
+
+/*New Classes*/
+
+.title {
+  font-weight: 700;
+}
+
+.form-control:focus {
+  outline=0;
+}
+
+.little-margin {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.green-gradient {
+  background: #56ab2f;
+  background: -webkit-linear-gradient(to right, #34ba55, #63db5b);
+  background: linear-gradient(to right, #34ba55, #63db5b);
+}
+.shadow {
+  box-shadow:0 1px 4px rgba(0,0,0,.22);
+}
+
+.navbar-padding{
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 10px !important;
+}
+.btn-style{
+  border:0px;
+  color:white;
+  border-radius:5px;
+  background-color:#34ba55;
+}
+
+.top-margin {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.forms-text {
+  color:#7c7c7c;
+}
+
+@media (max-width: 576px) {
+  .top-margin {
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+}
