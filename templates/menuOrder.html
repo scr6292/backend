@@ -33,11 +33,10 @@
 						</thead>
 						<tbody>
 							<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
-								<!-- <h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px;">Productos disponibles esta semana {{week[0]}} de {{year[0]}} </h3>
-							 <div class="add-to-cart" style="float: right; height: 57px;"> -->
-									<button class='btn btn-lg 'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
-
-										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Enviar al carrito</a>
+								<!-- <h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px;">Productos disponibles esta semana {{week[0]}} de {{year[0]}} </h3> -->
+							 <div style="float: right; height: 57px;">
+									<button class='btn btn-lg btn-success' type = 'submit' value = 'Actualiza tu compra'>
+										<a>Enviar al carrito</a>
 									</button>
 							</div>
 							{% for i in items %}
