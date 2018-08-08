@@ -469,7 +469,7 @@ def signup():
 
             link = url_for('confirm_email', token=token, _external=True)
 
-            msg.body = 'Your link is {}'.format(link)
+            msg.body = 'Haz click en el siguiente enlace para confirmar tu cuenta: {}'.format(link)
 
             mail.send(msg)
 
@@ -502,7 +502,7 @@ def confirm_email(token):
     db.session.add(user)
     db.session.commit()
 
-    flash("Tu email se ha validado correctamente, por favor, inicia sesion")
+    #flash("Tu email se ha validado correctamente, por favor, inicia sesion")
     return redirect(url_for('login'))
     # # end test email
 

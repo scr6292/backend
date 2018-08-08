@@ -232,13 +232,13 @@ class RegisterForm(FlaskForm):
         self.pickup.choices = [(a.id, a.name) for a in db.session.query(Pickup).order_by('name')]
 
 class UpdateUsernameForm(FlaskForm):
-    username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+    username = StringField('Nuevo nombre de usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
 
 class UpdateEmailForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
+    email = StringField('Nuevo email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
 
 class UpdatePassForm(FlaskForm):
-    password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
+    password = PasswordField('Nueva password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
 
 class PickupForm(FlaskForm):
     pickup_point = SelectField('Punto de entrega')
@@ -260,4 +260,3 @@ class PickupHome(FlaskForm):
 	cp = IntegerField('CP')
 
 #END FORMS
-

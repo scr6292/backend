@@ -13,28 +13,28 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
 		<!-- Navbar -->
-		<nav class="navbar navbar-expand-lg navbar-light">
-  			<div class="logo">
-  				<a class="navbar-brand" href="#">
-  					<img src="http://www.nuestrashuertas.com/test/wp-content/uploads/2018/06/download-1.jpg" class="normal">
-  				</a>
-  			</div>
-  			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    			<span class="navbar-toggler-icon"></span>
-  			</button>
-		  		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-		    		<div class="navbar-nav ml-auto">
-		      			<a class="nav-item nav-link" href="/agricultores/1/order">Hacer pedido</a> <!-- url_for('agricultorMenuOrder',agricultor_id=agricultor_id) -->
-				      	<a class="nav-item nav-link" href="#">Pedidos realizados</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
-				      	<a class="nav-item nav-link" href="/user">Usuario</a>
-				      	<a class="nav-item nav-link" href="http://www.nuestrashuertas.com/test/">Volver al blog</a>
-				      	<div class="navbar-nav mr-auto">
-				      	<button type="button" class="btn btn-success logout" onclick="window.location='/agricultores/1/postorder';">Ver carrito</a> <!-- url_for('postOrder',agricultor_id=agricultor_id) -->
-				      	<button type="button" class="btn btn-success shopping-cart" href="#">Cerrar sesión</a>
-		    		</div>
-		  		</div>
+		<nav class="navbar navbar-expand-lg navbar-light green-gradient navbar-padding">
+			<a class="navbar-brand" href="#">
+				<img src="{{url_for('.static', filename='img/POD_LOGO.png')}}" class="normal" width="50" height="50">
+			</a>
 
-		</nav>
+	    <ul class="navbar-nav ml-auto">
+	      <li class="nav-item dropdown">
+	        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	          <img src="{{url_for('.static', filename='img/user.png')}}" class="normal pull-right" width="30" height="30">
+	        </a>
+	        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="/agricultores/1/order">Haz tu pedido</a>
+	          <a class="dropdown-item" href="/historicalOrders">Ver pedidos</a>
+	          <a class="dropdown-item" href="/user">Perfil</a>
+	          <div class="dropdown-divider"></div>
+	          <a class="dropdown-item" href="#">Cerrar sesión</a>
+	        </div>
+	      </li>
+	    </ul>
+
+
+	</nav>
 		{% endblock head %}
 
 	</head>

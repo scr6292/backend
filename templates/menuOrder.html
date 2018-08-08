@@ -10,49 +10,41 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-12">
+			<div class="col-12 pl-0">
 				<div class="panel panel-primary filterable">
 					<div class="panel-heading">
-						
+
+					<h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px; margin-bottom: 20px;">Productos disponibles esta semana <!-- {{week[0]}} de {{year[0]}} --></h3>
+						<div style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px;"><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></div>
+
 					</div>
-	        <table class="table">
+	        <table class="table" style="margin-bottom: 60px">
 						<thead>
 							<tr class="filters">
-								<th></th>
-								<th><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></th>
-								<th><img src="{{url_for('static', filename='vectorpaint (2).svg')}}" alt="Farm icons" style="height: 38px;">
-									<img src="{{url_for('static', filename='vectorpaint (6).svg')}}" alt="Farm icons" style="height: 38px;">
-								</th>
-								<th>
-								<img src="{{url_for('static', filename='vectorpaint (3).svg')}}" alt="Farm icons" style="height: 38px;">
-								<img src="{{url_for('static', filename='vectorpaint (7).svg')}}" alt="Farm icons" style="height: 38px;">
-								<img src="{{url_for('static', filename='vectorpaint (4).svg')}}" alt="Farm icons" style="height: 38px;">
-								<img src="{{url_for('static', filename='vectorpaint (5).svg')}}" alt="Farm icons" style="height: 38px;">
-								</th>
-								<th></th>
+								<!-- <th></th>
+								<div class"col-sm-12"><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></div> -->
 							</tr>
-							<tr><td></td>
+							<tr><!-- <td></td> -->
 								<td><b>Producto</b></td>
 								<td><b>Precio</b></td>
-								<td><b>Procedencia</b></td>
+								<td class="d-none d-md-block d-lg-block"><b>Procedencia</b></td>
 								<td><b>Cantidad</b></td>
 							</tr>
 						</thead>
 						<tbody>
 							<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
-								<h3 class="panel-title" style="float:left; margin-top: 21px;">Productos disponibles de la semana {{week[0]}} de {{year[0]}}</h3>
-							<div class="add-to-cart" style="float: right; height: 57px;">
+								<!-- <h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px;">Productos disponibles esta semana {{week[0]}} de {{year[0]}} </h3>
+							 <div class="add-to-cart" style="float: right; height: 57px;"> -->
 									<button class='btn btn-lg 'style='background-color:transparent; color: white;' type = 'submit' value = 'Actualiza tu compra' style="position: relative; float: right; background: none; border: none; color: #333;     margin-right: 4px;">
-										<img src="{{url_for('static', filename='vectorpaint (8).svg')}}" alt="Farm icons" style="height: 38px; position:relative; float: left; margin-right: 15px; height: 38px;">
+
 										<a style="display: inline-block; float:right; padding-top: 5px;     text-transform: uppercase; font-family: 'Poppins', sans-serif;    line-height: 30px !important; font-size: 12px !important; padding-right: 37px !important;">Enviar al carrito</a>
 									</button>
 							</div>
 							{% for i in items %}
 							<tr>
-								<td><img src= "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/201703/15/00118110600014____1__600x600.jpg" style="height: 37px;"></td>
 								<td>{{i.product_title}}</td>
 								<td>{{i.unit_price}}€/{{i.units}}</td>
-								<td>{{i.location_origin}}</td>
+								<td class="d-none d-md-block d-lg-block">{{i.location_origin}}</td>
 								<td><input type = 'text' class = "form-control" size = '30' name = '{{i.product_title}}' placeholder = ' {{i.units}}'></td>
 							</tr>
 							{% endfor %}
@@ -64,8 +56,15 @@
 	</div>
 </div>
 
+<footer class="fixed-bottom">
+	<div class="row justify-content-center">
+		<div>
+			<p class="text-right vertical-align-middle subtotal"> Subtotal: 55€ </p>
+		</div>
+		<div>
+			<button type = 'submit' class="btn footer-button float-right" value = 'Actualiza tu compra'>Ver cesta (X)</button>
+		</div>
+	</div>
+</footer>
+
 {% endblock content %}
-
-
-
-

@@ -11,7 +11,7 @@
 {% block content %}
 <div class="container">
   <div class="row row-padding-top justify-content-md-center">
-    <div class = "col-lg-5 col-md-6 col-sm-12 col-xs-12 align-self-center">
+    <div class = "col-lg-5 col-md-6 col-sm-12 col-xs-12 align-self-center big-margin">
       <form class="form-signin" method="POST" action="/signup">
         <h2 class="form-signin-heading title top-margin">Regístrate</h2>
         <p class="text-justify forms-text"> Crea tu usuario para poder utilizar la nueva herramienta de pedidos de Plant on Demand.</p>
@@ -19,6 +19,7 @@
         {{ wtf.form_field(form.username) }}
         {{ wtf.form_field(form.email) }}
         {{ wtf.form_field(form.password) }}
+        {{ wtf.form_field(form.pickup) }}
         {% if user_exist %}
          <p class="text-danger">El email introducido ya existe, por favor introduce otro distinto</p>
         {% endif %}
