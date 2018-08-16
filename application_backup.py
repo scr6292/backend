@@ -200,63 +200,64 @@ def postOrder(agricultor_id):
     for item in order:
         tot = float(item.product_price)*float(item.quantity)
         total = total + tot
-    #pointform = PickupForm()
-    #pickchoice_form = PickupChoiceForm()
-    #pickupform = PickupHome()
+    pointform = PickupForm()
+    pickchoice_form = PickupChoiceForm()
+    pickupform = PickupHome()
     if request.method == 'POST':
-        #TEST
+
         # if pickchoice_form.validate_on_submit():
         #     pickup = "TEST"
             # pickup = pickchoice_form.pickup.data
             # pickup = pointform.pickup_point.data
-        #END TEST
-        # if pickchoice_form.pickup.data == "1":
-        #     if (total < 25):
-        #         pickup_total = 2.0
-        #     elif (25 < total < 40):
-        #         pickup_total = 1.0
-        #     else:
-        #         pickup_total = 0.0
-        #         pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
-        # elif (pickchoice_form.pickup.data == "2"):
-        #     if (total < 25):
-        #         flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
-        #         return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-        #     elif (25 < total < 40):
-        #         pickup_total = 2.0
-        #     elif (40 < total < 60):
-        #         pickup_total = 1.5
-        #     else:
-        #         pickup_total = 0.0
-        #         choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
-        #         pickup = choice.name
-        # elif (pickchoice_form.pickup.data == "3"):
-        #     if (total < 25):
-        #         flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
-        #         return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-        #     elif (25 < total < 40):
-        #         pickup_total = 5.0
-        #     elif (40 < total < 60):
-        #         pickup_total = 4.0
-        #     elif (60 < total < 100):
-        #         pickup_total = 3.0
-        #     else:
-        #         pickup_total = 0.0
-        #
-        # if (pickupform.street.data != "" and pickupform.city.data != "" and pickupform.cp.data != None):
-        #     pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
-        # else:
-        #     flash("Por favor introduce datos de entrega")
-        #     return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
 
-        for item in order:
-            try:
-                if request.form[item.product_name]:
-                    float(request.form[item.product_name].replace(',','.'))
-            except:
-                flash("Por favor introduce valores numericos")
-                #return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-                return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total)
+            if pickchoice_form.pickup.data == "1":
+                if (total < 25):
+                    pickup_total = 2.0
+                elif (25 < total < 40):
+                    pickup_total = 1.0
+                else:
+                    pickup_total = 0.0
+                pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
+            elif (pickchoice_form.pickup.data == "2"):
+                if (total < 25):
+                    flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
+                elif (25 < total < 40):
+                    pickup_total = 2.0
+                elif (40 < total < 60):
+                    pickup_total = 1.5
+                else:
+                    pickup_total = 0.0
+                choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
+                pickup = choice.name
+            elif (pickchoice_form.pickup.data == "3"):
+                if (total < 25):
+                    flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
+                elif (25 < total < 40):
+                    pickup_total = 5.0
+                elif (40 < total < 60):
+                    pickup_total = 4.0
+                elif (60 < total < 100):
+                    pickup_total = 3.0
+                else:
+                    pickup_total = 0.0
+                if (pickupform.street.data != "" and pickupform.city.data != "" and pickupform.cp.data != None):
+                    pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
+                else:
+                    flash("Por favor introduce datos de entrega")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
+
+
+#
+
+            for item in order:
+                try:
+                    if request.form[item.product_name]:
+                        float(request.form[item.product_name].replace(',','.'))
+                except:
+                    flash("Por favor introduce valores numericos")
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
             for item in order:
                 if request.form.get(item.product_name, False):
                     updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
@@ -266,10 +267,12 @@ def postOrder(agricultor_id):
                     db.session.commit()
                 except:
                     db.session.rollback()
-            #flash("Tus cambios ya estan en el carrito")
-            #return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup, pickup_total =pickup_total))
-    #return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total)
+
+            flash("Tus cambios ya estan en el carrito")
+            return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup, pickup_total =pickup_total))
+
+
+    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
 
 @application.route('/agricultores/<int:agricultor_id>/postorder/confirm/<pickup>/<float:pickup_total>', methods=['GET'])
 @login_required(role="CUSTOMER")
