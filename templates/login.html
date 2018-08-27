@@ -36,7 +36,7 @@
             {{ form.hidden_tag() }}
             {{ wtf.form_field(form.email,class_='form-control') }}
             {{ wtf.form_field(form.password,class_='form-control') }}
-            <p style=color:#46BC64>¿Olvidaste tu contraseña?</p>
+            <p style=color:#46BC64>¿Olvidaste tu contraseña?<a href="/reset">Restablecer</a></p>
             {% if invalid_email %}
              <p class="text-danger">El email no es válido, por favor inténtalo de nuevo, regístrate si aún no tienes cuenta</p>
             {% endif %}

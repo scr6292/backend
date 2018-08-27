@@ -234,6 +234,12 @@ class UpdateEmailForm(FlaskForm):
 class UpdatePassForm(FlaskForm):
     password = PasswordField('Nueva password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
 
+# password recovery
+class EmailForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Email(), Length(min=6, max=40)])
+class PasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[InputRequired()])
+# end of password recovery
 class PickupForm(FlaskForm):
     pickup_point = SelectField('Punto de entrega')
 
