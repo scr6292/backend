@@ -13,6 +13,16 @@
 			<div class="col-12 pl-0">
 				<div class="panel panel-primary filterable">
 					<div class="panel-heading">
+				    {% if numeric %}
+				    <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 60px;">
+				      Por favor introduce un valor numérico.
+				    </div>
+				    {% endif %}
+				    {% if empty %}
+				    <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 60px;">
+				    	No has seleccionado ningun producto.
+				    </div>
+				    {% endif %}
 
 					<h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px; margin-bottom: 20px;">Productos disponibles esta semana <!-- {{week[0]}} de {{year[0]}} --></h3>
 						<div style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px;"><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></div>
@@ -35,17 +45,19 @@
 							<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
 								<!-- <h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px;">Productos disponibles esta semana {{week[0]}} de {{year[0]}} </h3> -->
 							 <div style="float: right; height: 57px;">
-									<button class='btn btn-lg btn-success' type = 'submit' value = 'Actualiza tu compra'>
+									<button class='btn btn-lg btn-success add-to-cart' type = 'submit' value = 'Actualiza tu compra'>
 										<a>Enviar al carrito</a>
 									</button>
 							</div>
+
 							{% for i in items %}
-							<tr>
+							<tr class = "{{loop.index}} productos">
 								<td>{{i.product_title}}</td>
 								<td>{{i.unit_price}}€/{{i.units}}</td>
 								<td class="d-none d-md-block d-lg-block">{{i.location_origin}}</td>
-								<td><input type = 'text' class = "form-control" size = '30' name = '{{i.product_title}}' placeholder = ' {{i.units}}'></td>
+								<td><input type = 'text' id = "{{loop.index}}"class = "form-control" size = '30' name = '{{i.product_title}}' placeholder = ' {{i.units}}'></td>
 							</tr>
+
 							{% endfor %}
 						</form>
 					</tbody>
@@ -55,13 +67,32 @@
 	</div>
 </div>
 
+<script>
+	boxes = document.getElementsByClassName("form-control")
+	for (i=0 ; i < boxes.length ; i++){
+		boxes[i].onchange = function(){
+			n_products = {{n_order}}
+			total1 = 0
+			for (i=0 ; i < boxes.length ; i++){
+				if (boxes[i].value != ""){
+				var n_products = n_products + 1
+				var total1 = total1 + (parseFloat(document.getElementsByClassName(i)[0].getElementsByTagName('td')[1].innerHTML.split("€")[0]) * parseFloat(boxes[i].value))
+				}
+			document.getElementsByClassName("subtotal")[0].innerHTML = "SUBTOTAL:" + total1.toFixed(2) + " + {{total}}" + "€"
+			document.getElementsByClassName("cart")[0].innerHTML = "Ver cesta (" + n_products + ")"
+			}
+		}
+	}
+
+</script>
+
 <footer class="fixed-bottom">
 	<div class="row justify-content-center">
 		<div>
-			<p class="text-right vertical-align-middle subtotal"> Subtotal: 55€ </p>
+			<p class="text-right vertical-align-middle subtotal"> Subtotal: {{total}}€ </p>
 		</div>
 		<div>
-			<button type = 'submit' class="btn footer-button float-right" value = 'Actualiza tu compra'>Ver cesta (X)</button>
+			<button type = 'submit' class="btn footer-button float-right cart" value = 'Actualiza tu compra' onclick="document.getElementsByClassName('add-to-cart')[0].click()">Ver cesta ({{n_order}})</button>
 		</div>
 	</div>
 </footer>

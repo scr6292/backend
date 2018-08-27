@@ -8,23 +8,23 @@
 {% block content %}
 
 	<div class="container">
-	    {% if numeric %}
+	    {% if envio %}
 	    <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 60px;">
-	      Por favor introduce un valor numérico.
+	      Para esta modalidad de envio tu pedido debe ser mayor a 25 euros.
 	    </div>
 	    {% endif %}
-	    {% if doubleorder %}
+	    {% if nodata %}
 	    <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 60px;">
-	      Ya has realizado pedido esta semana.
+	      Por favor introduce datos de entrega.
 	    </div>
 	    {% endif %}
 		<div align="center">
-			<h1 class="title" style="margin-top: 20px">Cesta de la compra</h1>
+			<h1 class="title" style="margin-top: 20px">Elige tu forma de entrega</h1>
 			<hr width="80%" class="separator">
 		</div>
     <div class="row justify-content-center" align="center">
       <div class="col-lg-12">
-        <h4 style="position: relative; float: left; margin-bottom: 10px;">Revisa o actualiza tu pedido y confirma tu compra</h4>
+        <h4 style="position: relative; float: left; margin-bottom: 10px;">Elige la forma de entrega que más te convenga</h4>
         <table class="table">
           <!--<thead>
             <tr>
@@ -36,72 +36,11 @@
   				 </tr>
           </thead> -->
           <tbody> {% from "_formhelpers.html" import render_field %}
-            <form action = "{{url_for('postOrder',agricultor_id=agricultor_id)}}" method = 'POST' >
-
-              {% for i in order %}
-              <tr class="postorder">
-    						<!-- <td>{{i.product_price}}€/{{i.product_units}}
-                </td> -->
-                <td align="center" class="align-middle" style="width: 30px">
-                  <a class="eliminar" href="{{url_for('deleteItem', agricultor_id = agricultor_id, pedido_id = i.id)}}">
-                    <i class="material-icons align-middle">cancel</i>
-                  </a>
-                </td>
-                <td>
-                  <input type = 'text' size = '7' name = '{{i.product_name}}' placeholder = '{{i.quantity}} {{i.product_units}}'>
-                </td>
-    						<td>
-    				      {{i.product_name}}
-                </td>
-                <td>
-                  {{(i.quantity|float)*(i.product_price|float)}}€
-                </td>
-
-              </tr>
-              {% endfor %}
-
-              <tr>
-                <td></td>
-                <td></td>
-                <td><b>Total</b></td>
-                <td class="precio-total-productos" style="color: #000; font-weight: bold">{{ total }}€</td>
-              </tr>
+            <form action = "{{url_for('pickup',agricultor_id=agricultor.id)}}" method = 'POST' >
 
                 <button class='btn btn-lg btn-success update-order' type = 'submit' value = 'Actualiza tu compra' style='display:none'>
                 </button>
-            </form>
-
-        </table>
-      </div>
-      <div class="row justify-content-center" align="center">
-
-      </div>
-    </div>
-		<!-- <div>
-			<a class="compra" href="{{url_for('agricultorMenuOrder', agricultor_id = agricultor_id)}}">
-				<span class"row align-middle col-6">
-				<i class="material-icons align-middle">local_grocery_store</i>
-				Seguir comprando
-			</span>
-			</a>
-		</div> -->
-    <div>
-      <a class"compra" href="{{url_for('agricultorMenuOrder', agricultor_id = agricultor_id)}}">
-        <button type="button" class="btn btn-outline-success">
-          <i class="material-icons align-middle">local_grocery_store</i>
-            Seguir comprando
-        </button>
-      </a>
-    </div>
-    {% if total < 25 %}
-    <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 60px;">
-      Los pedidos inferiores a 25€ no se entregan a domicilio.
-    </div>
-    {% endif %}
-
-
-
-		                    <!-- {#	<tr>
+		                    <tr>
 		                    		<td>
 		                    			{{ pickchoice_form.hidden_tag() }}
 		                    			{{ wtf.form_field(pickchoice_form.pickup) }}
@@ -123,8 +62,8 @@
 		                    		<td></td>
 		                    		<td></td>
 		                    		<td></td>
-		                    	</tr>
-	                    	</form>
+		                    </tr>
+			</form>
 	                    	<tr>
 	                    		<td><b>Los gastos de envío</b></td>
 	                    		<td></td>
@@ -180,24 +119,6 @@
 
 	                </tbody>
 	            </table>
-	            <table class="table">
-	                <thead>
-	                    <tr class="filters">
-	                        <th><input type="text" class="form-control" placeholder="Ver mis pedidos de otras semanas" disabled></th>
-	                        <th>
-
-	                        </th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-	                		<tr>
-		                		{% for i in weeks %}
-								<td><a href = "{{url_for('historicalOrders', agricultor_id = agricultor.id, week = i.week)}}">Semana {{i.week}}</a></td>
-	                    	</tr>
-	                    		{% endfor %}
-
-	                </tbody>
-	            </table>
 	           	<div>
 
 	            </div>
@@ -214,11 +135,11 @@
 			</div>
 		</section>
 	</div>
- #} -->
+ 
 <footer class="fixed-bottom">
   	<div class="row justify-content-center">
   		<div>
-  			<p class="text-right vertical-align-middle subtotal"> Subtotal: {{ total }}€ </p>
+  			<p class="text-right vertical-align-middle subtotal"> Subtotal: {{ total }}€ + Los gastos de envío</p>
   		</div>
   		<div>
   			<button type="button" class="btn footer-button float-right" onclick="document.getElementsByClassName('update-order')[0].click()">Finalizar compra</button>
@@ -226,7 +147,7 @@
   	</div>
 </footer>
 
-<!--
+
 <script>
 
 	function updatePrice(){
@@ -287,6 +208,8 @@
 
 
 
+
+
 	// var priceSubTot = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0])
 	// priceTotal10.innerHTML = (this.value == "10") ? (priceSubTot + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])) : "";
 
@@ -301,7 +224,7 @@
 
 };
 
-</script> -->
+</script> 
 
 
 {% endblock content %}

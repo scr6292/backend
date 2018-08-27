@@ -54,12 +54,17 @@
 		                    		
 		                    	</tr>
 		                    		{% endfor %}
-
+		                    <tr>
+		                    	<td>Gastos de envío</td>
+	                    		<td></td>
+	                    		<td></td>
+	                    		<td style="font-weight: bold">{{ pickup_total }}€</td>
+		                    </tr>
 	                    	<tr>
 	                    		<td>TOTAL</td>
 	                    		<td></td>
 	                    		<td></td>
-	                    		<td style="color: red; font-weight: bold">{{ total }}€</td>
+	                    		<td style="color: green; font-weight: bold">{{ total }}€</td>
 	                    	</tr>
 	                    	<tr>
 	                    		<td>La dirección de recogida será <strong>"{{pickup}}"</strong>
