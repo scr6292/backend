@@ -40,20 +40,19 @@ class User(UserMixin, db.Model):
 	user_role = db.Column(db.String(80))
 	is_active = db.Column(db.Boolean,default=False)
 	is_admin = db.Column(db.Boolean,default=False)
-	pickup = db.Column(db.String(30), nullable=False)
 	# pickup_name_join = db.relationship(Pickup, foreign_keys=[pickup])
 
 
 
 
-	def __init__(self,username,password,email,user_role,is_active,is_admin,pickup):
+	def __init__(self,username,password,email,user_role,is_active,is_admin):
 		self.username = username
 		self.password = password
 		self.email = email
 		self.user_role = user_role
 		self.is_active = is_active
 		self.is_admin = is_admin
-		self.pickup = pickup
+
 
 	def get_id(self):
 		return self.id
@@ -225,11 +224,6 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
     username = StringField('Usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
     password = PasswordField('Password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
-    pickup = SelectField('Punto de entrega', validators=[InputRequired(message='Por favor, selecciona un punto de recogida')], coerce=int)
-
-    def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
-        self.pickup.choices = [(a.id, a.name) for a in db.session.query(Pickup).order_by('name')]
 
 class UpdateUsernameForm(FlaskForm):
     username = StringField('Nuevo nombre de usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])

@@ -500,11 +500,11 @@ def login():
                 link_expired = 1
                 user
                 return render_template('/login.html',methods=['GET','POST'], form=form, link_expired = link_expired)
+                db.session.delete(user)
+                db.session.commit()
 
         else:
             invalid_email = 1
-            db.session.delete(user)
-            db.session.commit()
             return render_template('/login.html',methods=['GET','POST'], form=form, invalid_email = invalid_email)
 
     return render_template('login.html', form=form)
@@ -524,7 +524,7 @@ def signup():
             user_name_exist = 1
             return render_template('signup.html', form=form, user_name_exist = user_name_exist)
         else:
-            new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False, pickup=form.pickup.data)
+            new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_active=False, user_role="CUSTOMER", is_admin=False)
             db.session.add(new_user)
             try:
                 db.session.commit()
