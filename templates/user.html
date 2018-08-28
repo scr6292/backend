@@ -8,12 +8,33 @@
 {% block content %}
 <div class="container">
   <div class="row row-padding-top justify-content-md-center">
+      {% if newname %}
+      <div class="alert alert-danger" role="alert" style="margin-top: 10px; height: 50px;">
+        Tu nuevo nombre de usuario es {{username}}.
+      </div>
+      {% endif %}
+      {% if newemail %}
+      <div class="alert alert-danger" role="alert" style="margin-top: 10px; height: 50px;">
+        Tu nuevo nombre de usuario es {{email}}.
+      </div>
+      {% endif %}
+      {% if newpass %}
+      <div class="alert alert-danger" role="alert" style="margin-top: 10px; height: 50px;">
+        Tu contraseña ha sido actualizada.
+      </div>
+      {% endif %}
+      {% if wrongpass %}
+      <div class="alert alert-danger" role="alert" style="margin-top: 10px; height: 50px;">
+        La contraseña que has introducido no es correcta.
+      </div>
+      {% endif %}
     <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 align-self-center">
       <h3 class="title margin-bottom">Editar información</h3>
       <form class="form-signin" method="POST" action="{{url_for('user')}}">
 
         {{ formuser.hidden_tag() }}
         {{ wtf.form_field(formuser.username) }}
+        {{ wtf.form_field(formuser.password) }}
         <button class="btn btn-success" type="submit">Cambiar usuario</button>
       </form>
       <hr>
@@ -21,6 +42,7 @@
 
         {{ formemail.hidden_tag() }}
         {{ wtf.form_field(formemail.email) }}
+        {{ wtf.form_field(formemail.password) }}
         <button class="btn btn-success" type="submit">Cambiar email</button>
       </form>
       <hr>
@@ -28,6 +50,7 @@
 
         {{ formpass.hidden_tag() }}
         {{ wtf.form_field(formpass.password) }}
+        {{ wtf.form_field(formpass.current_password) }}
         <button class="btn btn-success" type="submit">Cambiar password</button>
       </form>
     </div>

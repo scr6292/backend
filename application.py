@@ -275,7 +275,7 @@ def postOrder(agricultor_id):
     #return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
     return render_template('postOrder.html', agricultor_id=agricultor_id, order = order, weeks = weeks, user_name = current_user.username, total = total)
 
-@application.route('/agricultores/<int:agricultor_id>/postorder/pickup', methods=['GET','POST'])
+@application.route('/agricultores/<int:agricultor_id>/pickup', methods=['GET','POST'])
 @login_required(role="CUSTOMER")
 def pickup(agricultor_id):
     db.session.commit()
@@ -342,7 +342,7 @@ def pickup(agricultor_id):
     return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pickupform = pickupform, pickchoice_form = pickchoice_form, pointform = pointform)
 
 
-@application.route('/agricultores/<int:agricultor_id>/postorder/confirm/<pickup>/<float:pickup_total>', methods=['GET'])
+@application.route('/agricultores/<int:agricultor_id>/confirm/<pickup>/<float:pickup_total>', methods=['GET'])
 @login_required(role="CUSTOMER")
 def orderConfirm(agricultor_id, pickup, pickup_total):
     week = date.today().isocalendar()[1]
@@ -415,38 +415,70 @@ def historicalOrders(agricultor_id, week):
 @application.route('/user', methods=['GET', 'POST'])
 @login_required(role="CUSTOMER")
 def user():
+
+        # if form.validate_on_submit():
+        # user = User.query.filter_by(email=form.email.data).first()
+        # if user:
+        #     if user.is_active == True:
+        #         if check_password_hash(user.password, form.password.data):
+        #             login_user(user, remember=form.remember.data)
+        #             return redirect(url_for('agricultorMenuOrder', agricultor_id = 1))
+        #         else:
+        #             invalid_pass = 1
+        #             return render_template('/login.html',methods=['GET','POST'], form=form, invalid_pass = invalid_pass)
+
+
+
     form_user = UpdateUsernameForm()
     form_pass = UpdatePassForm()
     form_email = UpdateEmailForm()
     currentuser = db.session.query(User).filter_by(username=current_user.username).first()
     if form_user.validate_on_submit():
-        if form_user.username.data:
-            currentuser.username = form_user.username.data
-        db.session.add(currentuser)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-        return redirect(url_for('user'))
+        user = User.query.filter_by(email=current_user.email).first()
+        if check_password_hash(current_user.password, form_user.password.data):
+            if form_user.username.data:
+                currentuser.username = form_user.username.data
+                db.session.add(currentuser)
+            try:
+                db.session.commit()
+                newname = 1
+                return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newname = newname, username = form_user.username.data)
+            except:
+                db.session.rollback()
+        else:
+            wrongpass = 1
+            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass = wrongpass)
     if form_email.validate_on_submit():
-        if form_email.email.data:
-            currentuser.email = form_email.email.data
-        db.session.add(currentuser)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-        return redirect(url_for('user'))
+        user = User.query.filter_by(email=current_user.email).first()
+        if check_password_hash(current_user.password, form_user.password.data):
+            if form_email.email.data:
+                currentuser.email = form_email.email.data
+                db.session.add(currentuser)
+            try:
+                db.session.commit()
+                newemail = 1
+                return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newemail = newemail, email = form_email.email.data)
+            except:
+                db.session.rollback()
+        else:
+            wrongpass = 1
+            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass = wrongpass)
     if form_pass.validate_on_submit():
-        if form_pass.password.data:
-            hashed_password = generate_password_hash(form_pass.password.data, method='sha256')
-            currentuser.password = hashed_password
-        db.session.add(currentuser)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback() #Rollback the changes on error
-        return redirect(url_for('user'))
+        user = User.query.filter_by(email=current_user.email).first()
+        if check_password_hash(current_user.password, form_pass.current_password.data):       
+            if form_pass.current_password.data:
+                hashed_password = generate_password_hash(form_pass.current_password.data, method='sha256')
+                currentuser.password = hashed_password
+                db.session.add(currentuser)
+            try:
+                db.session.commit()
+                newpass = 1
+                return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newpass = newpass)
+            except:
+                db.session.rollback() #Rollback the changes on error
+        else:
+            wrongpass = 1
+            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass = wrongpass)
 
     return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email)
 

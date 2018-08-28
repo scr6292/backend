@@ -227,12 +227,15 @@ class RegisterForm(FlaskForm):
 
 class UpdateUsernameForm(FlaskForm):
     username = StringField('Nuevo nombre de usuario', validators=[InputRequired(message='Introduce un usuario (entre 8 y 80 caracteres)'), Length(min=4, max=15,message='Introduce un usuario (entre 8 y 80 caracteres)')])
+    password = PasswordField('Password actual', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
 
 class UpdateEmailForm(FlaskForm):
     email = StringField('Nuevo email', validators=[InputRequired(message='Introduce un mail'), Email(message='Introduce un mail'), Length(max=50)])
+    password = PasswordField('Password actual', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
 
 class UpdatePassForm(FlaskForm):
     password = PasswordField('Nueva password', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80, message='Introduce una password entre 8 y 80 caracteres')])
+    current_password = PasswordField('Password actual', validators=[InputRequired(message='Introduce una password entre 8 y 80 caracteres'), Length(min=8, max=80,message= 'Introduce una password entre 8 y 80 caracteres')])
 
 # password recovery
 class EmailForm(FlaskForm):
