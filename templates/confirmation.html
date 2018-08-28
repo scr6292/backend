@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout_progress_bar.html" %}
 
 {% block head %}
 {{ super() }}
@@ -11,9 +11,6 @@
 		<br>
 		<section class=nav-order>
 			<div class="row">
-				<div class="col-sm">
-					<button type="button" class="btn btn-outline-success" onclick="window.location.href='{{url_for('onepage')}}'">Volver a la homepage</button>
-				</div>
 				<div class="col-sm">
 					<button type="button" class="btn btn-outline-success update-order-2" onclick="">Ver pedidos realizados</button>
 				</div>

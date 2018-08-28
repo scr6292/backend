@@ -39,69 +39,6 @@
 
 	</head>
 	  <body>
-<!-- Flash -->
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-<!-- End flash -->
-
-<!-- progress bar -->
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<!-- <div class="progress">
-	<a href="/agricultores/1/order">
-	  <div class="circle active">
-	    <span class="label">1</span>
-	    <span class="title">Productos</span>
-	  </div>
-	</a>
-  <span class="bar done"></span>
-  <div class="circle">
-    <span class="label">2</span>
-    <span class="title">Cantidades</span>
-  </div>
-  <span class="bar half"></span>
-  <div class="circle">
-    <span class="label">3</span>
-    <span class="title">Recogida</span>
-  </div>
-  <span class="bar"></span>
-  <div class="circle">
-    <span class="label">4</span>
-    <span class="title">Finalizado</span>
-  </div>
-</div> -->
-
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<div class="progress">
-  <div class="circle done" onclick="window.location='/agricultores/1/order'">
-    <span class="label">1</span>
-    <span class="title">Productos</span>
-  </div>
-  <span class="bar done"></span>
-  <div class="circle done" onclick="window.location='/agricultores/1/postorder'">
-    <span class="label">2</span>
-    <span class="title">Cantidades</span>
-  </div>
-  <span class="bar half"></span>
-  <div class="circle active" onclick="window.location='/agricultores/1/pickup'">
-    <span class="label">3</span>
-    <span class="title">Recogida</span>
-  </div>
-  <span class="bar"></span>
-  <div class="circle" onclick="window.location='/agricultores/1/confirm'">
-    <span class="label">4</span>
-    <span class="title">Finalizado</span>
-  </div>
-</div>
-
-<!-- end progress bar -->
-
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">
       {% block footer %}
@@ -115,75 +52,14 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 		<script src="{{ url_for('static', filename='filter_products.js') }}"></script>
 
-		<script>
+<!-- 		<script>
 			$(document).ready(function() {
 			// get current URL path and assign 'active' class
 				var pathname = window.location.pathname;
 				$('.nav-link[href="'+pathname+'"]').addClass('active');
 			})
-		</script>
-		<!-- progress bar -->
-		<script type="text/javascript">
-			i = 0
-			if (window.location.href.split("/")[5] == "order"){
-			var i = 1;}
-			if (window.location.href.split("/")[5] == "postorder"){
-			var i = 2;}
-			if (window.location.href.split("/")[5] == "pickup"){
-			var i = 3;}
-			if (window.location.href.split("/")[5] == "confirm"){
-			var i = 4;}
-			// if (window.location.href.split("/")[3] == "user"){
-			// $('.progress')[0].style.display = "none"}
-$('.progress .circle').removeClass().addClass('circle');
-$('.progress .bar').removeClass().addClass('bar');
-setInterval(function() {
-  $('.progress .circle:nth-of-type(' + i + ')').addClass('active');
-  
-  $('.progress .circle:nth-of-type(' + (i-1) + ')').removeClass('active').addClass('done');
+		</script> -->
 
-  $('.progress .circle:nth-of-type(' + (i-2) + ')').removeClass('active').addClass('done');
-
-  $('.progress .circle:nth-of-type(' + (i-3) + ')').removeClass('active').addClass('done');
-
-  $('.progress .circle:nth-of-type(' + (i-4) + ')').removeClass('active').addClass('done');
-  
-  $('.progress .circle:nth-of-type(' + (i-1) + ') .label').html('&#10003;');
-
-  $('.progress .circle:nth-of-type(' + (i-2) + ') .label').html('&#10003;');
-
-  $('.progress .circle:nth-of-type(' + (i-3) + ') .label').html('&#10003;');
-
-  $('.progress .circle:nth-of-type(' + (i-4) + ') .label').html('&#10003;');
-  
-  $('.progress .bar:nth-of-type(' + (i-1) + ')').addClass('active');
-  
-  $('.progress .bar:nth-of-type(' + (i-2) + ')').removeClass('active').addClass('done');
-
-  $('.progress .bar:nth-of-type(' + (i-3) + ')').removeClass('active').addClass('done');
-
-  $('.progress .bar:nth-of-type(' + (i-4) + ')').removeClass('active').addClass('done');
-  
-  // i++;
-
-	if (window.location.href.split("/")[5] == "order"){
-	$('.progress')[0].style.opacity = 1}
-	if (window.location.href.split("/")[5] == "postorder"){
-	$('.progress')[0].style.opacity = 1}
-	if (window.location.href.split("/")[5] == "pickup"){
-	$('.progress')[0].style.opacity = 1}
-	if (window.location.href.split("/")[5] == "confirm"){
-	$('.progress')[0].style.opacity = 1}
-  
-  if (i==0) {
-    $('.progress .bar').removeClass().addClass('bar');
-    $('.progress div.circle').removeClass().addClass('circle');
-    i = 1;
-  }
-}, 1000);
-
-		</script>
-<!-- end progress bar -->
       {% endblock %}
   </body>
 </html>

@@ -39,6 +39,11 @@
             <button class="btn btn-lg btn-block little-margin btn-style" type="submit">Entrar</button>
             <p> ¿No tienes cuenta? <a class ="inline-block" href= "/signup" style=color:#46BC64>Regístrate</a></p>
           </form>
+        {% if newpass %}
+        <div class="alert alert-success" role="alert" style="margin-top: 10px; height: 50px;">
+          Tu contraseña ha sido actualizada
+        </div>
+        {% endif %}
         </div>
       </div>
 

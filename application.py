@@ -382,7 +382,7 @@ def orderConfirm(agricultor_id, pickup, pickup_total):
     msg = Message("Confirmacion de pedido",
                 sender="plantondemand@gmail.com",
                 recipients=[current_user.email])
-    msg.html = render_template('confirmation.html', user_name=current_user.username, total = total, order = order, pickup = pickup, agricultor_id = agricultor_id)
+    msg.html = render_template('confirmation_email.html', user_name=current_user.username, total = total, order = order, pickup = pickup, agricultor_id = agricultor_id, pickup_total = pickup_total)
     mail.send(msg)
     return render_template('confirmation.html', user_name = current_user.username, total = total, order = order, pickup = pickup, agricultor_id = agricultor_id, pickup_total = pickup_total)
 
@@ -439,12 +439,12 @@ def user():
             if form_user.username.data:
                 currentuser.username = form_user.username.data
                 db.session.add(currentuser)
-            try:
-                db.session.commit()
-                newname = 1
-                return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newname = newname, username = form_user.username.data)
-            except:
-                db.session.rollback()
+                try:
+                    db.session.commit()
+                    newname = 1
+                    return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newname = newname, username = form_user.username.data)
+                except:
+                    db.session.rollback()
         else:
             wrongpass1 = 1
             return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass1 = wrongpass1)
@@ -454,12 +454,12 @@ def user():
             if form_email.email.data:
                 currentuser.email = form_email.email.data
                 db.session.add(currentuser)
-            try:
-                db.session.commit()
-                newemail = 1
-                return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newemail = newemail, email = form_email.email.data)
-            except:
-                db.session.rollback()
+                try:
+                    db.session.commit()
+                    newemail = 1
+                    return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newemail = newemail, email = form_email.email.data)
+                except:
+                    db.session.rollback()
         else:
             wrongpass2 = 1
             return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass2 = wrongpass2)
@@ -467,15 +467,15 @@ def user():
         user = User.query.filter_by(email=current_user.email).first()
         if check_password_hash(current_user.password, form_pass.current_password.data):       
             if form_pass.current_password.data:
-                hashed_password = generate_password_hash(form_pass.current_password.data, method='sha256')
+                hashed_password = generate_password_hash(form_pass.password.data, method='sha256')
                 currentuser.password = hashed_password
                 db.session.add(currentuser)
-            try:
-                db.session.commit()
-                newpass = 1
-                return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newpass = newpass)
-            except:
-                db.session.rollback() #Rollback the changes on error
+                try:
+                    db.session.commit()
+                    newpass = 1
+                    return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, newpass = newpass)
+                except:
+                    db.session.rollback() #Rollback the changes on error
         else:
             wrongpass3 = 1
             return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass3 = wrongpass3)
@@ -645,7 +645,6 @@ def reset():
          
         if user:
             send_password_reset_email(user.email)
-            flash('Please check your email for a password reset link.', 'success')
         else:
             flash('Your email address must be confirmed before attempting a password reset.', 'error')
         return render_template('reset_password_link.html', email = form.email.data)
@@ -658,7 +657,6 @@ def reset_with_token(token):
         password_reset_serializer = URLSafeTimedSerializer(application.config['SECRET_KEY'])
         email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
     except:
-        flash('The password reset link is invalid or has expired.', 'error')
         return redirect(url_for('login'))
  
     form = PasswordForm()
@@ -668,13 +666,15 @@ def reset_with_token(token):
             user = User.query.filter_by(email=email).first_or_404()
         except:
             flash('Invalid email address!', 'error')
-            return redirect(url_for('users.login'))
+            return redirect(url_for('login'))
         password = generate_password_hash(form.password.data, method='sha256')
         user.password = password
         db.session.add(user)
         db.session.commit()
-        flash('Your password has been updated!', 'success')
-        return redirect(url_for('login'))
+
+        form1 = LoginForm()
+        newpass = 1
+        return render_template('login.html', newpass = newpass, form = form1)
  
     return render_template('reset_password_with_token.html', form=form, token=token)
 # END FORGOT PASS

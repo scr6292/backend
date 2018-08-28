@@ -1,0 +1,48 @@
+	<h4>Gracias {{current_user.username}}, tu pedido ha sido confirmado</h4>
+	<p>Resumen del pedido:</p>
+	    <table class="table postorder">
+	        <tbody>
+				<tr>
+            		
+					<td style="font-weight: bold">
+						Producto
+					</td>
+					<td style="font-weight: bold">
+						Cantidad
+					</td>
+                	<td style="font-weight: bold">Precio</td>
+                	<td style="font-weight: bold">Total</td>
+            		
+            	</tr>
+
+    			{% for i in order %}
+    			<tr class="postorder">
+	        		
+					<td>
+						{{i.product_name}}
+					</td>
+					<td>
+						{{i.quantity}}{{i.product_units}}
+					</td>
+	            	<td>{{i.product_price}}€/{{i.product_units}}</td>
+	            	<td>{{(i.quantity|float)*(i.product_price|float)}}€</td>
+	        		
+	        	</tr>
+        		{% endfor %}
+                <tr>
+                	<td style="font-weight: bold">Gastos de envío</td>
+            		<td></td>
+            		<td></td>
+            		<td style="font-weight: bold">{{ pickup_total }}€</td>
+                </tr>
+            	<tr>
+            		<td style="font-weight: bold">TOTAL</td>
+            		<td></td>
+            		<td></td>
+            		<td style="font-weight: bold">{{ total }}€</td>
+            	</tr>
+            	<tr>
+            		<td>La dirección de recogida será <strong>"{{pickup}}"</strong>
+            	</tr>
+	        </tbody>
+	    </table>

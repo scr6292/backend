@@ -1,0 +1,155 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+
+
+
+		<!-- CSS -->
+		<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+
+		<!-- JQUERY -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light green-gradient navbar-padding">
+			<a class="navbar-brand" href="#">
+				<img src="{{url_for('.static', filename='img/POD_LOGO.png')}}" class="normal" width="50" height="50">
+			</a>
+
+	    <ul class="navbar-nav ml-auto">
+	      <li class="nav-item dropdown">
+	        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	          <img src="{{url_for('.static', filename='img/user.png')}}" class="normal pull-right" width="30" height="30">
+	        </a>
+	        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="/agricultores/1/order">Haz tu pedido</a>
+	          <a class="dropdown-item" href="{{url_for('historicalOrders', agricultor_id = 1, week = 35)}}">Ver pedidos</a>
+	          <a class="dropdown-item" href="/user">Perfil</a>
+	          <div class="dropdown-divider"></div>
+	          <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+	        </div>
+	      </li>
+	    </ul>
+
+
+	</nav>
+		{% endblock head %}
+
+	</head>
+	  <body>
+
+<!-- progress bar -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<div class="progress">
+  <div class="circle done" onclick="window.location='/agricultores/1/order'">
+    <span class="label">1</span>
+    <span class="title">Productos</span>
+  </div>
+  <span class="bar done"></span>
+  <div class="circle done" onclick="window.location='/agricultores/1/postorder'">
+    <span class="label">2</span>
+    <span class="title">Carrito</span>
+  </div>
+  <span class="bar half"></span>
+  <div class="circle active" onclick="window.location='/agricultores/1/pickup'">
+    <span class="label">3</span>
+    <span class="title">Recogida</span>
+  </div>
+  <span class="bar"></span>
+  <div class="circle" onclick="window.location='/agricultores/1/confirm'">
+    <span class="label">4</span>
+    <span class="title">Finalizado</span>
+  </div>
+</div>
+
+<!-- end progress bar -->
+
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      {% block footer %}
+
+
+    </div>
+
+		<!-- JS -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+		<script src="{{ url_for('static', filename='filter_products.js') }}"></script>
+
+		<script>
+			$(document).ready(function() {
+			// get current URL path and assign 'active' class
+				var pathname = window.location.pathname;
+				$('.nav-link[href="'+pathname+'"]').addClass('active');
+			})
+		</script>
+		<!-- progress bar -->
+		<script type="text/javascript">
+			i = 0
+			if (window.location.href.split("/")[5] == "order"){
+			var i = 1;}
+			if (window.location.href.split("/")[5] == "postorder"){
+			var i = 2;}
+			if (window.location.href.split("/")[5] == "pickup"){
+			var i = 3;}
+			if (window.location.href.split("/")[5] == "confirm"){
+			var i = 4;}
+			// if (window.location.href.split("/")[3] == "user"){
+			// $('.progress')[0].style.display = "none"}
+$('.progress .circle').removeClass().addClass('circle');
+$('.progress .bar').removeClass().addClass('bar');
+setInterval(function() {
+  $('.progress .circle:nth-of-type(' + i + ')').addClass('active');
+  
+  $('.progress .circle:nth-of-type(' + (i-1) + ')').removeClass('active').addClass('done');
+
+  $('.progress .circle:nth-of-type(' + (i-2) + ')').removeClass('active').addClass('done');
+
+  $('.progress .circle:nth-of-type(' + (i-3) + ')').removeClass('active').addClass('done');
+
+  $('.progress .circle:nth-of-type(' + (i-4) + ')').removeClass('active').addClass('done');
+  
+  $('.progress .circle:nth-of-type(' + (i-1) + ') .label').html('&#10003;');
+
+  $('.progress .circle:nth-of-type(' + (i-2) + ') .label').html('&#10003;');
+
+  $('.progress .circle:nth-of-type(' + (i-3) + ') .label').html('&#10003;');
+
+  $('.progress .circle:nth-of-type(' + (i-4) + ') .label').html('&#10003;');
+  
+  $('.progress .bar:nth-of-type(' + (i-1) + ')').addClass('active');
+  
+  $('.progress .bar:nth-of-type(' + (i-2) + ')').removeClass('active').addClass('done');
+
+  $('.progress .bar:nth-of-type(' + (i-3) + ')').removeClass('active').addClass('done');
+
+  $('.progress .bar:nth-of-type(' + (i-4) + ')').removeClass('active').addClass('done');
+  
+  // i++;
+
+	if (window.location.href.split("/")[5] == "order"){
+	$('.progress')[0].style.opacity = 1}
+	if (window.location.href.split("/")[5] == "postorder"){
+	$('.progress')[0].style.opacity = 1}
+	if (window.location.href.split("/")[5] == "pickup"){
+	$('.progress')[0].style.opacity = 1}
+	if (window.location.href.split("/")[5] == "confirm"){
+	$('.progress')[0].style.opacity = 1}
+  
+  if (i==0) {
+    $('.progress .bar').removeClass().addClass('bar');
+    $('.progress div.circle').removeClass().addClass('circle');
+    i = 1;
+  }
+}, 1000);
+
+		</script>
+<!-- end progress bar -->
+      {% endblock %}
+  </body>
+</html>

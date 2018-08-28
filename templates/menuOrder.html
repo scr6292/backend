@@ -1,5 +1,5 @@
 <html>
-{% extends "layout.html" %}
+{% extends "layout_progress_bar.html" %}
 
 {% block head %}
 
@@ -80,7 +80,7 @@
 				}
 			total2 = total1 + parseFloat({{total}})
 			console.log(total2)
-			document.getElementsByClassName("subtotal")[0].innerHTML = "SUBTOTAL:" + total1.toFixed(2) + " + {{total}} = " + total2 +"€"
+			document.getElementsByClassName("subtotal")[0].innerHTML = "SUBTOTAL: " + total1.toFixed(2) + " + {{total}} = " + total2 +"€"
 			document.getElementsByClassName("cart")[0].innerHTML = "Ver cesta (" + n_products + ")"
 			}
 		}
@@ -91,7 +91,7 @@
 <footer class="fixed-bottom">
 	<div class="row justify-content-center">
 		<div>
-			<p class="text-right vertical-align-middle subtotal"> Subtotal: {{total}}€ </p>
+			<p class="text-right vertical-align-middle subtotal"> Subtotal : {{total}}€ </p>
 		</div>
 		<div>
 			<button type = 'submit' class="btn footer-button float-right cart" value = 'Actualiza tu compra' onclick="document.getElementsByClassName('add-to-cart')[0].click()">Ver cesta ({{n_order}})</button>
