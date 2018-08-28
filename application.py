@@ -648,7 +648,7 @@ def reset():
             flash('Please check your email for a password reset link.', 'success')
         else:
             flash('Your email address must be confirmed before attempting a password reset.', 'error')
-        return redirect(url_for('login'))
+        return render_template('reset_password_link.html', email = form.email.data)
  
     return render_template('password_reset_email.html', form=form)
 
