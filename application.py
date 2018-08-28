@@ -446,8 +446,8 @@ def user():
             except:
                 db.session.rollback()
         else:
-            wrongpass = 1
-            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass = wrongpass)
+            wrongpass1 = 1
+            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass1 = wrongpass1)
     if form_email.validate_on_submit():
         user = User.query.filter_by(email=current_user.email).first()
         if check_password_hash(current_user.password, form_user.password.data):
@@ -461,8 +461,8 @@ def user():
             except:
                 db.session.rollback()
         else:
-            wrongpass = 1
-            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass = wrongpass)
+            wrongpass2 = 1
+            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass2 = wrongpass2)
     if form_pass.validate_on_submit():
         user = User.query.filter_by(email=current_user.email).first()
         if check_password_hash(current_user.password, form_pass.current_password.data):       
@@ -477,8 +477,8 @@ def user():
             except:
                 db.session.rollback() #Rollback the changes on error
         else:
-            wrongpass = 1
-            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass = wrongpass)
+            wrongpass3 = 1
+            return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email, wrongpass3 = wrongpass3)
 
     return render_template('user.html', formuser=form_user, formpass=form_pass, formemail=form_email)
 

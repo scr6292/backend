@@ -133,6 +133,8 @@
 			var i = 3;}
 			if (window.location.href.split("/")[5] == "confirm"){
 			var i = 4;}
+			// if (window.location.href.split("/")[3] == "user"){
+			// $('.progress')[0].style.display = "none"}
 $('.progress .circle').removeClass().addClass('circle');
 $('.progress .bar').removeClass().addClass('bar');
 setInterval(function() {
@@ -163,6 +165,15 @@ setInterval(function() {
   $('.progress .bar:nth-of-type(' + (i-4) + ')').removeClass('active').addClass('done');
   
   // i++;
+
+	if (window.location.href.split("/")[5] == "order"){
+	$('.progress')[0].style.opacity = 1}
+	if (window.location.href.split("/")[5] == "postorder"){
+	$('.progress')[0].style.opacity = 1}
+	if (window.location.href.split("/")[5] == "pickup"){
+	$('.progress')[0].style.opacity = 1}
+	if (window.location.href.split("/")[5] == "confirm"){
+	$('.progress')[0].style.opacity = 1}
   
   if (i==0) {
     $('.progress .bar').removeClass().addClass('bar');
