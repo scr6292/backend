@@ -157,7 +157,7 @@ def agricultorMenuOrder(agricultor_id):
     year = date.today().year
     order_id = str(week) + str(year) + str(current_user.id)
     orderDone = db.session.query(Order).filter_by(id = order_id)
-    if orderDone == None:
+    if orderDone != None:
         return redirect(url_for('orderDone', agricultor_id = agricultor_id))
 
     else:
@@ -217,7 +217,7 @@ def postOrder(agricultor_id):
     year = date.today().year
     order_id = str(week) + str(year) + str(current_user.id)
     orderDone = db.session.query(Order).filter_by(id = order_id)
-    if orderDone == None:
+    if orderDone != None:
         return redirect(url_for('orderDone', agricultor_id = agricultor_id))
     else:
         db.session.commit()
@@ -264,7 +264,7 @@ def pickup(agricultor_id):
     year = date.today().year
     order_id = str(week) + str(year) + str(current_user.id)
     orderDone = db.session.query(Order).filter_by(id = order_id)
-    if orderDone == None:
+    if orderDone != None:
         return redirect(url_for('orderDone', agricultor_id = agricultor_id))
     else:
 
