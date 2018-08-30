@@ -132,214 +132,204 @@ def csvFiles(agricultor_id):
 def onepage():
     return redirect(url_for('login'))
 
-#Home
-@application.route('/home', methods=['GET'])
-def home():
-    week = str(date.today().isocalendar()[1])
-    return render_template('homepage.html', week = week)
-
-
-#Order agriculture products
-@application.route('/agricultores/<int:agricultor_id>/order', methods=['GET', 'POST'])
-@login_required(role="CUSTOMER")
-def agricultorMenuOrder(agricultor_id):
+#Order already done this week
+@application.route('/orderDone/<int:agricultor_id>', methods=['GET'])
+def orderDone(agricultor_id):
+    week = date.today().isocalendar()[1]
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     items = db.session.query(Productos)
-    week = db.session.query(Productos.week).first()
     year = db.session.query(Productos.year).first()
     order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
     n_order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1]).count()
     total = 0
     for item in order:
         tot = float(item.product_price)*float(item.quantity)
-        total = total + tot
-    if request.method == 'POST':
-        for item in items:
-            try:
+
+    return render_template('orderDone.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, total = total, n_order = n_order)
+
+
+#Order agriculture products
+@application.route('/agricultores/<int:agricultor_id>/order', methods=['GET', 'POST'])
+@login_required(role="CUSTOMER")
+def agricultorMenuOrder(agricultor_id):
+    week = date.today().isocalendar()[1]
+    year = date.today().year
+    order_id = str(week) + str(year) + str(current_user.id)
+    orderDone = db.session.query(Order).filter_by(id = order_id)
+    if orderDone == None:
+        return redirect(url_for('orderDone', agricultor_id = agricultor_id))
+
+    else:
+        db.session.commit()
+        agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+        items = db.session.query(Productos)
+        week = db.session.query(Productos.week).first()
+        year = db.session.query(Productos.year).first()
+        order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
+        n_order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1]).count()
+        total = 0
+        for item in order:
+            tot = float(item.product_price)*float(item.quantity)
+            total = total + tot
+        if request.method == 'POST':
+            for item in items:
+                try:
+                    if request.form[item.product_title]:
+                        float(request.form[item.product_title].replace(',','.'))
+                except:
+                    numeric = 1
+                    return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, numeric = numeric, total = total, n_order = n_order)
+            for item in items:
                 if request.form[item.product_title]:
-                    float(request.form[item.product_title].replace(',','.'))
-            except:
-                numeric = 1
-                return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, numeric = numeric, total = total, n_order = n_order)
-        for item in items:
-            if request.form[item.product_title]:
-                already_exist = db.session.query(Pedido).filter_by(product_name = item.product_title, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
-                if already_exist:
-                    already_exist.quantity = str(float(already_exist.quantity) + float(request.form[item.product_title].replace(',','.')))
-                    db.session.add(already_exist)
+                    already_exist = db.session.query(Pedido).filter_by(product_name = item.product_title, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+                    if already_exist:
+                        already_exist.quantity = str(float(already_exist.quantity) + float(request.form[item.product_title].replace(',','.')))
+                        db.session.add(already_exist)
+                        try:
+                            db.session.commit()
+                        except:
+                            db.session.rollback()
+
+                    else:
+                        order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price, week = date.today().isocalendar()[1])
+                        db.session.add(order)
                     try:
                         db.session.commit()
                     except:
                         db.session.rollback()
 
-                else:
-                    order = Pedido(product_name = item.product_title, quantity = request.form[item.product_title], user_name = current_user.username, email = current_user.email, product_units = item.units, product_price = item.unit_price, week = date.today().isocalendar()[1])
-                    db.session.add(order)
-                try:
-                    db.session.commit()
-                except:
-                    db.session.rollback()
 
+            order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+            if order != None:
+                return redirect(url_for('postOrder', agricultor_id = agricultor_id))
+            else:
+                empty = 1
+                return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, empty = empty, total = total, n_order = n_order)
 
-        order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1]).first()
-        if order != None:
-            return redirect(url_for('postOrder', agricultor_id = agricultor_id))
         else:
-            empty = 1
-            return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, empty = empty, total = total, n_order = n_order)
-
-    else:
-        return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, total = total, n_order = n_order)
+            return render_template('menuOrder.html', agricultor=agricultor, items=items, agricultor_id=agricultor_id, user = current_user.username, week = week, year = year, total = total, n_order = n_order)
 #Post Order page
 @application.route('/agricultores/<int:agricultor_id>/postorder', methods=['GET', 'POST'])
 @login_required(role="CUSTOMER")
 def postOrder(agricultor_id):
-    db.session.commit()
-    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
-    items = db.session.query(Productos)
-    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
-    total = 0
-    for item in order:
-        tot = float(item.product_price)*float(item.quantity)
-        total = total + tot
-    pointform = PickupForm()
-    pickchoice_form = PickupChoiceForm()
-    pickupform = PickupHome()
-    if request.method == 'POST':
-        #TEST
-        # if pickchoice_form.validate_on_submit():
-        #     pickup = "TEST"
-            # pickup = pickchoice_form.pickup.data
-            # pickup = pointform.pickup_point.data
-        #END TEST
-        # if pickchoice_form.pickup.data == "1":
-        #     if (total < 25):
-        #         pickup_total = 2.0
-        #     elif (25 < total < 40):
-        #         pickup_total = 1.0
-        #     else:
-        #         pickup_total = 0.0
-        #         pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
-        # elif (pickchoice_form.pickup.data == "2"):
-        #     if (total < 25):
-        #         flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
-        #         return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-        #     elif (25 < total < 40):
-        #         pickup_total = 2.0
-        #     elif (40 < total < 60):
-        #         pickup_total = 1.5
-        #     else:
-        #         pickup_total = 0.0
-        #         choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
-        #         pickup = choice.name
-        # elif (pickchoice_form.pickup.data == "3"):
-        #     if (total < 25):
-        #         flash("Para esta modalidad de envio tu pedido debe ser mayor a 25 euros")
-        #         return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-        #     elif (25 < total < 40):
-        #         pickup_total = 5.0
-        #     elif (40 < total < 60):
-        #         pickup_total = 4.0
-        #     elif (60 < total < 100):
-        #         pickup_total = 3.0
-        #     else:
-        #         pickup_total = 0.0
-        #
-        # if (pickupform.street.data != "" and pickupform.city.data != "" and pickupform.cp.data != None):
-        #     pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
-        # else:
-        #     flash("Por favor introduce datos de entrega")
-        #     return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-
+    week = date.today().isocalendar()[1]
+    year = date.today().year
+    order_id = str(week) + str(year) + str(current_user.id)
+    orderDone = db.session.query(Order).filter_by(id = order_id)
+    if orderDone == None:
+        return redirect(url_for('orderDone', agricultor_id = agricultor_id))
+    else:
+        db.session.commit()
+        agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+        weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
+        items = db.session.query(Productos)
+        order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
+        total = 0
         for item in order:
-            try:
-                if request.form[item.product_name]:
-                    float(request.form[item.product_name].replace(',','.'))
-            except:
-                numeric = 1
-                return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, numeric = numeric)
+            tot = float(item.product_price)*float(item.quantity)
+            total = total + tot
+        pointform = PickupForm()
+        pickchoice_form = PickupChoiceForm()
+        pickupform = PickupHome()
+        if request.method == 'POST':
+            
             for item in order:
-                if request.form.get(item.product_name, False):
-                    updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
-                    updateorder.quantity = request.form[item.product_name]
-                    db.session.add(updateorder)
                 try:
-                    db.session.commit()
+                    if request.form[item.product_name]:
+                        float(request.form[item.product_name].replace(',','.'))
                 except:
-                    db.session.rollback()
-            #flash("Tus cambios ya estan en el carrito")
+                    numeric = 1
+                    return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, numeric = numeric)
+                for item in order:
+                    if request.form.get(item.product_name, False):
+                        updateorder = db.session.query(Pedido).filter_by(product_name = item.product_name, user_name = current_user.username, week = date.today().isocalendar()[1]).first()
+                        updateorder.quantity = request.form[item.product_name]
+                        db.session.add(updateorder)
+                    try:
+                        db.session.commit()
+                    except:
+                        db.session.rollback()
+                #flash("Tus cambios ya estan en el carrito")
 
-        return redirect(url_for('pickup', agricultor_id=agricultor.id))
-    #return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
-    return render_template('postOrder.html', agricultor_id=agricultor_id, order = order, weeks = weeks, user_name = current_user.username, total = total)
+            return redirect(url_for('pickup', agricultor_id=agricultor.id))
+        #return render_template('postOrder.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform)
+        return render_template('postOrder.html', agricultor_id=agricultor_id, order = order, weeks = weeks, user_name = current_user.username, total = total)
 
 @application.route('/agricultores/<int:agricultor_id>/pickup', methods=['GET','POST'])
 @login_required(role="CUSTOMER")
 def pickup(agricultor_id):
-    db.session.commit()
-    agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
-    items = db.session.query(Productos)
-    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
-    total = 0
-    for item in order:
-        tot = float(item.product_price)*float(item.quantity)
-        total = total + tot
-    pointform = PickupForm()
-    pickchoice_form = PickupChoiceForm()
-    pickupform = PickupHome()
 
-    if request.method == 'POST':
-        # TEST
-        # pickup = pickchoice_form.pickup.data
-        # if pickchoice_form.validate_on_submit():
-        #     pickup = "TEST"
-        #     pickup = pickchoice_form.pickup.data
-        #     pickup = pointform.pickup_point.data
-        # END TEST
-        if pickchoice_form.pickup.data == "1":
-            if (total < 25):
-                pickup_total = 2.0
-            elif (25 < total < 40):
-                pickup_total = 1.0
-            else:
-                pickup_total = 0.0
-            pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
-        elif (pickchoice_form.pickup.data == "2"):
-            if (total < 25):
-                envio = 1
-                return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform, envio = envio)
-            elif (25 < total < 40):
-                pickup_total = 2.0
-            elif (40 < total < 60):
-                pickup_total = 1.5
-            else:
-                pickup_total = 0.0
-            choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
-            pickup = choice.name
-        elif (pickchoice_form.pickup.data == "3"):
-            if (total < 25):
-                envio = 1
-                return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform, envio = envio)
-            elif (25 < total < 40):
-                pickup_total = 5.0
-            elif (40 < total < 60):
-                pickup_total = 4.0
-            elif (60 < total < 100):
-                pickup_total = 3.0
-            else:
-                pickup_total = 0.0
-        
-            if (pickupform.street.data != "" and pickupform.city.data != "" and pickupform.cp.data != None):
-                pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
-            else:
-                nodata = 1
-                return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform, nodata = nodata)
+    week = date.today().isocalendar()[1]
+    year = date.today().year
+    order_id = str(week) + str(year) + str(current_user.id)
+    orderDone = db.session.query(Order).filter_by(id = order_id)
+    if orderDone == None:
+        return redirect(url_for('orderDone', agricultor_id = agricultor_id))
+    else:
 
-        return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup, pickup_total =pickup_total))
+        db.session.commit()
+        agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
+        items = db.session.query(Productos)
+        order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = date.today().isocalendar()[1])
+        total = 0
+        for item in order:
+            tot = float(item.product_price)*float(item.quantity)
+            total = total + tot
+        pointform = PickupForm()
+        pickchoice_form = PickupChoiceForm()
+        pickupform = PickupHome()
 
-    return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pickupform = pickupform, pickchoice_form = pickchoice_form, pointform = pointform)
+        if request.method == 'POST':
+            # TEST
+            # pickup = pickchoice_form.pickup.data
+            # if pickchoice_form.validate_on_submit():
+            #     pickup = "TEST"
+            #     pickup = pickchoice_form.pickup.data
+            #     pickup = pointform.pickup_point.data
+            # END TEST
+            if pickchoice_form.pickup.data == "1":
+                if (total < 25):
+                    pickup_total = 2.0
+                elif (25 < total < 40):
+                    pickup_total = 1.0
+                else:
+                    pickup_total = 0.0
+                pickup = "Recogida en Bustarviejo (Calle Maruste 18)"
+            elif (pickchoice_form.pickup.data == "2"):
+                if (total < 25):
+                    envio = 1
+                    return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform, envio = envio)
+                elif (25 < total < 40):
+                    pickup_total = 2.0
+                elif (40 < total < 60):
+                    pickup_total = 1.5
+                else:
+                    pickup_total = 0.0
+                choice = db.session.query(Pickup).filter_by(id = pointform.pickup_point.data).first()
+                pickup = choice.name
+            elif (pickchoice_form.pickup.data == "3"):
+                if (total < 25):
+                    envio = 1
+                    return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform, envio = envio)
+                elif (25 < total < 40):
+                    pickup_total = 5.0
+                elif (40 < total < 60):
+                    pickup_total = 4.0
+                elif (60 < total < 100):
+                    pickup_total = 3.0
+                else:
+                    pickup_total = 0.0
+            
+                if (pickupform.street.data != "" and pickupform.city.data != "" and pickupform.cp.data != None):
+                    pickup = pickupform.street.data + ", " + pickupform.city.data + ", " + str(pickupform.cp.data)
+                else:
+                    nodata = 1
+                    return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pointform = pointform, pickchoice_form = pickchoice_form, pickupform = pickupform, nodata = nodata)
+
+            return redirect(url_for('orderConfirm', agricultor_id = agricultor_id, pickup = pickup, pickup_total =pickup_total))
+
+        return render_template('pickup.html', agricultor=agricultor, order = order, user_name = current_user.username, total = total, pickupform = pickupform, pickchoice_form = pickchoice_form, pointform = pointform)
 
 
 @application.route('/agricultores/<int:agricultor_id>/confirm/<pickup>/<float:pickup_total>', methods=['GET'])
@@ -408,7 +398,7 @@ def historicalOrders(agricultor_id, week):
     db.session.commit()
     agricultor = db.session.query(Agricultor).filter_by(id=agricultor_id).one()
     weeks = db.session.query(Pedido.week).filter_by(user_name = current_user.username).distinct()
-    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = week)
+    order = db.session.query(Pedido).filter_by(user_name = current_user.username, week = week, is_confirmed = True)
     return render_template('historicalOrders.html', agricultor=agricultor, order = order, weeks = weeks, user_name = current_user.username, week = week)
 
 #Users page

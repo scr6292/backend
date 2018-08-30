@@ -138,7 +138,7 @@
 </footer>
 
 
-<script>
+<!-- <script>
 
 	function updatePrice(){
 	var priceTotal10 = $('.precio-total-10')[0];
@@ -151,7 +151,7 @@
 	}
 	updatePrice();
 
-</script>
+</script> -->
 
 <script>
 
@@ -169,13 +169,23 @@
     hiddenDiv3.style.opacity = (this.value == "1") ? 1 : 0;
 
     var priceBustarviejo = document.getElementById("showMe-4");
+    var price = document.getElementsByClassName("subtotal")[0]
     priceBustarviejo.style.display = (this.value == "1") ? "block" : "none";
+    if (this.value == "1"){
+    	price.innerHTML = "Subtotal: {{ total }}€ + " + document.getElementById("showMe-4").innerHTML
+    }
 
     var priceDomicilio = document.getElementById("showMe-5");
     priceDomicilio.style.display = (this.value == "1" || this.value == "2") ? "none" : "block";
+    if (this.value == "3"){
+    	price.innerHTML = "Subtotal: {{ total }}€ + " + document.getElementById("showMe-5").innerHTML
+    }
 
     var pricePuntoEntrega = document.getElementById("showMe-6");
     pricePuntoEntrega.style.display = (this.value == "1" || this.value == "3") ? "none" : "block";
+    if (this.value == "2"){
+    	price.innerHTML = "Subtotal: {{ total }}€ + " + document.getElementById("showMe-6").innerHTML
+    }
 
 
 // opacity:0;pointer-events: none; cursor: default;

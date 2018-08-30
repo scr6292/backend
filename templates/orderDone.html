@@ -1,0 +1,58 @@
+<html>
+{% extends "layout.html" %}
+
+{% block head %}
+
+{{ super() }}
+
+{% endblock head %}
+{% block content %}
+
+
+
+
+<div class="container" style="position: relative;">
+    <div class = "row row-padding-top justify-content-md-center" style="position: absolute;">
+        <div class = "col-lg-5 col-md-6 col-sm-12 col-xs-12 align-self-center" style="background-color: white; border:solid; border-width: 0.5px">
+            <h2 class="form-signin-heading title top-margin">Ya has realizado tu pedido esta semana</h2>
+            <p>De momento solo se puede realizar un pedido por semana, si has cometido algún error a la hora de realizar el pedido, por favor, ponte en contacto con nosotros <a href = "#" style='color:#46BC64'>nuestrashuertas@gmail.com</a></p>
+            <button class="btn btn-lg btn-block little-margin btn-style" onclick="window.location.href='{{url_for('historicalOrders',agricultor_id = 1, week = week)}}'">Ver pedidos</button>
+        </div>
+    </div>
+
+
+	<table class="table" style="position:absolute; z-index: -10;opacity: 0.1;">
+				<thead>
+					<tr class="filters">
+					</tr>
+					<tr><!-- <td></td> -->
+						<td><b>Producto</b></td>
+						<td><b>Precio</b></td>
+						<td class="d-none d-md-block d-lg-block"><b>Procedencia</b></td>
+						<td><b>Cantidad</b></td>
+					</tr>
+				</thead>
+				<tbody>
+					<form action = "{{url_for('agricultorMenuOrder',agricultor_id=agricultor_id)}}" method = 'POST'>
+						<!-- <h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px;">Productos disponibles esta semana {{week[0]}} de {{year[0]}} </h3> -->
+					 <div style="float: right; height: 57px; display:none">
+							<button class='btn btn-lg btn-success add-to-cart' type = 'submit' value = 'Actualiza tu compra'>
+								<a>Enviar al carrito</a>
+							</button>
+					</div>
+
+					{% for i in items %}
+					<tr class = "{{loop.index}} productos">
+						<td>{{i.product_title}}</td>
+						<td>{{i.unit_price}}€/{{i.units}}</td>
+						<td class="d-none d-md-block d-lg-block">{{i.location_origin}}</td>
+						<td><input type = 'text' id = "{{loop.index}}"class = "form-control" size = '30' name = '{{i.product_title}}' placeholder = ' {{i.units}}'></td>
+					</tr>
+
+					{% endfor %}
+				</form>
+			</tbody>
+		</table>
+	</div>
+
+{% endblock content %}
