@@ -76,7 +76,7 @@
 				var total1 = total1 + (parseFloat(document.getElementsByClassName(i)[0].getElementsByTagName('td')[1].innerHTML.split("€")[0]) * parseFloat(boxes[i].value))
 				}
 			total2 = total1 + parseFloat({{total}})
-			console.log(total2)
+
 			document.getElementsByClassName("subtotal")[0].innerHTML = "SUBTOTAL: " + total1.toFixed(2) + " + {{total}} = " + total2 +"€"
 			document.getElementsByClassName("cart")[0].innerHTML = "Ver cesta (" + n_products + ")"
 			}

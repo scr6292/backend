@@ -26,20 +26,11 @@
       <div class="col-lg-12">
         <h4 style="position: relative; float: left; margin-bottom: 10px;">Revisa o actualiza tu pedido y confirma tu compra</h4>
         <table class="table">
-          <!--<thead>
-            <tr>
-              <td style="width: 15%"></td>
-              <- <td style="width: 20%"><b>Precio</b></td> ->
-          		<td style="width: 55%"><b>Producto</b></td>
-              <td style="width: 20%"><b>Subtotal</b></td>
-              <td style="width: 10%"><b></b></td>
-  				 </tr>
-          </thead> -->
           <tbody> {% from "_formhelpers.html" import render_field %}
             <form action = "{{url_for('postOrder',agricultor_id=agricultor_id)}}" method = 'POST' >
 
               {% for i in order %}
-              <tr class="postorder">
+              <tr class="postorder {{loop.index}}">
     						<!-- <td>{{i.product_price}}€/{{i.product_units}}
                 </td> -->
                 <td align="center" class="align-middle" style="width: 30px">
@@ -48,10 +39,13 @@
                   </a>
                 </td>
                 <td>
-                  <input type = 'text' size = '7' name = '{{i.product_name}}' placeholder = '{{i.quantity}} {{i.product_units}}'>
+                  <input id = "{{loop.index}}" class="form-control" type = 'text' size = '7' name = '{{i.product_name}}' placeholder = '{{i.quantity}} {{i.product_units}}'>
                 </td>
     						<td>
     				      {{i.product_name}}
+                </td>
+                <td style="display:none">
+                	{{i.product_price}}
                 </td>
                 <td>
                   {{(i.quantity|float)*(i.product_price|float)}}€
@@ -77,14 +71,6 @@
 
       </div>
     </div>
-		<!-- <div>
-			<a class="compra" href="{{url_for('agricultorMenuOrder', agricultor_id = agricultor_id)}}">
-				<span class"row align-middle col-6">
-				<i class="material-icons align-middle">local_grocery_store</i>
-				Seguir comprando
-			</span>
-			</a>
-		</div> -->
     <div>
       <a class"compra" href="{{url_for('agricultorMenuOrder', agricultor_id = agricultor_id)}}">
         <button type="button" class="btn btn-outline-success">
@@ -99,122 +85,6 @@
     </div>
     {% endif %}
 
-
-
-		                    <!-- {#	<tr>
-		                    		<td>
-		                    			{{ pickchoice_form.hidden_tag() }}
-		                    			{{ wtf.form_field(pickchoice_form.pickup) }}
-
-		                    		</td>
-		                    		<td id="showMe-1" style="opacity:0">
-		                    			{{ pointform.hidden_tag() }}
-		                    			{{ wtf.form_field(pointform.pickup_point) }}
-		                    		</td>
-		                    		<td id="showMe-2" style="opacity:1">
-		                    			{{ pickupform.hidden_tag() }}
-		                    			{{ wtf.form_field(pickupform.city) }}
-		                    			{{ wtf.form_field(pickupform.street) }}
-		                    			{{ wtf.form_field(pickupform.cp) }}
-		                    		</td>
-		                    		<td id="showMe-3" style="opacity:0">
-		                    			*El gasto asociado es exclusivo de logística de las cajas
-		                    		</td>
-		                    		<td></td>
-		                    		<td></td>
-		                    		<td></td>
-		                    	</tr>
-	                    	</form>
-	                    	<tr>
-	                    		<td><b>Los gastos de envío</b></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td id = "showMe-4" class="precio-entrega precio-bustarviejo" style="color: red; font-weight: bold; display:none">
-	                    			{% if total < 25 %}
-	                    			2.0€
-	                    			{% elif 25 < total < 40 %}
-	                    			1.0€
-	                    			{% elif 40 < total %}
-	                    			0.0€
-	                    			{% endif %}
-	                    		</td>
-	                    		<td id = "showMe-5" class="precio-entrega precio-domicilio" style="color: red; font-weight: bold; display:block">
-	                    			{% if total < 25 %}
-	                    			No llegas al pedido mínimo (25€) para realizar envíos a domicilio
-	                    			{% elif 25 < total < 40 %}
-	                    			5.0€
-	                    			{% elif 40 < total < 60 %}
-	                    			4.0€
-	                    			{% elif 60 < total < 100 %}
-	                    			3.0€
-	                    			{% elif 100 < total %}
-	                    			0.0€
-	                    			{% endif %}
-	                    		</td>
-	                    		<td id = "showMe-6" class="precio-entrega precio-punto-entrega" style="color: red; font-weight: bold; display:none">
-	                    			{% if total < 25 %}
-	                    			No llegas al pedido mínimo (25€) para realizar envíos a domicilio
-	                    			{% elif 25 < total < 40 %}
-	                    			2.0€
-	                    			{% elif 40 < total < 60 %}
-	                    			1.5€
-	                    			{% elif 60 < total < 100 %}
-	                    			0.0€
-	                    			{% elif 100 < total %}
-	                    			0.0€
-	                    			{% endif %}
-
-	                    		</td>
-	                    		<td></td>
-	                    	<tr>
-	                    		<td><b>TOTAL</b></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td></td>
-	                    		<td class="precio-total-10" style="color: green; font-weight: bold; display:none"></td>
-	                    		<td class="precio-total-11" style="color: green; font-weight: bold; display:none;"></td>
-	                    		<td class="precio-total-12" style="color: green; font-weight: bold; display:block"></td>
-	                    	</tr>
-
-	                </tbody>
-	            </table>
-	            <table class="table">
-	                <thead>
-	                    <tr class="filters">
-	                        <th><input type="text" class="form-control" placeholder="Ver mis pedidos de otras semanas" disabled></th>
-	                        <th>
-
-	                        </th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-	                		<tr>
-		                		{% for i in weeks %}
-								<td><a href = "{{url_for('historicalOrders', agricultor_id = agricultor.id, week = i.week)}}">Semana {{i.week}}</a></td>
-	                    	</tr>
-	                    		{% endfor %}
-
-	                </tbody>
-	            </table>
-	           	<div>
-
-	            </div>
-	        </div>
-	    </div>
-		<section class=nav-order>
-			<div class="row">
-				<div class="col-sm">
-					<button type="button" class="btn btn-outline-danger" onclick="window.location.href='{{url_for('agricultorMenuOrder',agricultor_id = agricultor.id)}}'">Volver al listado</button>
-				</div>
-				<div class="col-sm">
-					<button type="button" class="btn btn-outline-warning update-order-2" onclick="document.getElementsByClassName('update-order')[0].click()">Actualizar la cesta</button>
-				</div>
-			</div>
-		</section>
-	</div>
- #} -->
 <footer class="fixed-bottom">
   	<div class="row justify-content-center">
   		<div>
@@ -226,82 +96,32 @@
   	</div>
 </footer>
 
-<!--
 <script>
+	boxes = document.getElementsByClassName("form-control")
+	for (j=0 ; j < boxes.length ; j++){
+		boxes[j].onchange = function(){
+			n_products = {{n_order}}
+			total1 = 0
+			for (j=0 ; j < boxes.length ; j++){
+				if (boxes[j].value != ""){
+				var n_products = n_products + 1
+				var total1 = total1 + (parseFloat(document.getElementsByClassName(j+1)[0].getElementsByTagName('td')[3].innerHTML) * parseFloat(boxes[j].value))
 
-	function updatePrice(){
-	var priceTotal10 = $('.precio-total-10')[0];
-	var priceTotal11 = $('.precio-total-11')[0];
-	var priceTotal12 = $('.precio-total-12')[0];
-	var priceSubTot = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0])
-	priceTotal10.innerHTML = priceSubTot + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0]) + "€"
-	priceTotal12.innerHTML = priceSubTot + parseFloat($('.precio-domicilio')[0].innerHTML.split('€')[0]) + "€"
-	priceTotal11.innerHTML = priceSubTot + parseFloat($('.precio-punto-entrega')[0].innerHTML.split('€')[0]) + "€"
+				document.getElementsByClassName(j+1)[0].getElementsByTagName('td')[4].innerHTML = (parseFloat(document.getElementsByClassName(j+1)[0].getElementsByTagName('td')[3].innerHTML) * parseFloat(boxes[j].value)).toFixed(2) + "€"
+				}
+				else{
+					total1 = total1 + parseFloat(document.getElementsByClassName("form-control")[j].placeholder.split(" ")[0])*parseFloat(document.getElementsByClassName(j+1)[0].getElementsByTagName('td')[3].innerHTML)
+					document.getElementsByClassName(j+1)[0].getElementsByTagName('td')[4].innerHTML = (parseFloat(document.getElementsByClassName(j+1)[0].getElementsByTagName('td')[3].innerHTML) * parseFloat(document.getElementsByClassName("form-control")[j].placeholder.split(" ")[0])).toFixed(2) + "€"
+				}
+			total2 = total1
+
+			document.getElementsByClassName("subtotal")[0].innerHTML = "SUBTOTAL: " + total1.toFixed(2) + "€"
+			document.getElementsByClassName("precio-total-productos")[0].innerHTML = total1.toFixed(2) + "€"
+			}
+		}
 	}
-	updatePrice();
 
 </script>
-
-<script>
-
-//Show/hide the proper divs in the pickup section
-	var elem = document.getElementById("pickup");
-	elem.onchange = function(){
-
-    var hiddenDiv = document.getElementById("showMe-1");
-    hiddenDiv.style.opacity = (this.value == "1" || this.value == "3") ? 0 : 1;
-
-    var hiddenDiv2 = document.getElementById("showMe-2");
-    hiddenDiv2.style.opacity = (this.value == "1" || this.value == "2") ? 0 : 1;
-
-    var hiddenDiv3 = document.getElementById("showMe-3");
-    hiddenDiv3.style.opacity = (this.value == "1") ? 1 : 0;
-
-    var priceBustarviejo = document.getElementById("showMe-4");
-    priceBustarviejo.style.display = (this.value == "1") ? "block" : "none";
-
-    var priceDomicilio = document.getElementById("showMe-5");
-    priceDomicilio.style.display = (this.value == "1" || this.value == "2") ? "none" : "block";
-
-    var pricePuntoEntrega = document.getElementById("showMe-6");
-    pricePuntoEntrega.style.display = (this.value == "1" || this.value == "3") ? "none" : "block";
-
-
-// opacity:0;pointer-events: none; cursor: default;
-
-	// if ($('#pickup option:selected')[0].value = "10"){
-	// 	$('.precio-total')[0].innerHTML = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])
-	// } else if ($('#pickup option:selected')[0].value = "11"){
-	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-entrega')[0].innerHTML.split('€')[0])
-	// } else if ($('#pickup option:selected')[0].value = "12"){
-	// 	$('.precio-total')[0] = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0]) + parseFloat($('.precio-punto-entrega')[0].innerHTML.split('€')[0])
-	// }
-
-	var priceTotal10 = $('.precio-total-10')[0];
-	var priceTotal11 = $('.precio-total-11')[0];
-	var priceTotal12 = $('.precio-total-12')[0];
-
-	priceTotal10.style.display = (this.value == "1") ? "block":"none"
-	priceTotal11.style.display = (this.value == "1" || this.value == "2") ? "none":"block";
-	priceTotal12.style.display = (this.value == "1" || this.value == "3") ? "none":"block";
-
-
-
-	// var priceSubTot = parseFloat($('.precio-total-productos')[0].innerHTML.split('€')[0])
-	// priceTotal10.innerHTML = (this.value == "10") ? (priceSubTot + parseFloat($('.precio-bustarviejo')[0].innerHTML.split('€')[0])) : "";
-
-	// priceTotal10.innerHTML = (this.value == "12") ? (priceSubTot + parseFloat($('.precio-domicilio')[0].innerHTML.split('€')[0])) : "";
-
-	// priceTotal10.innerHTML = (this.value == "11") ? (priceSubTot + parseFloat($('.precio-entrega')[0].innerHTML.split('€')[0])) : "";
-
-
-
-
-
-
-};
-
-</script> -->
 
 
 {% endblock content %}
