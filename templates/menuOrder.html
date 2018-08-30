@@ -25,14 +25,11 @@
 				    {% endif %}
 
 					<h3 class="panel-title" style="float:left; margin-top: 21px; margin-left: 10px; margin-bottom: 20px;">Productos disponibles esta semana <!-- {{week[0]}} de {{year[0]}} --></h3>
-						<div style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px;"><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></div>
-
 					</div>
 	        <table class="table" style="margin-bottom: 60px">
 						<thead>
 							<tr class="filters">
-								<!-- <th></th>
-								<div class"col-sm-12"><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></div> -->
+								<th><input type="text" class="form-control" placeholder="Filtrar por producto" enabled></th>
 							</tr>
 							<tr><!-- <td></td> -->
 								<td><b>Producto</b></td>
@@ -69,7 +66,7 @@
 
 <script>
 	boxes = document.getElementsByClassName("form-control")
-	for (i=0 ; i < boxes.length ; i++){
+	for (i=1 ; i < boxes.length ; i++){
 		boxes[i].onchange = function(){
 			n_products = {{n_order}}
 			total1 = 0
