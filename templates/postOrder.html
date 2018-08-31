@@ -19,12 +19,12 @@
 	    </div>
 	    {% endif %}
 		<div align="center">
-			<h1 class="title" style="margin-top: 20px">Cesta de la compra</h1>
+			<h1 class="title" style="margin-top: 20px">Tu Cesta</h1>
 			<hr width="80%" class="separator">
 		</div>
-    <div class="row justify-content-center" align="center">
+    <div class="row justify-content-center main-table" align="center">
       <div class="col-lg-12">
-        <h4 style="position: relative; float: left; margin-bottom: 10px;">Revisa o actualiza tu pedido y confirma tu compra</h4>
+        <p class="check-cart">Revisa o actualiza tu pedido y confirma Tu Cesta</p>
         <table class="table">
           <tbody> {% from "_formhelpers.html" import render_field %}
             <form action = "{{url_for('postOrder',agricultor_id=agricultor_id)}}" method = 'POST' >
@@ -35,11 +35,11 @@
                 </td> -->
                 <td align="center" class="align-middle" style="width: 30px">
                   <a class="eliminar" href="{{url_for('deleteItem', agricultor_id = agricultor_id, pedido_id = i.id)}}">
-                    <i class="material-icons align-middle">cancel</i>
+                    <i class="material-icons align-middle">highlight_off</i>
                   </a>
                 </td>
-                <td>
-                  <input id = "{{loop.index}}" class="form-control" type = 'text' size = '7' name = '{{i.product_name}}' placeholder = '{{i.quantity}} {{i.product_units}}'>
+                <td style="width: 100px;">
+                  <input style="width: 100px;" id = "{{loop.index}}" class="form-control" type = 'text' size = '7' name = '{{i.product_name}}' placeholder = '{{i.quantity}} {{i.product_units}}'>
                 </td>
     						<td>
     				      {{i.product_name}}
@@ -47,7 +47,7 @@
                 <td style="display:none">
                 	{{i.product_price}}
                 </td>
-                <td>
+                <td style="width: 10%;">
                   {{(i.quantity|float)*(i.product_price|float)}}€
                 </td>
 
@@ -61,7 +61,7 @@
                 <td class="precio-total-productos" style="color: #000; font-weight: bold">{{ total }}€</td>
               </tr>
 
-                <button class='btn btn-lg btn-success update-order' type = 'submit' value = 'Actualiza tu compra' style='display:none'>
+                <button class='btn btn-lg btn-success update-order' type = 'submit' value = 'Actualiza Tu Cesta' style='display:none'>
                 </button>
             </form>
 
@@ -75,7 +75,7 @@
       <a class"compra" href="{{url_for('agricultorMenuOrder', agricultor_id = agricultor_id)}}">
         <button type="button" class="btn btn-outline-success">
           <i class="material-icons align-middle">local_grocery_store</i>
-            Seguir comprando
+            Añadir más productos a Tu Cesta
         </button>
       </a>
     </div>
@@ -91,7 +91,7 @@
   			<p class="text-right vertical-align-middle subtotal"> Subtotal: {{ total }}€ </p>
   		</div>
   		<div>
-  			<button type="button" class="btn footer-button float-right" onclick="document.getElementsByClassName('update-order')[0].click()">Finalizar compra</button>
+  			<button type="button" class="btn footer-button float-right" onclick="document.getElementsByClassName('update-order')[0].click()">Confirmar pedido</button>
   		</div>
   	</div>
 </footer>
